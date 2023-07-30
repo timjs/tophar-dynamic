@@ -4,11 +4,32 @@
 %150--250 words.
 %
 % Context
+\TOPHAT\ is a mathematically formalised language for Task-Oriented Programming (\TOP).
+It allows developers to specify workflows and business processes in a formal language,
+reason about their equality
+and use symbolic execution to verify their the correctness.
 % Inquiry
+\TOPHAT\ can run a specification to support collaborators during the execution of a workflow.
+However, it can only do so for \emph{statically specified} amount of workflows,
+that is, the number of tasks running in parallel is always predefined by the developer.
+In contrast, other \TOP\ engines like \ITASKS\ and \MTASKS\ act like an operating system,
+starting and stopping tasks at will.
+
 % Approach
+To capture this dynamic nature of workflow systems,
+we introduce \DYNTOPHAT:
+a moderate extension of the \TOPHAT\ calculus which allows end users to start and stop tasks at runtime.
 % Knowledge
+Although this is a restriction on dynamic parallel tasks in \ITASKS,
+where the system itself can initialise new tasks,
+we show that all common use cases of this feature are still expressible in \DYNTOPHAT.
+Also, our proposed solution does not compromise the formal reasoning properties of \TOPHAT.
+
 % Grounding
+\TOPHAT's metatheory is formalised in the dependently typed programming language \IDRIS\
+and it's symbolic execution engine is implemented in \HASKELL.
 % Importance
+
 
 % Context: What is the broad context of the work? What is the importance of the general research area?
 % Inquiry: What problem or question does the paper address? How has this problem or question been addressed by others (if at all)?

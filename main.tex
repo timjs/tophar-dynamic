@@ -108,6 +108,13 @@
 %% the next command will enable that style.
 %%\citestyle{acmauthoryear}
 
+\input{macros/imports}
+\input{macros/general}
+\input{macros/languages}
+\input{macros/symbols}
+\input{macros/abbreviations}
+
+
 %%
 %% end of the preamble, start of the body of the document source.
 \begin{document}
@@ -154,7 +161,7 @@
 %% article.
 \begin{abstract}
 
-\input{sections/abstract}
+  \input{sections/abstract}
 
 \end{abstract}
 
@@ -163,28 +170,28 @@
 %% Please copy and paste the code instead of the example below.
 %%
 \begin{CCSXML}
-<ccs2012>
- <concept>
+  <ccs2012>
+  <concept>
   <concept_id>10010520.10010553.10010562</concept_id>
   <concept_desc>Computer systems organization~Embedded systems</concept_desc>
   <concept_significance>500</concept_significance>
- </concept>
- <concept>
+  </concept>
+  <concept>
   <concept_id>10010520.10010575.10010755</concept_id>
   <concept_desc>Computer systems organization~Redundancy</concept_desc>
   <concept_significance>300</concept_significance>
- </concept>
- <concept>
+  </concept>
+  <concept>
   <concept_id>10010520.10010553.10010554</concept_id>
   <concept_desc>Computer systems organization~Robotics</concept_desc>
   <concept_significance>100</concept_significance>
- </concept>
- <concept>
+  </concept>
+  <concept>
   <concept_id>10003033.10003083.10003095</concept_id>
   <concept_desc>Networks~Network reliability</concept_desc>
   <concept_significance>100</concept_significance>
- </concept>
-</ccs2012>
+  </concept>
+  </ccs2012>
 \end{CCSXML}
 
 \ccsdesc[500]{Computer systems organization~Embedded systems}
@@ -215,7 +222,7 @@
 
 
 \begin{acks}
-\input{sections/acknowledgements}
+  \input{sections/acknowledgements}
 \end{acks}
 
 %% The next two lines define the bibliography style to be used, and
