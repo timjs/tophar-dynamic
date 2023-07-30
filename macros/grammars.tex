@@ -1,0 +1,100 @@
+%% Grammars %%
+
+\newmacro{G-Types}{
+  \begin{grammar*}
+    \tau::=&                     & Types \\
+      \mid& \tau_1 \to \tau_2    & – function type \\
+      \mid& \Reference \tau      & – reference type \\
+      \mid& \Task \tau           & – task type \\
+      \mid& \Unit                & – unit type \\
+      \mid& \tau_1 \times \tau_2 & – product type \\
+      \mid& \List \tau           & – list type \\
+      \mid& \pi                  & – primitive type \\
+    \pi ::=&                     & Primitive types \\
+      \mid& \Bool                & – boolean type \\
+      \mid& \Int                 & – integer type \\
+      \mid& \String              & – string type \\
+    \beta ::=&                   & Basic types \\
+      \mid& \Unit                & – unit type \\
+      \mid& \beta_1 \times \beta_2 & – product type \\
+      \mid& \List \beta          & – list type \\
+      \mid& \pi                  & – primitive type \\
+  \end{grammar*}
+}
+
+\newmacro{G-Expression-contexts}{
+  \begin{grammar*}
+    E::=&                      & Contexts         \\
+  \addlinespace
+    \mid& \cdot                & – hole             \\
+    \mid& \lambda m:\tau.\ E   & – abstraction      \\
+    \mid& E_1\ E_2             & – application      \\
+    \mid& x                    & – variable         \\
+    \mid& h                    & – heap location    \\
+  \addlinespace
+    \mid& \Ite{E_1}{E_2}{E_3}  & – conditional      \\
+    \mid& \unit                & – unit             \\
+    \mid& \record{E_1, E_2}    & – tuple            \\
+  \addlinespace
+    \mid& c                    & – constant         \\
+    \mid& P                    & – pre-task context \\
+  \end{grammar*}
+}
+
+\newmacro{G-Tasks}{
+  \begin{grammar*}
+    d::=&                     & Editors \\
+    \mid& \Enter^{\nu}\beta   & – unvalued         editor \\
+    \mid& \Update^{\nu} b     & – valued           editor \\
+    \mid& \View^{\nu} b       & – valued read-only editor \\
+    \mid& \Change^{\nu} h     & – shared           editor \\
+    \mid& \Watch^{\nu} h      & – shared read-only editor \\
+    t::=&                     & Tasks            \\
+    \mid& d                   & – editor           \\
+    \mid& e_1 \Trans t_2      & – transform        \\
+    \mid& t_1 \Pair t_2       & – pair             \\
+    \mid& \Lift v             & – lift             \\
+    \mid& t_1 \Choose t_2     & – choose           \\
+    \mid& \Fail               & – fail             \\
+    \mid& t_1 \Step e_2       & – step             \\
+    \mid& \Share v            & – share            \\
+    \mid& h_1 \Assign v_2     & – assign           \\
+  \end{grammar*}
+}
+
+\newmacro{G-Task-contexts}{
+  \begin{grammar*}
+    P::=&                     & Pre-task contexts\\
+  \addlinespace
+    \mid& \Enter^{\nu}\beta   & – unvalued         editor \\
+    \mid& \Update^{\nu} E     & – valued           editor \\
+    \mid& \Change^{\nu} E     & – shared           editor \\
+    \mid& \View^{\nu} E       & – valued read-only editor \\
+    \mid& \Watch^{\nu} E      & – shared read-only editor \\
+  \addlinespace
+    \mid& E_1 \Trans E_2      & – transform        \\
+    \mid& E_1 \Pair E_2       & – pair             \\
+    \mid& \Lift E             & – lift             \\
+    \mid& E_1 \Choose E_2     & – choose           \\
+    \mid& \Fail               & – fail             \\
+    \mid& E_1 \Step E_2       & – step             \\
+  \addlinespace
+    \mid& \Share E            & – share            \\
+    \mid& E_1 \Assign E_2     & – assign           \\
+  \end{grammar*}
+}
+
+\newmacro{G-Static-Tasks}{
+  \begin{grammar*}
+      s::=&                 & Static tasks     \\
+    \addlinespace
+      \mid& \Update^k b     & – valued           editor \\
+      \mid& \Change^k h     & – shared           editor \\
+      \mid& \View^k b       & – valued read-only editor \\
+      \mid& \Watch^k h      & – shared read-only editor \\
+    \addlinespace
+      \mid& v_1 \Trans s_2  & – transform        \\
+      \mid& s_1 \Pair s_2   & – pair             \\
+      \mid& \Lift v         & – lift             \\
+  \end{grammar*}
+}

@@ -4,4 +4,111 @@
 
 \subsection{Language}
 
+Here we describe the \TOPHAT\ language as presented in \cite{Steenvoorden22}.
+This slightly deviates from other presentations in \cite{conf/ppdp/SteenvoordenNK19,conf/ifl/NausSK19,conf/sfp/NausS20}.
+The \TOPHAT\ language consists of two layers: the expression layer and the task layer.
+The expression layer is a \STLC\ with primitive types, pairs, lists and references.
+We use pattern matching to project the fields of pairs.
+The grammar of the task layer is given in \cref{fig:task-grammar}.
+Tasks can be editors or combinators.
+
+\begin{figure}[h]
+  \usemacro{G-Tasks}
+  \caption{Task grammar}
+  \label{fig:task-grammar}
+\end{figure}
+
+Editors are the interaction points of a task program.
+They can be thought of as an abstraction over widgets or form input fields.
+Editors are type safe,
+they only accept values of their specified type.
+The type of an editor can also be used to (generically) render an user interface.
+For example,
+an editor of type $\Bool$ could be rendered as a check box,
+while end users could interact with an editor of type $\Location$ by putting a pin on a map.
+
+Combinators unite smaller tasks into bigger ones.
+The pair combinator ($t_1 \Pair t_2$) for example,
+pairs two tasks so that both can be worked on concurrently.
+The result thereof is a pair containing both the results of $t_1$ and $t_2$.
+The choose combinator ($t_1 \Choose t_2$) on the other hand,
+results in either the result of $t_1$ or $t_2$,
+depending on which task first has a result.
+The most important combinator is the step combinator.
+The task $t_1 \Step e_2$ decides when to transition from task $t_1$
+to the task calculated by its continuation $e_2$.
+
+% \todo{shares}
+
+\cref{fig:typing-grammar} shows the grammar of types.
+The typing rules of all tasks can be found in \cref{fig:typing-rules}.
+Note that editors and references can only contain values of basic types $\beta$.
+In particular, editors and references cannot contain functions or tasks themselves.
+The reason for this restriction is two fold.
+First, prohibiting references to functions keeps our language total.
+This is necessary for the symbolic execution to not enter an infinite loop.
+Second, restricting editors to only contain basic values
+guarantees one can present these values to end users (print them)
+and receive new inputs from end users (parse them).
+Arbitrary tasks and functions do not have this property.
+
+\begin{figure}[t]
+  \usemacro{G-Types}
+  \caption{Typing grammar}
+  \label{fig:typing-grammar}
+\end{figure}
+
+\begin{figure}[t]
+  % \small
+  \begin{mathpar}
+      \boxed{\RelationT}    \\
+      \userule{T-Enter}     \quad
+      \userule{T-Update}    \quad
+      \userule{T-View}      \\
+      \userule{T-Change}    \quad
+      \userule{T-Watch}     \\
+      \userule{T-Trans}     \\
+      \userule{T-Pair}      \quad
+      \userule{T-Lift}      \\
+      \userule{T-Choose}    \quad
+      \userule{T-Fail}      \\
+      \userule{T-Step}      \\
+      \userule{T-Share}     \quad
+      \userule{T-Assign}
+  \end{mathpar}
+  \caption{Typing rules}
+  \label{fig:typing-rules}
+\end{figure}
+
+
 \subsection{Semantics}
+
+\TOPHAT\ semantics consist of three layers: the host layer, the internal layer, and the external layer.
+
+\begin{figure}[h]
+  \usemacro{P-Semantic-Layers}
+  \caption{Semantic functions and their relation
+    (read $x \bullet\!\!\raisebox{-0.1ex}{\mbox{–}}\ y$ as `$x$ makes use of $y$')}
+  \label{fig:semantic-layers}
+\end{figure}
+
+\begin{itemize}
+  \item
+    The \emph{host layer} is responsible for evaluating expressions in our host language,
+    the \STLC\ with basic types and references.
+    This layer only contains big-step evaluation relation ($\evaluate$).
+  \item
+    The \emph{internal layer} only operates on tasks.
+    It normalises tasks so that they can be presented to end users to interact with.
+    This layer contains the big-step normalisation ($\normalise$) and fixation ($\fixate$) relations.
+  \item
+    The \emph{external layer} takes inputs from end users and rewrites tasks based on this input.
+    This layer contains two labelled small-step handling ($\handle{\iota}$) and interaction ($\interact{\iota}$) relations.
+\end{itemize}
+
+Next to these semantic relations, \TOPHAT\ uses \emph{observations} on tasks to decide which semantic rule will fire.
+These observations include, amongst others,
+the value of a task,
+if a task is failing or not,
+and the set of possible inputs a task can handle.
+\cref{fig:semantic-layers} shows an overview of all semantic relations and observations used in each layer.

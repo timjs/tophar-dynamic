@@ -307,7 +307,7 @@
   {\end{tabular}\end{block}}
 \newenvironment*{grammar*}
   %%NOTE: the `@{}` suppreses `\tabcolsep` before the first column
-  {\begin{block}\begin{tabular}{@{}R>{\quad}L>{\quad}l}}
+  {\begin{block}\begin{tabular}{@{}RLl}}
   {\end{tabular}\end{block}}
 
 
@@ -357,7 +357,7 @@
       {\dfrac{#2}{#3}\ #4}
   }}
 
-\newmacro{newrule}[4][4]
+\newmacro{newrule}[4] %[4]
   {\newmacro{#1}{\placerule[#1]{#2}{#3}[#4]}}
 \newmacro{userule}
   {\usemacro}

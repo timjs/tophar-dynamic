@@ -1,0 +1,1120 @@
+
+%% Typing %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newmacro{RelationT}
+  {\Gamma,\Sigma \infers e : \tau}
+
+
+\newrule{T-Bool}
+  {c\in B}
+  {\Gamma,\Sigma \infers c : \Bool}
+  {}
+
+\newrule{T-Int}
+  {c\in I}
+  {\Gamma,\Sigma \infers c : \Int}
+  {}
+
+\newrule{T-String}
+  {c\in S}
+  {\Gamma,\Sigma \infers c : \String}
+  {}
+
+
+\newrule{T-Unit}
+  {}
+  {\Gamma,\Sigma \infers \unit : \Unit}
+  {}
+
+
+\newrule{T-Var}
+  {x : \tau \in \Gamma}
+  {\Gamma,\Sigma \infers x : \tau}
+  {}
+
+\newrule{T-Label}
+  {}
+  {\Gamma,\Sigma \infers l' \As \variant{\many{l}} : \variant{\many{l}}}
+  {}
+
+\newrule{T-Sym}
+  {z : \beta \in \Gamma}
+  {\Gamma,\Sigma \infers z : \beta}
+  {}
+
+\newrule{T-Loc}
+  {h : \beta \in \Sigma}
+  {\Gamma,\Sigma \infers h : \Reference \beta}
+  {}
+
+
+\newrule{T-Abs}
+  {\infers m : \tau \To \Delta \Quad
+   \Gamma \cup \Delta,\Sigma \infers e:\tau'}
+  {\Gamma,\Sigma \infers \lambda m : \tau . e :\tau \to \tau'}
+  {}
+
+\newrule{T-App}
+  {\Gamma,\Sigma \infers e_1 : \tau' \to \tau \Quad
+   \Gamma,\Sigma \infers e_2 : \tau'}
+  {\Gamma,\Sigma \infers e_1\ e_2 : \tau}
+  {}
+
+
+\newrule{T-If}
+  {\Gamma,\Sigma \infers e_1 : \Bool \Quad
+   \Gamma,\Sigma \infers e_2 : \tau \Quad
+   \Gamma,\Sigma \infers e_3 : \tau}
+  {\Gamma,\Sigma \infers \Ite{e_1}{e_2}{e_3} : \tau}
+  {}
+
+
+\newrule{T-Tuple}
+    {\Gamma,\Sigma \infers e_1 : \tau_1  \Quad
+     \Gamma,\Sigma \infers e_2 : \tau_2}
+    {\Gamma,\Sigma \infers \record{e_1, e_2} : \tau_1 \times \tau_2}
+    {}
+
+\newrule{T-First}
+  {\Gamma,\Sigma \infers e : \tau_1 \times \tau_2}
+  {\Gamma,\Sigma \infers \Fst\ e : \tau_1}
+  {}
+
+\newrule{T-Second}
+  {\Gamma,\Sigma \infers e : \tau_1 \times \tau_2}
+  {\Gamma,\Sigma \infers \Snd\ e : \tau_2}
+  {}
+
+\newrule{T-Record}
+  {\foreach{l} \Quad
+   \Gamma,\Sigma \infers e_l : \tau_l}
+  {\Gamma,\Sigma \infers \record{\many{l=e_l}} : \record{\many{l:\tau_l}}}
+  {}
+
+
+\newrule{T-Variant}
+  {l' \in \many{l} \Quad
+   \Gamma,\Sigma \infers e : \tau_{l'}}
+  {\Gamma,\Sigma \infers l'\ e \As \variant{\many{l:\tau_l}} : \variant{\many{l:\tau_l}}}
+  {}
+
+% \newrule{T-Case-Var}
+%   {\split
+%      {\Gamma,\Sigma \infers e : \variant{\many{l:\tau_l}}}
+%      {\foreach{l} \Quad
+%       \infers m_l : \tau_l \To \Delta_l \Quad
+%       \Gamma\cup\Delta_l,\Sigma \infers e_l : \tau}}
+%   {\Gamma,\Sigma \infers \Case e \Of \block{\many{l\ m_l \mapsto e_l}} : \tau}
+%   {}
+
+\newrule{T-Case}%-Enum
+  {\Gamma,\Sigma \infers e : \variant{\many{l}} \Quad
+   \foreach{l} \Quad
+   \Gamma,\Sigma \infers e_l : \tau}
+  {\Gamma,\Sigma \infers \Case e \Of \block{\many{l \mapsto e_l}} : \tau}
+  {}
+
+
+\newrule{T-Nil}
+  {}
+  {\Gamma,\Sigma \infers [\ ]_\tau : \List \tau}
+  {}
+
+\newrule{T-Cons}
+  {\Gamma,\Sigma \infers e_1 : \tau \Quad
+   \Gamma,\Sigma \infers e_2 : \List \tau}
+  {\Gamma,\Sigma \infers e_1 :: e_2 : \List \tau}
+  {}
+
+\newrule{T-Head}
+  {\Gamma,\Sigma \infers e : \List\tau}
+  {\Gamma,\Sigma \infers \Head e : \tau}
+  {}
+
+\newrule{T-Tail}
+  {\Gamma,\Sigma \infers e : \List\tau}
+  {\Gamma,\Sigma \infers \Tail e : \List\tau}
+  {}
+
+\newrule{T-Fold}
+  {\Gamma,\Sigma \infers e_1 : \List\tau \Quad
+   \Gamma,\Sigma \infers e_2 : \tau \to \tau' \to \tau' \Quad
+   \Gamma,\Sigma \infers e_3 : \tau'}
+  {\Gamma,\Sigma \infers \Fwo{e_1}{e_2}{e_3} : \tau'}
+  {}
+
+% \newrule{T-Foldl}
+%   {\Gamma,\Sigma \infers e_1 : \tau' -> \tau -> \tau' \Quad
+%    \Gamma,\Sigma \infers e_2 : \tau' \Quad
+%    \Gamma,\Sigma \infers e_3 : \List\tau}
+%   {\Gamma,\Sigma \infers \Foldl e_1\ e_2\ e_3 : \tau'}
+
+\newmacro{RelationTT}
+  {\Gamma,\Sigma \infers p : \Task\ \tau}
+
+
+\newrule{T-Editor}
+  {\Gamma,\Sigma \infers d : \Task \tau}
+  {\Gamma,\Sigma \infers d^{(\nu)} : \Task \tau}
+  {}
+
+\newrule{T-Lift}
+  {\Gamma,\Sigma \infers e : \tau}
+  {\Gamma,\Sigma \infers \Lift e : \Task \tau}
+  {}
+
+\newrule{T-Enter}
+  {}
+  {\Gamma,\Sigma \infers \Enter^\nu \beta : \Task \beta}
+  {}
+
+\newrule{T-Update}
+  {\Gamma,\Sigma \infers e : \beta}
+  {\Gamma,\Sigma \infers \Update^\nu e : \Task \beta}
+  {}
+
+\newrule{T-View}
+  {\Gamma,\Sigma \infers e : \beta}
+  {\Gamma,\Sigma \infers \View^\nu e : \Task \beta}
+  {}
+
+\newrule{T-Select}
+  {\text{for each $l$} \Quad
+   \Gamma,\Sigma \infers e_l : \Task \tau}
+  {\Gamma,\Sigma \infers \Select^\nu \block{\many{l \mapsto e_l}} : \Task \tau}
+  {}
+
+
+\newrule{T-Pair}
+  {\Gamma,\Sigma \infers e_1 : \Task \tau_1 \Quad
+   \Gamma,\Sigma \infers e_2 : \Task \tau_2}
+  {\Gamma,\Sigma \infers e_1 \Pair e_2 : \Task\ (\tau_1 \times \tau_2)}
+  {}
+
+\newrule{T-Choose}
+  {\Gamma,\Sigma \infers e_1 : \Task \tau \Quad
+   \Gamma,\Sigma \infers e_2 : \Task \tau}
+  {\Gamma,\Sigma \infers e_1 \Choose e_2 : \Task \tau}
+  {}
+
+\newrule{T-Fail}
+  {}
+  {\Gamma,\Sigma \infers \Fail : \Task \tau}
+  {}
+
+
+\newrule{T-Trans}
+  {\Gamma,\Sigma \infers e_1 : \tau_1 \to \tau_2 \Quad
+   \Gamma,\Sigma \infers e_2 : \Task \tau_1}
+  {\Gamma,\Sigma \infers e_1 \Trans e_2 : \Task \tau_2}
+  {}
+
+\newrule{T-Step}
+  {\Gamma,\Sigma \infers e_1 : \Task \tau_1 \Quad
+   \Gamma,\Sigma \infers e_2 : \tau_1 \to \Task \tau_2}
+  {\Gamma,\Sigma \infers e_1 \Step e_2 : \Task \tau_2}
+  {}
+
+\newrule{T-Repeat}
+  {\Gamma,\Sigma \infers e : \Task \tau}
+  {\Gamma,\Sigma \infers \Repeat e : \Task \tau}
+  {}
+
+\newrule{T-Assert}
+  {\Gamma,\Sigma \infers e : \Bool}
+  {\Gamma,\Sigma \infers \Assert e : \Task \Bool}
+  {}
+
+\newrule{T-Execute}
+  {\Gamma,\Sigma \infers x : \tau' \to \Task\ \tau \Quad
+   \Gamma,\Sigma \infers e : \tau'}
+  {\Gamma,\Sigma \infers x\ e : \Task\ \tau}
+  {}
+
+\newrule{T-Share}
+  {\Gamma,\Sigma \infers e: \beta}
+  {\Gamma,\Sigma \infers \Share e : \Task\ (\Reference \beta)}
+  {}
+
+\newrule{T-Assign}
+  {\Gamma,\Sigma \infers e_1 : \Reference \beta \Quad
+   \Gamma,\Sigma \infers e_2 : \beta}
+  {\Gamma,\Sigma \infers e_1 \Assign e_2 : \Task \Unit}
+  {}
+
+\newrule{T-Change}
+  {\Gamma,\Sigma \infers e : \Reference \beta}
+  {\Gamma,\Sigma \infers \Change^\nu e : \Task \beta}
+  {}
+
+\newrule{T-Watch}
+  {\Gamma,\Sigma \infers e : \Reference \beta}
+  {\Gamma,\Sigma \infers \Watch^\nu e : \Task \beta}
+  {}
+
+
+
+\newmacro{RelationTR}
+  {\Gamma,\Sigma \infers p : \shaded{\Task\ \rho}}
+
+\newrule{R-Editor}
+  {\Gamma,\Sigma \infers d : \Task \tau}
+  {\Gamma,\Sigma \infers d^{(\nu)} : \shaded{\Task\ \record{\lbl{value}:\tau}}}
+  {}
+
+\newrule{R-Enter}
+  {}
+  {\Gamma,\Sigma \infers \Enter^\nu_\beta : \shaded{\Task\ \record{\lbl{value}:\beta}}}
+  {}
+
+\newrule{R-Update}
+  {\Gamma,\Sigma \infers e : \beta}
+  {\Gamma,\Sigma \infers \Update^\nu e : \shaded{\Task\ \record{\lbl{value}:\beta}}}
+  {}
+
+\newrule{R-View}
+  {\Gamma,\Sigma \infers e : \beta}
+  {\Gamma,\Sigma \infers \View^\nu e : \shaded{\Task\ \record{\lbl{value}:\beta}}}
+  {}
+
+
+\newrule{R-Lift}
+  {\Gamma,\Sigma \infers e : \tau}
+  {\Gamma,\Sigma \infers \Lift e : \shaded{\Task\ \record{\lbl{value}:\tau}}}
+  {}
+
+\newrule{R-Pair}
+  {\Gamma,\Sigma \infers e_1 : \shaded{\Task \rho_1} \Quad
+   \Gamma,\Sigma \infers e_2 : \shaded{\Task \rho_2}}
+  {\Gamma,\Sigma \infers e_1 \Pair e_2 : \shaded{\Task\ (\rho_1 \uplus \rho_2)}}
+  {}
+
+\newrule{R-Choose}
+  {\Gamma,\Sigma \infers e_1 : \shaded{\Task \rho_1} \Quad
+   \Gamma,\Sigma \infers e_2 : \shaded{\Task \rho_2}}
+  {\Gamma,\Sigma \infers e_1 \Choose e_2 : \shaded{\Task\ (\rho_1 \cap \rho_2)}}
+  {}
+
+\newrule{R-Fail}
+  {}
+  {\Gamma,\Sigma \infers \Fail : \shaded{\Task \rho}}
+  {}
+
+
+\newrule{R-Trans}
+  {\Gamma,\Sigma \infers e_1 : \shaded{\rho_1 \to \rho_2} \Quad
+   \Gamma,\Sigma \infers e_2 : \shaded{\Task \rho_1}}
+  {\Gamma,\Sigma \infers e_1 \Trans e_2 : \shaded{\Task \rho_2}}
+  {}
+
+\newrule{R-Step}
+  {\Gamma,\Sigma \infers e_1 : \shaded{\Task \rho_1} \Quad
+   \Gamma,\Sigma \infers e_2 : \shaded{\rho_1 \to \Task \rho_2}}
+  {\Gamma,\Sigma \infers e_1 \Step e_2 : \shaded{\Task \rho_2}}
+  {}
+
+\newrule{R-Assert}
+  {\Gamma,\Sigma \infers e : \Bool}
+  {\Gamma,\Sigma \infers \Assert e : \shaded{\Task\ \record{\lbl{value:\Bool}}}}
+  {}
+
+\newrule{R-Execute}
+  {\Gamma,\Sigma \infers x : \shaded{\rho' \to \Task\ \rho} \Quad
+   \Gamma,\Sigma \infers e : \shaded{\rho'}}
+  {\Gamma,\Sigma \infers x\ e : \shaded{\Task\ \rho}}
+  {}
+
+\newrule{R-Share}
+  {\Gamma,\Sigma \infers e: \beta}
+  {\Gamma,\Sigma \infers \Share e : \shaded{\Task\ \record{\lbl{value}:\Reference \beta}}}
+  {}
+
+\newrule{R-Change}
+  {\Gamma,\Sigma \infers e : \Reference \beta}
+  {\Gamma,\Sigma \infers \Change^\nu e : \shaded{\Task\ \record{\lbl{value}:\beta}}}
+  {}
+
+\newrule{R-Watch}
+  {\Gamma,\Sigma \infers e : \Reference \beta}
+  {\Gamma,\Sigma \infers \Watch^\nu e : \shaded{\Task\ \record{\lbl{value}:\beta}}}
+  {}
+
+\newrule{R-Assign}
+  {\Gamma,\Sigma \infers e_1 : \Reference \beta \Quad
+   \Gamma,\Sigma \infers e_2 : \beta}
+  {\Gamma,\Sigma \infers e_1 \Assign e_2 : \shaded{\Task\ \record{}}}
+  {}
+
+
+%% Matching %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newmacro{RelationM}
+  {\infers m : \tau \To \Delta}
+
+
+\newrule{M-Ignore}
+  {}
+  {\infers \_ : \tau \To \nothing}
+  {}
+
+\newrule{M-Bind}
+  {}
+  {\infers x : \tau \To \set{x : \tau}}
+  {}
+
+\newrule{M-Tuple}
+  {\infers m_1 : \tau_1 \To \Delta_1 \Quad
+   \infers m_2 : \tau_2 \To \Delta_2}
+  {\infers \record{m_1, m_2} : \tau_1 \times \tau_2\To \Delta_1 \cup \Delta_2}
+  {}
+
+\newrule{M-Unit}
+  {}
+  {\infers \unit : \Unit \To \nothing}
+  {}
+
+\newrule{M-List}
+  {\infers m_1 : \tau \To \Delta_1 \Quad
+   \infers m_2 : \List \tau \To \Delta_2}
+  {\infers m_1 :: m_2 : \List \tau \To \Delta_1 \cup \Delta_2}
+  {}
+
+\newrule{M-Rename}
+  {\text{for each $x$ with $x = y$} \Quad
+   \infers m_x : \tau_y \To \Delta_x}
+  {\infers \record{x \matches m_x\ ^{x \in X}} : \record{y : \tau_y\ ^{y \in Y}} \To \bigcup_x \Delta_x}
+  {X \subseteq Y}
+
+\newrule{M-Unpack}
+  {\text{for each $l$} \Quad
+   \infers l : \tau_l \To \Delta_l}
+  {\infers \record{..} : \record{\many{l : \tau_l}} \To \bigcup_l \Delta_l}
+  {}
+
+
+%% Substitution %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newmacro{RelationS}
+  {m \sim v \To \theta}
+
+
+\newrule{S-Ignore}
+  {}
+  {\_ \sim v \To []}
+  {}
+
+\newrule{S-Bind}
+  {}
+  {x \sim v \To [x \mapsto v]}
+  {}
+
+\newrule{S-Tuple}
+  {m_1 \sim v_1 \To \theta_1 \Quad
+   m_2 \sim v_2 \To \theta_2}
+  {\record{m_1, m_2} \sim \record{v_1, v_2} \To \theta_1 \circ \theta_2}
+  {}
+
+\newrule{S-Unit}
+  {}
+  {\unit \sim \unit \To []}
+  {}
+
+\newrule{S-List}
+  {m_1 \sim v_1 \To \theta_1 \Quad
+   m_2 \sim v_2 \To \theta_2}
+  {m_1 :: m_2 \sim v_1 :: v_2 \To \theta_1 \circ \theta_2}
+  {}
+
+\newrule{S-Rename}
+  {\foreach{x \text{ with } x=y} \Quad
+   m_x \sim v_y \To \theta_x}
+  {\record{{x \matches m_x\ ^{x \in X}}} \sim \record{{y = v_y\ ^{y \in Y}}} \To \underset{x}{\bigcirc}\ \theta_x}
+  {X \subseteq Y}
+
+\newrule{S-Unpack}
+  {\foreach{l} \Quad
+   l \sim v_l \To \theta_l}
+  {\record{..} \sim \record{\many{l=v_l}} \To \underset{l}{\bigcirc}\ \theta_l}
+  {}
+
+
+
+%% Evaluating %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newmacro{RelationE}
+  {e \evaluate v}
+
+
+\newrule{E-Value}
+  {}
+  {v  \evaluate v}
+  {}
+
+\newrule{E-App}
+  {e_1 \evaluate \lambda m:\tau.e_1' \Quad
+   e_2 \evaluate v_2 \Quad
+   m \sim v_2 \To \theta \Quad
+   \theta(e_1') \evaluate v_1}
+  {e_1\ e_2 \evaluate v_1}
+  {}
+
+
+\newrule{E-IfTrue}
+  {e_1 \evaluate \True \Quad
+   e_2 \evaluate v_2}
+  {\Ite{e_1}{e_2}{e_3} \evaluate v_2}
+  {}
+
+\newrule{E-IfFalse}
+  {e_1 \evaluate \False \Quad
+   e_3 \evaluate v_3}
+  {\Ite{e_1}{e_2}{e_3} \evaluate v_3}
+  {}
+
+
+\newrule{E-Tuple}
+  {e_1 \evaluate v_1 \Quad
+   e_2 \evaluate v_2}
+  {\record{e_1,e_2} \evaluate \record{v_1,v_2}}
+  {}
+
+\newrule{E-First}
+  {e \evaluate \record{v_1,v_2}}
+  {\Fst e \evaluate v_1}
+  {}
+
+\newrule{E-Second}
+  {e \evaluate \record{v_1,v_2}}
+  {\Snd e \evaluate v_2}
+  {}
+
+
+\newrule{E-Record}
+  {\foreach{l} \Quad
+   e_l \evaluate v_l}
+  {\record{\many{l=e_l}} \evaluate \record{\many{l=v_l}}}
+  {}
+
+
+\newrule{E-Variant}
+  {e \evaluate v}
+  %NOTE: We could erease the type of the variant, but then we would not have v \subseteq e!
+  {l\ e \As \tau \evaluate l\ v \As \tau}
+  {}
+
+% \newrule{E-Case}
+%   {e \evaluate l'\ v \As \tau \Quad
+%    %NOTE: We do not need to check for l' \in \many{l} because that's already done by type checking!
+%    m_{l'} \sim v \To \theta \Quad
+%    \theta(e_{l'}) \evaluate v_{l'}}
+%   {\Case e \Of \many{l\ m_l \mapsto e_l} \evaluate v_{l'}}
+%   {l' \in \many{l}}
+
+\newrule{E-Case}%-Enum
+  {e \evaluate l' \As \tau \Quad
+   e_{l'} \evaluate v_{l'}}
+  {\Case e \Of \block{\many{l \mapsto e_l}} \evaluate v_{l'}}
+  {}
+  %NOTE: We do not need to check for l' \in \many{l} because that's already done by type checking!
+  % {l' \in \many{l}}
+
+
+\newrule{E-Cons}
+  {e_1 \evaluate v_1 \Quad
+   e_2 \evaluate v_2}
+  {e_1 :: e_2 \evaluate v_1 :: v_2}
+  {}
+
+\newrule{E-Fold-Nil}
+  {e_1 \evaluate [\ ]_\tau \Quad
+   e_3 \evaluate v_3}
+  {\Fwo{e_1}{e_2}{e_3} \evaluate v_3}
+  {}
+\newrule{E-Fold-Cons}
+  {e_1 \evaluate v_1 :: v_1' \Quad
+   e_2 \evaluate v_2 \Quad
+   v_2\ v_1\ (\Fwo{v_1'}{v_2}{e_3}) \evaluate v_3}
+  {\Fwo{e_1}{e_2}{e_3} \evaluate v_3}
+  {}
+
+\newrule{E-Head}
+  {e \evaluate v_1 :: v_2}
+  {\Head e \evaluate v_1}
+  {}
+
+\newrule{E-Tail}
+  {e \evaluate v_1 :: v_2}
+  {\Tail e \evaluate v_2}
+  {}
+
+
+\newrule{E-Lift}
+  {e \evaluate v}
+  {\Lift e \evaluate \Lift v}
+  {}
+
+\newrule{E-Enter}
+  {}
+  {\Enter^\nu\beta \evaluate \Enter^\nu\beta}
+  {}
+
+\newrule{E-Update}
+  {e \evaluate b}
+  {\Update^\nu e \evaluate \Update^\nu b}
+  {}
+
+\newrule{E-View}
+  {e \evaluate b}
+  {\View^\nu e \evaluate \View^\nu b}
+  {}
+
+\newrule{E-Select}
+  {\text{for each $l$} \Quad
+   e_l \evaluate t_l}
+  {\Select^\nu \block{\many{l \mapsto e_l}} \evaluate \Select^\nu \block{\many{l \mapsto t_l}}}
+  {}
+
+
+\newrule{E-Pair}
+  {e_1 \evaluate t_1 \Quad
+   e_2 \evaluate t_2}
+  {e_1 \Pair e_2 \evaluate t_1 \Pair t_2}
+  {}
+
+\newrule{E-Choose}
+  {e_1 \evaluate t_1 \Quad
+   e_2 \evaluate t_2}
+  {e_1 \Choose e_2 \evaluate t_1 \Choose t_2}
+  {}
+
+
+\newrule{E-Trans}
+  {e_1 \evaluate v_1 \Quad
+   e_2 \evaluate t_2}
+  {e_1 \Trans e_2 \evaluate v_1 \Trans t_2}
+  {}
+
+\newrule{E-Step}
+  {e_1 \evaluate t_1 \Quad
+   e_2 \evaluate v_2}
+  {e_1 \Step e_2 \evaluate t_1 \Step v_2}
+  {}
+
+\newrule{E-Fail}
+  {}
+  {\Fail \evaluate \Fail}
+  {}
+
+\newrule{E-Repeat}
+  {e \evaluate t}
+  {\Repeat e \evaluate \Repeat t}
+  {}
+
+\newrule{E-Assert}
+  {}
+  {\Assert e \evaluate \Assert b}
+  {}
+
+
+\newrule{E-Share}
+  {e \evaluate b}
+  {\Share e \evaluate \Share b}
+  {}
+
+\newrule{E-Assign}
+  {e_1 \evaluate h \Quad
+   e_2 \evaluate b}
+  {e_1 \Assign e_2 \evaluate h \Assign b}
+  {}
+
+\newrule{E-Change}
+  {e \evaluate h}
+  {\Change^\nu e \evaluate \Change^\nu h}
+  {}
+
+\newrule{E-Watch}
+  {e \evaluate h}
+  {\Watch^\nu e \evaluate \Watch^\nu h}
+  {}
+
+
+
+%% Normalisating %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newmacro{RelationN}
+  {t,\sigma \normalise n',\sigma',\delta'}
+
+
+%% Step %%
+
+\newrule{N-StepNone}
+  {t_1,\sigma \normalise n_1',\sigma',\delta'}
+  {t_1 \Step v_2,\sigma \normalise n_1' \Step v_2,\sigma',\delta'}
+  {\Value(n_1',\sigma') = \bot}
+
+\newrule{N-StepFail}
+  {t_1,\sigma \normalise n_1',\sigma',\delta' \Quad
+   v_2\ v_1 \evaluate t_2}
+  {t_1 \Step v_2,\sigma \normalise n_1' \Step v_2,\sigma',\delta'}
+  {\startcases
+     \NC \Value(n_1',\sigma') = v_1 \NR
+     \NC \Failing(t_2)              \NR
+   \stopcases}
+
+\newrule{N-StepWait}
+  {t_1,\sigma \normalise n_1',\sigma',\delta' \Quad
+   v_2\ v_1 \evaluate t_2}
+  {t_1 \Step v_2,\sigma \normalise n_1' \Step v_2,\sigma',\delta'}
+  {\startcases
+     \NC \Value(n_1',\sigma') = v_1  \NR
+     \NC \lnot\Failing(t_2)          \NR
+     \NC \Options(t_2) \neq \nothing \NR
+   \stopcases}
+
+\newrule{N-StepCont}
+  {t_1,\sigma \normalise n_1',\sigma',\delta'
+    \Quad v_2\ v_1 \evaluate t_2
+    \Quad t_2,\sigma' \normalise n_2',\sigma'',\delta''}
+  {t_1 \Step v_2,\sigma \normalise n_2',\sigma'',\delta'\cup\delta''}
+  {\startcases
+     \NC \Value(n_1',\sigma') = v_1 \NR
+     \NC \lnot\Failing(t_2)         \NR
+    %  \NC \Options(t_2) = \nothing   \NR
+   \stopcases}
+
+
+%% Choose %%
+
+\newrule{N-ChooseLeft}
+  {t_1,\sigma  \normalise n_1',\sigma',\delta'}
+  {t_1 \Choose t_2,\sigma \normalise n_1',\sigma',\delta'}
+  {\Value(n_1',\sigma') = v_1}
+
+\newrule{N-ChooseRight}
+  {t_1,\sigma  \normalise n_1',\sigma',\delta'  \Quad
+   t_2,\sigma' \normalise n_2',\sigma'',\delta''}
+  {t_1 \Choose t_2,\sigma \normalise n_2',\sigma'',\delta'\cup\delta''}
+  {\startcases
+     \NC \Value(n_1',\sigma') = \bot \NR
+     \NC \Value(n_2',\sigma'') = v_2 \NR
+   \stopcases}
+
+\newrule{N-ChooseNone}
+  {t_1,\sigma  \normalise n_1',\sigma',\delta'  \Quad
+   t_2,\sigma' \normalise n_2',\sigma'',\delta''}
+  {t_1 \Choose t_2,\sigma \normalise n_1' \Choose n_2',\sigma'',\delta'\cup\delta''}
+  {\startcases
+     \NC \Value(n_1',\sigma') = \bot  \NR
+     \NC \Value(n_2',\sigma'') = \bot \NR
+   \stopcases}
+
+
+%% Evaluate %%
+
+\newrule{N-Trans}
+	{t_2,\sigma \normalise n_2',\sigma',\delta'}
+	{v_1 \Trans t_2,\sigma \normalise v_1 \Trans n_2',\sigma',\delta'}
+  {}
+
+\newrule{N-Repeat}
+	{t,\sigma \normalise n',\sigma',\delta'}
+	{\Repeat t,\sigma \normalise n' \Step \lambda x. \Select\block{\lbl{Repeat} \mapsto \Repeat t, \lbl{Exit} \mapsto \Lift x},\sigma',\delta'}
+  {}
+
+\newrule{N-Pair}
+	{t_1,\sigma \normalise n_1',\sigma',\delta' \Quad
+	 t_2,\sigma' \normalise n_2',\sigma'',\delta''}
+	{t_1 \Pair t_2,\sigma \normalise n_1' \Pair n_2',\sigma'',\delta'\cup\delta''}
+  {}
+
+
+
+%% Internal %%
+
+%% FIXME: \not\in
+\newrule{N-Share}
+	{h \nin \mathrm{dom}(\sigma)}
+	{\Share b, \sigma \normalise \Lift h, [h \mapsto b]\sigma, \nothing}
+  {}
+
+\newrule{N-Assign}
+	{}
+	{h \Assign b, \sigma \normalise \Lift \unit, [h \mapsto b]\sigma, \set{h}}
+  {}
+
+\newrule{N-Assert}
+  {}
+  {\Assert b, \sigma \normalise \Lift b, \sigma, \nothing}
+  {}
+
+
+%% Editors %%
+
+\newrule{N-Name}
+  {}
+  {d^{(\epsilon)},\sigma \normalise d^{(k)},\sigma,\nothing}
+  {k \text{ is fresh}}
+
+\newrule{N-Editor}
+  {}
+  {d^{(k)},\sigma \normalise d^{(k)},\sigma,\nothing}
+  {}
+
+
+%% Ready %%
+
+\newrule{N-Lift}
+  {}
+  {\Lift v,\sigma \normalise \Lift v,\sigma,\nothing}
+  {}
+
+\newrule{N-Enter}
+  {}
+  {\Enter\beta,\sigma \normalise \Enter\beta,\sigma,\nothing}
+  {}
+
+\newrule{N-Update}
+  {}
+  {\Update b,\sigma \normalise \Update b,\sigma,\nothing}
+  {}
+
+\newrule{N-View}
+  {}
+  {\View b,\sigma \normalise \View b,\sigma,\nothing}
+  {}
+
+\newrule{N-Select}
+  {}
+  {\Select \block{\many{l_i \mapsto t_i}},\sigma \normalise \Select \block{\many{l_i \mapsto t_i}},\sigma,\nothing}
+  {}
+
+\newrule{N-Change}
+  {}
+  {\Change h,\sigma \normalise \Change h,\sigma,\nothing}
+  {}
+
+\newrule{N-Watch}
+  {}
+  {\Watch h,\sigma \normalise \Watch h,\sigma,\nothing}
+  {}
+
+\newrule{N-Fail}
+  {}
+  {\Fail,\sigma \normalise \Fail,\sigma,\nothing}
+  {}
+
+
+\newrule{N-Lift-Old}
+  {e,\sigma \evaluate t,\sigma' \Quad
+   t,\sigma' \stride t',\sigma''}
+  {e,\sigma \normalise t,\sigma'}
+  {\sigma'=\sigma'' \land t=t'}
+
+\newrule{N-Repeat-Old}
+  {e,\sigma \evaluate t,\sigma'  \Quad
+   t,\sigma' \stride t',\sigma''  \Quad
+   t',\sigma'' \normalise t'',\sigma'''}
+  {e,\sigma \normalise t'',\sigma'''}
+  {\sigma'\neq \sigma''\vee t\neq t'}
+
+
+%% Picking %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newmacro{RelationP}
+  {t \pick{l} t'}
+
+\newrule{P-Select}
+  {}
+  {\Select^\nu\block{\many{l \mapsto t_l}} \pick{l'} t_{l'}}
+  {\send{\nu}{l'} \in \Options(\Select^\nu\block{\many{l \mapsto t_l}})}
+  % {\startcases
+  %    \NC l' \in \many{l} \NR
+  %    \NC \send{\nu}{l'} \in \Options(\Select^\nu\block{\many{l \mapsto t_l}}) \NR
+  %  \stopcases}
+
+\newrule{P-Trans}
+  {t_1 \pick{l'} t_1'}
+  {e_1 \Trans t_1 \pick{l'} e_1 \Trans t_1'}
+  {}
+
+\newrule{P-Step}
+  {t_1 \pick{l'} t_1'}
+  {t_1 \Step v_2 \pick{l'} t_1' \Step v_2}
+  {}
+
+
+%% Handling %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newmacro{RelationH}
+  {n,\sigma \handle{\iota} t',\sigma',\delta'}
+
+
+%% Edit %%
+
+\newrule{H-Enter}
+  {}
+  {\Enter^k\beta,\sigma \handle{\send{k}{b'}} \Update^k b',\sigma,\nothing}
+  {b' : \beta}
+
+% \newrule{H-Select}
+%   {}
+%   {\Enter^k \Label\block{\many{S_i}},\sigma \handle{\ISelect S} \Update^k S,\sigma,\nothing}
+%   [S \in \many{S_i}]
+%   {}
+
+\newrule{H-Update}
+  {}
+  {\Update^k b,\sigma \handle{\send{k}{b'}} \Update^k b',\sigma,\nothing}
+  {b,b' : \beta}
+
+\newrule{H-Change}
+  {}
+  {\Change^k h,\sigma \handle{\send{k}{b'}} \Change^k h,[h \mapsto b']\sigma,\set{h}}
+  {\sigma(h),b' : \beta}
+
+
+%% Select %%
+
+\newrule{H-Select}
+	{\Select^k \block{\many{l \mapsto t_l}} \pick{l'} t_{l'}}
+	{\Select^k \block{\many{l \mapsto t_l}},\sigma \handle{\send{k}{l'}} t_{l'},\sigma,\nothing}
+  {}
+
+
+%% Step %%
+
+\newrule{H-Step}
+  {n_1,\sigma \handle{\iota} t_1',\sigma',\delta'}
+  {n_1 \Step v_2,\sigma \handle{\iota} t_1' \Step v_2,\sigma',\delta'}
+  {}
+
+\newrule{H-Preselect}
+	{v_2\ v_1 \evaluate t_2 \Quad
+   t_2 \pick{l'} t_2'}
+  {n_1 \Step v_2,\sigma \handle{\send{\epsilon}{l'}} t_2',\sigma,\nothing}
+  {\Value(n_1,\sigma) = v_1}
+
+\newrule{H-Preselect2}
+	{v_2\ v_1 \evaluate \Select^\epsilon \block{l_i \mapsto t_i} \Quad
+   \Select^k \block{l_i \mapsto t_i},\sigma \handle{\send{k}{l}} t_2',\sigma',\delta'}
+  {n_1 \Step v_2,\sigma \handle{\send{\epsilon}{l}} t_2',\sigma',\delta'}
+  {\Value(n_1,\sigma) = v_1, k \text{ fresh}}
+
+\newrule{H-Preselect3}
+	{v_2\ v_1 \evaluate \Select^\epsilon \block{l_i \mapsto t_i}}
+  {n_1 \Step v_2,\sigma \handle{\send{\epsilon}{l_j}} t_j,\sigma,\nothing}
+  {\Value(n_1,\sigma) = v_1,\send{\epsilon}{l_j} \in \Options(\Select^\epsilon \block{\many{l_i \mapsto t_i}})}
+
+
+%% Pass %%
+
+\newrule{H-Trans}
+	{n_2,\sigma \handle{\iota} t_2',\sigma',\delta'}
+	{v_1 \Trans n_2,\sigma \handle{\iota} v_1 \Trans t_2',\sigma',\delta'}
+  {}
+
+% \newrule{H-Repeat}
+%   {t \Step \lambda\_. \Repeat t,\sigma \handle{\iota} t',\sigma',\delta'}
+%   {\Repeat t,\sigma \handle{\iota} t',\sigma',\delta'}
+%   {}
+
+\newrule{H-Pair}
+  {n_1,\sigma \handle{\iota} t_1',\sigma',\delta' \Quad
+   n_1,\sigma' \handle{\iota} t_2',\sigma'',\delta''}
+  {n_1 \Pair n_1,\sigma \handle{\iota} t_1' \Pair t_2',\sigma'',\delta'\cup\delta''}
+  {}
+
+\newrule{H-PairFirst}
+  {n_1,\sigma \handle{\iota} t_1',\sigma',\delta'}
+  {n_1 \Pair n_2,\sigma \handle{\iota} t_1' \Pair n_2,\sigma',\delta'}
+  {}
+
+\newrule{H-PairSecond}
+  {n_2,\sigma \handle{\iota} t_2',\sigma',\delta'}
+  {n_1 \Pair n_2,\sigma \handle{\iota} n_1 \Pair t_2',\sigma',\delta'}
+  {}
+
+\newrule{H-Choose}
+  {n_1,\sigma \handle{\iota} t_1',\sigma',\delta' \Quad
+   n_2,\sigma' \handle{\iota} t_2',\sigma'',\delta''}
+  {n_1 \Choose n_2,\sigma \handle{\iota} t_1' \Choose t_2',\sigma'',\delta'\cup\delta''}
+  {}
+
+\newrule{H-ChooseFirst}
+  {n_1,\sigma \handle{\iota} t_1',\sigma',\delta'}
+  {n_1 \Choose n_2,\sigma \handle{\iota} t_1' \Choose n_2,\sigma',\delta'}
+  {}
+
+\newrule{H-ChooseSecond}
+  {n_2,\sigma \handle{\iota} t_2',\sigma',\delta'}
+  {n_1 \Choose n_2,\sigma \handle{\iota} n_1 \Choose t_2',\sigma',\delta'}
+  {}
+
+
+
+%% Fixation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newmacro{RelationF}
+  {t,\sigma,\delta \fixate n',\sigma'}
+
+\newrule{F-Done}
+  {t,\sigma \normalise n',\sigma',\delta'}
+  {t,\sigma,\delta \fixate n',\sigma'}
+  {(\delta \cup \delta') \cap \Watching(n') = \nothing}
+
+\newrule{F-Loop}
+  {t,\sigma \normalise n',\sigma',\delta' \Quad
+   n',\sigma',\delta' \fixate n'',\sigma''}
+  {t,\sigma,\delta \fixate n'',\sigma''}
+  {(\delta \cup \delta') \cap \Watching(n') \neq \nothing}
+
+
+
+%% Interaction %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newmacro{RelationI}
+  {n,\sigma \interact{\iota} n',\sigma'}
+
+
+\newrule{I-Handle}
+  {n,\sigma \handle{\iota} t',\sigma',\delta' \Quad
+   t',\sigma',\delta' \fixate n'',\sigma''}
+  {n,\sigma \interact{\iota} n'',\sigma''}
+  {}
+
+
+%% Simulations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newmacro{RelationSE}
+  {e \symevaluate v|_\phi}
+
+\newrule{SE-Value}
+  {}
+  {v  \symevaluate v\shaded{|_{\True}}}
+  {}
+
+\newrule{SE-Tuple}
+  {e_1 \symevaluate v_1\shaded{|_{\phi_1}} \Quad
+   e_2 \symevaluate v_2\shaded{|_{\phi_2}}}
+  {\record{e_1,e_2} \symevaluate \record{v_1,v_2}\shaded{|_{\phi_1 \land \phi_2}}}
+  {}
+
+
+\newrule{SE-IfTrue}
+  {e_1 \symevaluate b_1\shaded{|_{\phi_1}} \Quad
+   e_2 \symevaluate v_2\shaded{|_{\phi_2}}}
+  {\Ite{e_1}{e_2}{e_3} \symevaluate v_2\shaded{|_{\phi_1 \land \phi_2 \land b_1}}}
+  {}
+
+\newrule{SE-IfFalse}
+  {e_1 \symevaluate b_1\shaded{|_{\phi_1}} \Quad
+   e_3 \symevaluate v_3\shaded{|_{\phi_3}}}
+  {\Ite{e_1}{e_2}{e_3} \symevaluate v_3\shaded{|_{\phi_1 \land \phi_3 \land \lnot b_1}}}
+  {}
+
+\newrule{SE-Case}
+  {e   \symevaluate b\shaded{|_{\phi}} \Quad
+   e_l \symevaluate v_l\shaded{|_{\phi_l}}}
+  {\Co{e}{\block{\many{l \mapsto e_l}}} \symevaluate v_l\shaded{|_{\phi \land \phi_l \land b \equiv l}}}
+  {\foreach l \in \many{l}}
+
+
+\newrule{SE-Schema}
+  {e_1 \symevaluate v_1|_{\phi_1} \Quad
+   \ldots \Quad
+   e_j \symevaluate v_j|_{\phi_j}}
+  {\Node(e_1,\ldots,e_j) \symevaluate \Node(v_1,\ldots,v_j)|_{\phi_1\land\ldots\land\phi_j}}
+  {}
+
+
+\newmacro{RelationSN}
+  {t|_{\phi},\sigma \symnormalise n'|_{\phi'},\sigma',\delta'}
+
+\newrule{SN-Assert}%XXX: same
+  {}
+  {\Assert b\shaded{|_{\phi}}, \sigma \symnormalise \Lift b\shaded{|_{\phi \land b}}, \sigma, \nothing}
+  {}
+
+\newrule{SN-Schema}
+  {t_1|_{\phi_0},\sigma_0 \symnormalise n_1|_{\phi_1},\sigma_1,\delta_1 \Quad
+   \ldots \Quad
+   t_j|_{\phi_{j-1}},\sigma_{j-1} \symnormalise n_j|_{\phi_j},\sigma_j,\delta_j}
+  {\Node(t_1,\ldots,t_j)|_{\phi_0},\sigma_0 \symnormalise \Node(n_1,\ldots,n_j)|_{\phi_j},\sigma_j,\delta_1\cup\ldots\cup\delta_j}
+  {}
+
+
+\newmacro{RelationSF}
+  {t|_{\phi},\sigma,\delta \symfixate n'|_{\phi'},\sigma'}
+
+\newrule{SF-Done}
+  {t\shaded{|_\phi},\sigma \symnormalise n'\shaded{|_{\phi'}},\sigma',\delta'}
+  {t\shaded{|_\phi},\sigma,\delta \symfixate n'\shaded{|_{\phi'}},\sigma'}
+  {(\delta \cup \delta') \cap \Watching(n') = \nothing}
+
+\newrule{SF-Loop}
+  {t\shaded{|_\phi},\sigma \symnormalise n'\shaded{|_{\phi'}},\sigma',\delta' \Quad
+   n'\shaded{|_{\phi'}},\sigma',\delta' \symfixate n''\shaded{|_{\phi''}},\sigma''}
+  {t\shaded{|_\phi},\sigma,\delta \symfixate n''\shaded{|_{\phi''}},\sigma''}
+  {(\delta \cup \delta') \cap \Watching(n') \neq \nothing}
+
+
+\newmacro{RelationSH}
+  {n|_{\phi},\sigma \symhandle{\iota} t'|_{\phi'},\sigma',\delta'}
+
+\newrule{SH-Enter}%XXX: same
+  {z' \text{fresh}}
+  {\Enter^k\beta\shaded{|_{\phi}},\sigma \symhandle{\send{k}{z'}} \Update^k z'\shaded{|_{\phi}},\sigma,\nothing}
+  {z' : \beta}
+
+\newrule{SH-Update}
+  {z' \text{fresh}}
+  {\Update^k b\shaded{|_{\phi}},\sigma \symhandle{\send{k}{z'}} \Update^k z'\shaded{|_{\phi}},\sigma,\nothing}
+  {b,z' : \beta}
+
+\newrule{SH-Change}
+  {z' \text{fresh}}
+  {\Change^k h\shaded{|_{\phi}},\sigma \symhandle{\send{k}{z'}} \Change^k h\shaded{|_{\phi}},[h \mapsto z']\sigma,\set{h}}
+  {\sigma(h),z' : \beta}
+
+\newrule{SH-Select}
+	{\Select^k \block{\many{l \mapsto t_l}} \sympick{l'} t_{l'}}
+	{\Select^k \block{\many{l \mapsto t_l}}\shaded{|_{\phi}},\sigma \symhandle{\send{k}{l'}} t_{l'}\shaded{|_{\phi}},\sigma,\nothing}
+  {}
+
+\newrule{SH-Preselect}
+	{e_2\ v_1 \symevaluate t_2\shaded{|_{\phi'}} \Quad
+   t_2 \sympick{l'} t_2'}
+  {n_1 \Step v_2\shaded{|_{\phi}},\sigma \symhandle{\send{\epsilon}{l'}} t_2'\shaded{|_{\phi \land \phi'}},\sigma,\nothing}
+  {\Value(n_1,\sigma) = v_1}
+
+\newrule{SH-Schema}
+  {n_i|_{\phi},\sigma \symhandle{\iota} t_i'|_{\phi'},\sigma',\delta'}
+  {\Node(\ldots,n_i,\ldots)|_{\phi},\sigma \symhandle{\iota} \Node(\ldots,t_i',\ldots)|_{\phi'},\sigma',\delta'}
+  {\foreach i}
+
+
+\newmacro{RelationSP}
+  {t \sympick{l} t'}
+
+\newrule{SP-Select}
+  {}
+  {\Select^\nu\block{\many{l \mapsto t_l}} \sympick{l'} t_{l'}}
+  {\foreach l' \in \set{l \mid \lnot\Failing(t_{l})}}
+
+\newrule{SP-Schema}
+  {t_i \sympick{l} t_i'}
+  {\Node(\ldots,t_i,\ldots) \sympick{l} \Node(\ldots,t_i',\ldots)}
+  {\foreach i}
+
+
+
+\newmacro{RelationSI}
+  {n|_{\phi},\sigma \syminteract{\iota} n'|_{\phi'},\sigma'}
+
+\newrule{SI-Handle}%XXX: same
+  {n\shaded{|_{\phi}},\sigma \symhandle{\iota} t'\shaded{|_{\phi'}},\sigma',\delta' \Quad
+   t'\shaded{|_{\phi'}},\sigma',\delta' \symfixate n''\shaded{|_{\phi''}},\sigma''}
+  {n\shaded{|_{\phi}},\sigma \syminteract{\iota} n''\shaded{|_{\phi''}},\sigma''}
+  {}
