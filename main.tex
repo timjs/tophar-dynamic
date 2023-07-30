@@ -5,17 +5,17 @@
 %% The original source files were:
 %%
 %% samples.dtx  (with options: `manuscript')
-%% 
+%%
 %% IMPORTANT NOTICE:
-%% 
+%%
 %% For the copyright see the source file.
-%% 
+%%
 %% Any modified versions of this file must be renamed
 %% with new filenames distinct from sample-manuscript.tex.
-%% 
+%%
 %% For distribution of the original source see the terms
 %% for copying and modification in the file samples.dtx.
-%% 
+%%
 %% This generated file may be distributed as long as the
 %% original source files, as listed above, are part of the
 %% same distribution. (The sources need not necessarily be
@@ -46,7 +46,7 @@
 %%%% Generic manuscript mode, required for submission
 %%%% and peer review
 \documentclass[sigconf,screen,review]{acmart}
-%% Fonts used in the template cannot be substituted; margin 
+%% Fonts used in the template cannot be substituted; margin
 %% adjustments are not allowed.
 %%
 %% \BibTeX command to typeset BibTeX logo in the docs
@@ -60,8 +60,8 @@
 %% the commands and values with those provided to you when you
 %% complete the rights form.
 \setcopyright{acmcopyright}
-\copyrightyear{2018}
-\acmYear{2018}
+\copyrightyear{2023}
+\acmYear{2023}
 \acmDOI{XXXXXXX.XXXXXXX}
 
 %% These commands are for a PROCEEDINGS abstract or paper.
@@ -70,8 +70,8 @@
 %  Uncomment \acmBooktitle if th title of the proceedings is different
 %  from ``Proceedings of ...''!
 %
-\acmBooktitle{IFL '18: The 35th Symposium on Implementation and Application of Functional Languages,
- August 29--31, 2023, Braga, Portugal} 
+\acmBooktitle{IFL '23: The 35th Symposium on Implementation and Application of Functional Languages,
+ August 29--31, 2023, Braga, Portugal}
 \acmPrice{15.00}
 \acmISBN{978-1-4503-XXXX-X/18/06}
 
@@ -207,11 +207,15 @@
 \maketitle
 
 \input{sections/introduction}
+\input{sections/tophat}
+\input{sections/dynamic-tophat}
+\input{sections/relatedwork}
+\input{sections/discussion}
 \input{sections/conclusion}
 
 
 \begin{acks}
-...
+\input{sections/acknowledgements}
 \end{acks}
 
 %% The next two lines define the bibliography style to be used, and
