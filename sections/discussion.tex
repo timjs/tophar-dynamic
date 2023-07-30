@@ -1,3 +1,43 @@
 % !TEX root=../main.tex
 
 \section{Discussion}
+
+% \subsection{Alternative implementation}
+
+One could think of an alternative implementation of task pools,
+using already existing \TOPHAT\ language constructs.
+A possible solution could be by using a shared reference to a list of running tasks,
+and creating custom tasks to remove a task by its index from this list
+or append the template task to this list.
+\begin{TASK}
+  let kill = do ts. enter Int >>= do i. remove i ts
+  let init = do t. do ts. enter Unit >>= do _. append t ts
+  let pool = do t.
+    share [] >>= do ts.
+    forever (watch h <&> kill ts <&> init t ts)
+\end{TASK}
+
+This is effectively the way that \ITASKS\ implements dynamic task lists \cite{conf/pepm/PlasmeijerAKLNG11}.
+However, there are two reasons this is not a good fit for \TOPHAT.
+
+The first is that the forever combinator ($\Forever$), is not definable in \TOPHAT.
+Our goal is to keep our host language total.
+The combinator could be added explicitly to the task layer,
+but this would impose severe restrictions on the symbolic execution engine,
+in the same way non-total functions would do.
+
+The second is that it would require references and editors over the $\Task$ type constructor.
+Currently, both are restricted to basic types,
+because basic types are trivially displayable, parsable and equatable.
+This last property is used by \cite{Klijnsma2020} as a basis to reason about task equivalence.
+
+This raises the question if tasks, like other basic types, have the properties of if they are mare similar to functions.
+What would $\Update (Update 42)$ mean?
+How can end users dynamically enter a task that results in an integer?
+Could they create new tasks at will?
+Or should they pick from a list?
+Is this list predefined or is it populated dynamically during runtime?
+Although \ITASKS supports editors on tasks,
+above example cannot be rendered at runtime and the equality on two tasks in \ITASKS is always \var{True}.
+
+Therefore, we think explicitly adding task pools to \TOPHAT\ is a better fit for a language which main goal is formal reasoning about task-oriented programs.

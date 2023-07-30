@@ -216,6 +216,13 @@
   {\Gamma,\Sigma \infers e_1 \Step e_2 : \Task \tau_2}
   {}
 
+\newrule{T-Pool}
+  {\Gamma,\Sigma \infers t_0 : \Task \tau \Quad
+   \text{for each $t_i \in \many{t}$} \quad
+   \Gamma,\Sigma \infers t_i : \Task \tau}
+  {\Gamma,\Sigma \infers \Pool_{t_0} [\many{t}] : \Task (\List \tau)}
+  {}
+
 \newrule{T-Repeat}
   {\Gamma,\Sigma \infers e : \Task \tau}
   {\Gamma,\Sigma \infers \Repeat e : \Task \tau}
@@ -601,6 +608,11 @@
   {e_1 \Step e_2 \evaluate t_1 \Step v_2}
   {}
 
+\newrule{E-Pool}
+  {e_0 \evaluate t_0}
+  {\Pool^\nu_{e_0} [] \evaluate \Pool^\nu_{t_0} []}
+  {}
+
 \newrule{E-Fail}
   {}
   {\Fail \evaluate \Fail}
@@ -729,6 +741,19 @@
 	{t_1 \Pair t_2,\sigma \normalise n_1' \Pair n_2',\sigma'',\delta'\cup\delta''}
   {}
 
+\newrule{N-Pool-Name}
+  {t_1,\sigma \normalise n_1,\sigma_1,\delta_1 \Quad
+   \ldots \Quad
+   t_j,\sigma_{j-1} \normalise n_j,\sigma',\delta_j}
+  {\Pool^\epsilon_{t_0} [\many{t}],\sigma \normalise \Pool^k_{t_0} [\many{n}],\sigma',\bigcup_j \delta_j}
+  {k \text{ fresh}}
+
+\newrule{N-Pool}
+  {t_1,\sigma \normalise n_1,\sigma_1,\delta_1 \Quad
+   \ldots \Quad
+   t_j,\sigma_{j-1} \normalise n_j,\sigma',\delta_j}
+  {\Pool^k_{t_0} [\many{t}],\sigma \normalise \Pool^k_{t_0} [\many{n}],\sigma',\bigcup_j \delta_j}
+  {}
 
 
 %% Internal %%
@@ -906,6 +931,29 @@
 	{v_2\ v_1 \evaluate \Select^\epsilon \block{l_i \mapsto t_i}}
   {n_1 \Step v_2,\sigma \handle{\send{\epsilon}{l_j}} t_j,\sigma,\nothing}
   {\Value(n_1,\sigma) = v_1,\send{\epsilon}{l_j} \in \Options(\Select^\epsilon \block{\many{l_i \mapsto t_i}})}
+
+
+%% Pool %%
+
+\newrule{H-Init}
+  {}
+  {\Pool^k_{t_0}[\many{n}],\sigma \handle{k \Send \Init} \Pool^k_{t_0}[\many{n},t_0],\sigma,\nothing}
+  {}
+
+\newrule{H-Kill}
+  {}
+  {\Pool^k_{t_0}[n_1,\ldots,n_i,\ldots,n_j],\sigma \handle{k \Send \Kill i} \Pool^k_{t_0}[n_1,\ldots,n_j],\sigma,\nothing}
+  {}
+
+\newrule{H-Pool}
+	{n_1,\sigma \handle{k' \Send \alpha} n_1',\sigma_1',\delta_1' \Quad
+   \ldots \Quad
+   n_j,\sigma_{j-1} \handle{k' \Send \alpha} n_j',\sigma',\delta_j'
+  }
+	{\Pool^k_{t_0}[\many{n}],\sigma \handle{k' \Send \alpha} \Pool^k_{t_0}[\many{n'}],\sigma',\bigcup_j \delta_j'}
+  {}
+
+
 
 
 %% Pass %%

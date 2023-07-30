@@ -5,6 +5,7 @@
 
 \newbinary{Rhd}           {\blacktriangleright}
 \newbinary{Lhd}           {\blacktriangleleft}
+\newbinary{moustache}     {\rhd\mkern-5mu\lhd}
 \newbinary{blackmoustache}{\Rhd\mkern-8mu\Lhd}
 \renewbinary{blacklozenge}{\Lhd\mkern-4mu\Rhd}
 \newbinary{boxcirc}       {\square\mkern-10.33mu\circ\mkern+2mu} %\kern-1.25ex\whitebox} %{\ocircle} %{\boxcircle} %{\overline{\whitebox}}
@@ -64,7 +65,19 @@
 \newtype[List]{List\;}
 \newtype[Task]{Task\;}
 \newtype[Reference]{Ref\;}
+
+\newtype{Snack}
 \newtype{Location}
+
+
+%% Inputs %%
+
+\newmacro{send}[2]
+  {#1!#2}
+
+\newbinary{Send}     {!}
+\newunary {Init}     {\circledast}
+\newunary {Kill}     {\ominus}
 
 
 %% Operators %%
@@ -81,19 +94,17 @@
 \newbinary{Trans}    {\bullet}
 \newbinary{Step}     {\Rhd}
 
+\newunary {Pool}     {\moustache}
 \newbinary{Assign}   {\colonequals}
 \newunary {Change}   {\boxplus}
 \newunary {Watch}    {\boxpluscirc}
 
 \newbinary{Modify}   {::=}
-\newbinary{Gets}     {\Lhd}
-\newbinary{Gots}     {\lhd}
 \newbinary{Select}   {\rhd}
-\newbinary{Stop}     {\Select}
 \newunary {Pick}     {\diamond}
 \newunary {Branch}   {\blackdiamond}
 \newunary {Repeat}   {\backcicle}
-\newunary {Forever}  {\counterclockwise}
+\newunary {Forever}  {\circlearrowleft}
 
 
 %% Observations %%

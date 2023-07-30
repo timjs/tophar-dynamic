@@ -4,4 +4,110 @@
 
 \subsection{Language}
 
+Although it is possible in \TOPHAT to start multiple tasks in parallel,
+the amount of these task should be specified by the programmer at develop time.
+
+\begin{example}[Vending machine with shared stock]
+  \label{exm:vending-shared}
+  Take this slightly more complex vending machine,
+  where two buyers can purchase a $\Snack$ at the same time from a shared inventory.
+
+  \begin{TASK}[]
+    let vend : Task Snack = do ss.
+      enter Int >>= do n.
+      case n of
+        1 |-> decrease Biscuit ss >>= do _.
+             view Biscuit
+        2 |-> decrease Chocolate ss >>= do _.
+             view Chocolate
+        _ |-> fail
+    let machine : Task (Snack * Snack) =
+      share [(Biscuit, 24), (Chocolate, 16)] >>= do ss.
+      vend ss <&> vend ss
+  \end{TASK}
+
+  Here \var{decrease} is a function that decreases the amount of the given snack by one in the shared list of snacks.
+  Note that this task results in a pair containing the two bought $\Snack$s.
+\end{example}
+
+\DYNTOPHAT\ is a moderate extension to the \TOPHAT\ base language where we add support for \emph{task pools}.
+A task pool is a new combinator at the task level of the \TOPHAT\ language.
+The combinator ($\Pool^k_{t_0} []$) is parametrised by an unique key $k$, a template task $t_0$ and (initially) an empty task list $[]$.
+Each time end users send an \emph{init} action to this pool ($k\Send\Init$),
+the template task is placed in the list of current running tasks,
+in this case resulting in $\Pool^k_{t_0} [t_0]$.
+This way, an arbitrary amount of tasks can be started at runtime.
+Task in the task list of a pool can also be killed by sending a \emph{kill} action to the pool ($k\Send\Kill1$).
+In this case the first task in the pool will be killed.
+The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
+
+\begin{example}[Dynamic number of vending machines]
+  \label{exm:vending-dynamic}
+  Using the same \var{vend} task from \cref{exm:vending-shared},
+  we can now create a vending machine where end users can start an arbitrary amount of vending tasks.
+  \begin{TASK}
+    let machine : Task (List Snack) =
+      share [(Biscuit, 24), (Chocolate, 16)] >>= do ss.
+      >&<$_\text{\var{vend ss}}$ []
+  \end{TASK}
+  Sending $\Init$ to above task creates a new \var{vend} task
+  which will ask for an amount of money and will result in a \var{Biscuit} or \var{Chocolate}.
+  Note that this machine, contrary to the one in \cref{exm:vending-shared}, will run indefinitely.
+\end{example}
+
+\begin{figure}[h]
+  \usemacro{G-Dynamic-Ext}
+  \caption{Grammar for \DYNTOPHAT}
+  \label{fig:dynamic-grammar}
+\end{figure}
+
+
 \subsection{Semantics}
+
+Static and dynamic semantics of task pools are given in \cref{fig:semantics-dynamic},
+and extended observations in \cref{fig:observations-dynamic}.
+
+\begin{figure}[h]
+  \begin{mathpar}
+    \boxed{\RelationT} \\
+    \userule{T-Pool} \\
+    % \userule{E-Pool} \\
+    \boxed{\RelationN} \\
+    % \userule{N-Pool-Name} \\
+    \userule{N-Pool} \\
+    \boxed{\RelationH} \\
+    \userule{H-Init} \\
+    \userule{H-Kill} \\
+    \userule{H-Pool} \\
+  \end{mathpar}
+  \caption{Semantic rules for \DYNTOPHAT}
+  \label{fig:semantics-dynamic}
+\end{figure}
+
+\begin{figure}[h]
+  \usemacro{O-Dynamic}
+  \caption{Observations for \DYNTOPHAT}
+  \label{fig:observations-dynamic}
+\end{figure}
+
+
+\subsection{Meta theory}
+
+Propositions from \cite{Steenvoorden22} and \cite{Klijnsma2020} that still hold are the following:
+
+\begin{itemize}
+  \item Valued tasks are static
+  \item Steady tasks stay steady
+\end{itemize}
+
+However, because of the dynamic nature of task pools, the following propositions need alteration:
+
+\begin{itemize}
+  \item Static tasks stay static
+  \item Finished tasks stay finished
+\end{itemize}
+
+This is because task pools can always receive the initialise input ($\Init$),
+so tasks containing a task pool will never get to a steady state!
+
+We will discuss the impact on equational reasoning on tasks more thoroughly...

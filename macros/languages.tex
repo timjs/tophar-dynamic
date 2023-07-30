@@ -4,7 +4,7 @@
 %% Styles %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \lstdefinestyle{common}
-  {escapechar=|
+  {escapechar=$
   ,numbersep=-9pt % to make numbers appear inside the column; otherwise they are in the margin
   % ,aboveskip=0pt
   % ,belowskip=0pt
@@ -13,10 +13,10 @@
 \lstdefinestyle{natural}
   {style=common
   ,columns=fullflexible
-  ,gobble=2
+  % ,gobble=2
   ,breaklines=true
   ,breakatwhitespace=true
-  ,literate=
+  % ,literate=
     %{.}{{$\cdot$}}1
     %{.}{{\ }}1
     % {<<}{{$\<$}}1
@@ -98,22 +98,24 @@
 \lstdefinestyle{tasks}
   {style=natural
   ,literate=
-    {\\}{{$\lambda$}}1
+    {do}{{$\lambda$}}1
     {<<}{{$\<$}}1
     {>>}{{$\>$ }}1
     {->}{{$\to$ }}1
+    {|->}{{$\mapsto$ }}1
     {==}{{$\equiv$ }}1
     {/=}{{$\nequiv$ }}1
     {<=}{{$\leq$ }}1
     {>=}{{$\geq$ }}1
     {*}{{$\times$ }}1
-    {`elem`}{{$\in$ }}1
+    {=<}{{$\in$ }}1
     {\\/}{{$\vee$ }}1
     {/\\}{{$\wedge$ }}1
     {>>=}{{$\Step$ }}1
-    {>>?}{{$\Continue$ }}1
+    {>>?}{{$\Select$ }}1
     {<*>}{{$\Trans$ }}1
     {<&>}{{$\Pair$ }}1
+    {>&<}{{$\Pool$ }}1
     {<|>}{{$\Choose$ }}1
     {<?>}{{$\Pick$ }}1
     {++}{{$\pp$ }}1
@@ -124,6 +126,7 @@
     {change}{{$\Change$}}1
     {watch}{{$\Watch$}}1
     {fail}{{$\Fail$ }}1
+    {forever}{{$\Forever$ }}1
   }
 
 \lstnewenvironment{TASK}[1][]

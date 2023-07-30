@@ -38,6 +38,32 @@ The most important combinator is the step combinator.
 The task $t_1 \Step e_2$ decides when to transition from task $t_1$
 to the task calculated by its continuation $e_2$.
 
+\begin{example}[Vending machine]
+  \label{exm:vending-base}
+  The following example demonstrates the use of external communication and choice.
+  We have a vending machine that dispenses a biscuit for one coin and a chocolate bar for two coins.
+  % \begin{TASK}
+  %   let vend : Task Snack = enter Int >>? do n. if n == 1 then view Biscuit
+  %     else if n == 2 then view Chocolate else fail
+  % \end{TASK}
+  \begin{TASK}
+    let vend : Task Snack = enter Int >>? do n.
+      case n of
+        1 |-> view Biscuit
+        2 |-> view Chocolate
+        _ |-> fail
+  \end{TASK}
+  The editor $\Enter \Int$ asks the user to enter an amount of money.
+  This editor stands for a coin slot in a real machine that freely accepts and returns coins.
+  There is a continue button on the machine, which sends a continue event to the select combinator ($\Select$).
+  The button is initially disabled, due to the fact that the editor has no value.
+  When the user has inserted exactly 1 or 2 coins, the continue button becomes enabled.
+  When the user presses the continue button, the machine dispenses either a biscuit or a chocolate bar, depending on the amount of money.
+  Other cases result in the failure task $\Fail$, which signals a path that cannot be followed.
+  The vending machine stays in the state to accept and return money.
+  Snacks are modelled using a custom type.
+\end{example}
+
 % \todo{shares}
 
 \cref{fig:typing-grammar} shows the grammar of types.
@@ -52,29 +78,29 @@ guarantees one can present these values to end users (print them)
 and receive new inputs from end users (parse them).
 Arbitrary tasks and functions do not have this property.
 
-\begin{figure}[t]
+\begin{figure}[h]
   \usemacro{G-Types}
   \caption{Typing grammar}
   \label{fig:typing-grammar}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[h]
   % \small
   \begin{mathpar}
-      \boxed{\RelationT}    \\
-      \userule{T-Enter}     \quad
-      \userule{T-Update}    \quad
-      \userule{T-View}      \\
-      \userule{T-Change}    \quad
-      \userule{T-Watch}     \\
-      \userule{T-Trans}     \\
-      \userule{T-Pair}      \quad
-      \userule{T-Lift}      \\
-      \userule{T-Choose}    \quad
-      \userule{T-Fail}      \\
-      \userule{T-Step}      \\
-      \userule{T-Share}     \quad
-      \userule{T-Assign}
+    \boxed{\RelationT}    \\
+    \userule{T-Enter}     \quad
+    \userule{T-Update}    \quad
+    \userule{T-View}      \\
+    \userule{T-Change}    \quad
+    \userule{T-Watch}     \\
+    \userule{T-Trans}     \\
+    \userule{T-Pair}      \quad
+    \userule{T-Lift}      \\
+    \userule{T-Choose}    \quad
+    \userule{T-Fail}      \\
+    \userule{T-Step}      \\
+    \userule{T-Share}     \quad
+    \userule{T-Assign}
   \end{mathpar}
   \caption{Typing rules}
   \label{fig:typing-rules}
