@@ -31,13 +31,13 @@ Currently, both are restricted to basic types,
 because basic types are trivially displayable, parsable and equatable.
 This last property is used by \cite{Klijnsma2020} as a basis to reason about task equivalence.
 
-This raises the question if tasks, like other basic types, have the properties of if they are mare similar to functions.
-What would $\Update (Update 42)$ mean?
+This raises the question if tasks are more like basic types, or if they should behave more like functions.
+What would $\Update (Update\ 42)$ mean?
 How can end users dynamically enter a task that results in an integer?
 Could they create new tasks at will?
 Or should they pick from a list?
 Is this list predefined or is it populated dynamically during runtime?
-Although \ITASKS supports editors on tasks,
-above example cannot be rendered at runtime and the equality on two tasks in \ITASKS is always \var{True}.
+Although \ITASKS\ supports editors on tasks,
+above example cannot be rendered at runtime and the equality on two tasks in \ITASKS\ is always \var{True}.
 
 Therefore, we think explicitly adding task pools to \TOPHAT\ is a better fit for a language which main goal is formal reasoning about task-oriented programs.

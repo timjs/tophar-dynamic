@@ -22,7 +22,7 @@ Editors are the interaction points of a task program.
 They can be thought of as an abstraction over widgets or form input fields.
 Editors are type safe,
 they only accept values of their specified type.
-The type of an editor can also be used to (generically) render an user interface.
+The type of an editor can also be used to (generically) render a user interface.
 For example,
 an editor of type $\Bool$ could be rendered as a check box,
 while end users could interact with an editor of type $\Location$ by putting a pin on a map.
@@ -70,7 +70,7 @@ to the task calculated by its continuation $e_2$.
 The typing rules of all tasks can be found in \cref{fig:typing-rules}.
 Note that editors and references can only contain values of basic types $\beta$.
 In particular, editors and references cannot contain functions or tasks themselves.
-The reason for this restriction is two fold.
+The reason for this restriction is twofold.
 First, prohibiting references to functions keeps our language total.
 This is necessary for the symbolic execution to not enter an infinite loop.
 Second, restricting editors to only contain basic values

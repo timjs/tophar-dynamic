@@ -4,7 +4,7 @@
 
 \subsection{Language}
 
-Although it is possible in \TOPHAT to start multiple tasks in parallel,
+Although it is possible in \TOPHAT\ to start multiple tasks in parallel,
 the amount of these task should be specified by the programmer at develop time.
 
 \begin{example}[Vending machine with shared stock]
@@ -37,7 +37,7 @@ Each time end users send an \emph{init} action to this pool ($k\Send\Init$),
 the template task is placed in the list of current running tasks,
 in this case resulting in $\Pool^k_{t_0} [t_0]$.
 This way, an arbitrary amount of tasks can be started at runtime.
-Task in the task list of a pool can also be killed by sending a \emph{kill} action to the pool ($k\Send\Kill1$).
+Tasks in the task list of a pool can also be killed by sending a \emph{kill} action to the pool ($k\Send\Kill1$).
 In this case the first task in the pool will be killed.
 The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
 
