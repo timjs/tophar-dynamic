@@ -13,7 +13,7 @@ However, many researchers found that more powerful abstractions are needed to de
 Since then, a lot of work has been published on better describing and implementing business processes, such as the workflow patterns by van der Aalst et al., Workflow nets, (INSERT SOME MORE HERE).
 Most notably is the by Koopman et al. and Plasmeijer et al. on iTasks.
 They present an abstraction over workflow systems implemented as a DSL in the functional programming language CLEAN.
-The idea behind their paradigm is to model collaboration patterns, and to abstract away from things like GUI, client-server communication, and databases, 
+The idea behind their paradigm is to model collaboration patterns, and to abstract away from things like GUI, client-server communication, and databases,
 Their work proved to be successful, with several extensions and the technology now being used in a spin-off company.
 
 Even though iTasks is implemented as a DSL in a functional programming language, the paradigm lacks any formal semantics.
@@ -34,3 +34,41 @@ Key in our approach is that we do not compromise any of the formal properties wh
 
 Section~\ref{sec:tophat} introduces the \TOPHAT\ language as presented in earlier work. Section~\ref{sec:dyntophat} then goes on to present our dynamic version of \TOPHAT.
 Related work is discussed in~\ref{sec:relatedwork}. After a short discussion on the implications of \DYNTOPHAT in Section~\ref{sec:discussion}, we conclude in Section~\ref{sec:conclusion}.
+
+\begin{TASK}[emph={passengers,seats,free}]
+  let main = do
+    free <- share [(r, s) | r <- [1 .. 10], s <- ['A' .. 'D']]
+    watch free <& pool (book free)
+
+  let book free = do
+    enter List Passenger >>= do passengers.
+      all valid passengers |->
+        choose_seats passengers free >>= seats.
+        confirm_booking passengers seats >>= _.
+        assert length passengers == length seats
+        assert unique seats
+        assert seats /< free
+
+  let choose_seats = do passengers free.
+    watch free <&> enter Seats >>= do (fs, seats).
+    seats fs /\ length passengers == length seats
+      |-> confirm_booking passengers seats free
+
+  confirmBooking :: Passengers -> Seats -> Store h Seats -> Task h (Passengers, Seats)
+  let confirm_booking == do passengers seats free
+    free <<= difference seats
+    view (passengers, seats)
+\end{TASK}
+
+  % allValid :: Passengers -> Bool
+  % allValid ps = all isValid ps && any isAdult ps
+
+  % isValid :: Passenger -> Bool
+  % isValid (n, a) = n /= "" && a >= 0
+
+  % isAdult :: Passenger -> Bool
+  % isAdult (_, a) = a >= 18
+
+  % isCorrect :: Seats -> Seats -> Bool
+  % isCorrect ss fs = do
+  %   List.intersect ss fs == ss
