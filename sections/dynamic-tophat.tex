@@ -14,7 +14,7 @@ the amount of these task should be specified by the programmer at develop time.
   where two buyers can purchase a $\Snack$ at the same time from a shared inventory.
 
   \begin{TASK}[]
-    let vend : Task Snack = do ss.
+    let vend$_1$ : Task Snack = do ss.
       enter Int >>= do n.
       case n of
         1 |-> decrease Biscuit ss >>= do _.
@@ -22,9 +22,9 @@ the amount of these task should be specified by the programmer at develop time.
         2 |-> decrease Chocolate ss >>= do _.
              view Chocolate
         _ |-> fail
-    let machine : Task (Snack * Snack) =
+    let machine$_1$ : Task (Snack * Snack) =
       share [(Biscuit, 24), (Chocolate, 16)] >>= do ss.
-      vend ss <&> vend ss
+      vend$_1$ ss <&> vend$_1$ ss
   \end{TASK}
 
   Here \var{decrease} is a function that decreases the amount of the given snack by one in the shared list of snacks.
@@ -47,9 +47,9 @@ The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
   Using the same \var{vend} task from \cref{exm:vending-shared},
   we can now create a vending machine where end users can start an arbitrary amount of vending tasks.
   \begin{TASK}
-    let machine : Task (List Snack) =
+    let machine$_2$ : Task (List Snack) =
       share [(Biscuit, 24), (Chocolate, 16)] >>= do ss.
-      >&<$_\text{\var{vend ss}}$ []
+      >&<$_{\var{vend}_1\,\var{ss}}$ []
   \end{TASK}
   Sending $\Init$ to above task creates a new \var{vend} task
   which will ask for an amount of money and will result in a \var{Biscuit} or \var{Chocolate}.
@@ -74,7 +74,7 @@ and extended observations in \cref{fig:observations-dynamic}.
     \userule{T-Pool} \\
     % \userule{E-Pool} \\
     \boxed{\RelationN} \\
-    % \userule{N-Pool-Name} \\
+    \userule{N-Pool-Name} \\
     \userule{N-Pool} \\
     \boxed{\RelationH} \\
     \userule{H-Init} \\

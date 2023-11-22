@@ -742,11 +742,12 @@
   {}
 
 \newrule{N-Pool-Name}
-  {t_1,\sigma \normalise n_1,\sigma_1,\delta_1 \Quad
+  {k \text{ fresh} \Quad
+   t_1,\sigma \normalise n_1,\sigma_1,\delta_1 \Quad
    \ldots \Quad
    t_j,\sigma_{j-1} \normalise n_j,\sigma',\delta_j}
   {\Pool^\epsilon_{t_0} [\many{t}],\sigma \normalise \Pool^k_{t_0} [\many{n}],\sigma',\bigcup_j \delta_j}
-  {k \text{ fresh}}
+  {}
 
 \newrule{N-Pool}
   {t_1,\sigma \normalise n_1,\sigma_1,\delta_1 \Quad
@@ -943,7 +944,7 @@
 \newrule{H-Kill}
   {}
   {\Pool^k_{t_0}[n_1,\ldots,n_i,\ldots,n_j],\sigma \handle{k \Send \Kill i} \Pool^k_{t_0}[n_1,\ldots,n_j],\sigma,\nothing}
-  {}
+  {0 \le i \le j}
 
 \newrule{H-Pool}
 	{n_1,\sigma \handle{k' \Send \alpha} n_1',\sigma_1',\delta_1' \Quad
