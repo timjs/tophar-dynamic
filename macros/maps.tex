@@ -117,13 +117,16 @@
 \newmacro{O-Dynamic}{
   \begin{function}
     \signature{\Value : \mathrm{Normalised\ task} \times \mathrm{State} \rightharpoonup \mathrm{Value}} \\
-    \Value(\Pool^k_{t_0}[\many{n}], \sigma)  &=&  [\Value{n_i} \Mid n_i \in \many{n}] \\
+    \Value(\Pool^k_{t_0}[\many{n}], \sigma)  &=&  [\Value(n_i, \sigma) \Mid n_i \in \many{n}] \\
   \addlinespace
     \signature{\Failing : \mathrm{Task} \to \mathrm{Boolean}} \\
     \Failing(\Pool^\nu_{t_0}[\many{t}])  &=&  \False \\
   \addlinespace
     \signature{\Inputs : \mathrm{Normalised\ task} \to \powerset{\mathrm{Input}}} \\
     \Inputs(\Pool^k_{t_0}[\many{n}])  &=&  \set{\Inputs(n_i) \Mid n_i \in \many{n}} \\
-                                       & &  \cup\:\set{k \Send \Init} \cup \set{k \Send \Kill i \Mid i \in 0\upto\#\many{n}} \\
+                                       & &  \cup\:\set{k \Send \Init} \cup \set{k \Send \Kill i \Mid i \in 1\upto\#\many{n}} \\
+  \addlinespace
+    \signature{\Watching : \mathrm{Normalised\ task} \to \powerset{\mathrm{Heap\ location}}} \\
+    \Watching(\Pool^k_{t_0}[\many{n}]) &=& \bigcup_{n_i\in\many{n}} \Watching(n_i) \\
   \end{function}
 }
