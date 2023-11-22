@@ -1,3 +1,23 @@
 % !TEX root=../main.tex
 
 \section{Introduction}
+
+In modern society, it is almost unthinkable to run any organization without the help of software that manages the oganization's processes.
+From managing customers and pations to monitoring systems and situations, software has become a crucial component.
+
+Traditionally, these systems are developed using tools that offer a rather low level of abstraction.
+Standard Object Oriented appraches allow some superficial domain modeling, and best practices like the Unified Process from the late 90's provide developers with some guidance.
+
+However, many researchers found that more powerful abstractions are needed to develop these all too common systems in a way that results in more robust and reliable systems.
+Since then, a lot of work has been published on better describing and implementing business processes, such as the workflow patterns by van der Aalst et al., Worflow nets, (INSERT SOME MORE HERE).
+Most notably is the by Koopman et al. and Plasmeijer et al. on iTasks.
+They present an abstraction over workflow systems implemented as a DSL in the functional programming language CLEAN.
+The idea behind their paradigm is to model collaboration patterns, and to abtract away from things like GUI, client-server communication, and databases, 
+Their work proved to be succesful, with several extensions and the technology now being used in a spin-off company.
+
+Even though iTasks is implemented as a DSL in a functional programming language, the paradigm lacks any formal semantics.
+This heavily restricts the amount of formal reasoning that can be done on iTasks programs.
+
+To overcome this downside, TopHat was introduced.
+Built on top of the lambda-calculus, TopHat is a TOP implementation that has a completely formal semantics.
+Several works leverage this to perform symbolic execution, and (SAY MORE).
