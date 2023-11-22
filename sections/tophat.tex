@@ -19,6 +19,8 @@ Tasks can be editors or combinators.
   \label{fig:task-grammar}
 \end{figure}
 
+\subsubsection{Tasks}
+
 Editors are the interaction points of a task program.
 They can be thought of as an abstraction over widgets or form input fields.
 Editors are type safe,
@@ -48,7 +50,8 @@ to the task calculated by its continuation $e_2$.
   %     else if n == 2 then view Chocolate else fail
   % \end{TASK}
   \begin{TASK}
-    let vend : Task Snack = enter Int >>? do n.
+    type Snack = [Biscuit, Chocolate]
+    let vend$_0$ : Task Snack = enter Int >>? do n.
       case n of
         1 |-> view Biscuit
         2 |-> view Chocolate
@@ -66,6 +69,23 @@ to the task calculated by its continuation $e_2$.
 \end{example}
 
 % \todo{shares}
+
+\subsubsection{Inputs}
+
+Editors are the interaction leaves of task-oriented programs.
+They are the only way users can interact with the system.
+Each editor is keyed with an \emph{unique} key $k$.
+Sending a key and a value to the system will change ...
+\cref{fig:input-grammar} contains the grammar of inputs and actions accepted by a \TOPHAT\ system.
+
+\begin{figure}[h]
+  \usemacro{G-Inputs}
+  \caption{Input grammar}
+  \label{fig:input-grammar}
+\end{figure}
+
+
+\subsubsection{Types}
 
 \cref{fig:typing-grammar} shows the grammar of types.
 The typing rules of all tasks can be found in \cref{fig:typing-rules}.

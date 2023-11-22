@@ -8,6 +8,7 @@
       \mid& \Task \tau           & – task type \\
       \mid& \Unit                & – unit type \\
       \mid& \tau_1 \times \tau_2 & – product type \\
+      \mid& [\many{l,}]          & – enum type \\
       \mid& \List \tau           & – list type \\
       \mid& \pi                  & – primitive type \\
     \pi ::=&                     & Primitive types \\
@@ -17,6 +18,7 @@
     \beta ::=&                   & Basic types \\
       \mid& \Unit                & – unit type \\
       \mid& \beta_1 \times \beta_2 & – product type \\
+      \mid& [\many{l,}]          & – enum type \\
       \mid& \List \beta          & – list type \\
       \mid& \pi                  & – primitive type \\
   \end{grammar*}
@@ -60,6 +62,18 @@
     \mid& \Share v            & – share            \\
     \mid& h_1 \Assign v_2     & – assign           \\
   \end{grammar*}
+}
+
+\newmacro{G-Inputs}{
+  \begin{grammar}
+    Names
+      & \nu   & ::=& \epsilon \mid k & – empty or keyed \\
+    Inputs
+      & \iota & ::=& k!\alpha    & – send action \\
+    Actions
+      & \alpha& ::=& b \mid l        & – basic value or label\\
+      % &       &\mid& l               & – continue with label \\
+  \end{grammar}
 }
 
 \newmacro{G-Task-contexts}{
