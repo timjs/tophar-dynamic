@@ -5,13 +5,16 @@
 
 \subsection{Language}
 
-Here we describe the \TOPHAT\ language as presented in \cite{Steenvoorden22}.
-This slightly deviates from other presentations in \cite{conf/ppdp/SteenvoordenNK19,conf/ifl/NausSK19,conf/sfp/NausS20}.
+Here we describe the \TOPHAT\ language as presented in \citet{Steenvoorden22},
+which slightly deviates from presentations in earlier work \cite{conf/ppdp/SteenvoordenNK19,conf/ifl/NausSK19,conf/sfp/NausS20}.
+
 The \TOPHAT\ language consists of two layers: the expression layer and the task layer.
 The expression layer is a \STLC\ with primitive types, pairs, lists and references.
 We use pattern matching to project the fields of pairs.
+% It's grammar can be found in \cref{fig:expr-grammar}.
+%
 The grammar of the task layer is given in \cref{fig:task-grammar}.
-Tasks can be editors or combinators.
+Tasks can either be editors or combinators.
 
 \begin{figure}[h]
   \usemacro{G-Tasks}
@@ -19,16 +22,34 @@ Tasks can be editors or combinators.
   \label{fig:task-grammar}
 \end{figure}
 
-\subsubsection{Tasks}
+\paragraph{Editors}
 
 Editors are the interaction points of a task program.
-They can be thought of as an abstraction over widgets or form input fields.
+They are an abstraction over widgets or form input fields.
 Editors are type safe,
 they only accept values of their specified type.
 The type of an editor can also be used to (generically) render a user interface.
 For example,
 an editor of type $\Bool$ could be rendered as a check box,
 while end users could interact with an editor of type $\Location$ by putting a pin on a map.
+
+Editors can initially be empty, or \emph{unvalued} ($\Enter^\nu \beta$).
+After sending a value $b$ to an editor, the editor is \emph{valued} ($\Update^\nu b$).
+The value of an editor can be changed by sending a new value.
+They cannot be cleared.
+Editors can also be declared as \emph{read-only} ($\View^\nu b$).
+This way they show static information to an end user.
+
+Shared editors $\Change^\nu h$ watch over a heap location $h$,
+similar to \ML-style references.
+Changing the value of shared editors,
+changes the value in the heap location.
+Multiple shared editors can watch the same heap location.
+As plain editors, shared editors can also be read-only ($\Watch^\nu h$),
+which means their displayed value will only change when the referenced heap location changes,
+but the end user cannot send a value to update the heap location.
+
+\paragraph{Combinators}
 
 Combinators unite smaller tasks into bigger ones.
 The pair combinator ($t_1 \Pair t_2$) for example,
@@ -37,9 +58,17 @@ The result thereof is a pair containing both the results of $t_1$ and $t_2$.
 The choose combinator ($t_1 \Choose t_2$) on the other hand,
 results in either the result of $t_1$ or $t_2$,
 depending on which task first has a result.
+To map a function over the value in a task,
+one can use the transform task ($e_1 \Trans t_2$).
+
 The most important combinator is the step combinator.
 The task $t_1 \Step e_2$ decides when to transition from task $t_1$
 to the task calculated by its continuation $e_2$.
+The failing task $\Fail$ is used to signal a task that cannot be stepped to.
+Also, it is the identity of the choose task.
+Furthermore, one can create a shared heap location and assign to it.
+The lift task is used to lift a value into the task domain.
+
 
 \begin{example}[Vending machine]
   \label{exm:vending-base}
@@ -59,7 +88,8 @@ to the task calculated by its continuation $e_2$.
   \end{TASK}
   The editor $\Enter \Int$ asks the user to enter an amount of money.
   This editor stands for a coin slot in a real machine that freely accepts and returns coins.
-  There is a continue button on the machine, which sends a continue event to the select combinator ($\Select$).
+  There is a continue button on the machine, which sends a continue event to the select combinator ($\Select$),
+  which is a derived combinator acting similar to the previously mentioned step combinator.
   The button is initially disabled, due to the fact that the editor has no value.
   When the user has inserted exactly 1 or 2 coins, the continue button becomes enabled.
   When the user presses the continue button, the machine dispenses either a biscuit or a chocolate bar, depending on the amount of money.
@@ -70,22 +100,22 @@ to the task calculated by its continuation $e_2$.
 
 % \todo{shares}
 
-\subsubsection{Inputs}
+\paragraph{Inputs}
 
 Editors are the interaction leaves of task-oriented programs.
 They are the only way users can interact with the system.
 Each editor is keyed with an \emph{unique} key $k$.
-Sending a key and a value to the system will change ...
+Sending $k \Send b$ to the system will change the value inside the editor with key $k$ to hold value $b$.
 \cref{fig:input-grammar} contains the grammar of inputs and actions accepted by a \TOPHAT\ system.
 
 \begin{figure}[h]
-  \usemacro{G-Inputs}
+  \usemacro{G-Inputs-compact}
   \caption{Input grammar}
   \label{fig:input-grammar}
 \end{figure}
 
 
-\subsubsection{Types}
+\paragraph{Types}
 
 \cref{fig:typing-grammar} shows the grammar of types.
 The typing rules of all tasks can be found in \cref{fig:typing-rules}.

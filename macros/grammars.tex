@@ -64,7 +64,7 @@
   \end{grammar*}
 }
 
-\newmacro{G-Inputs}{
+\newmacro{G-Inputs-compact}{
   \begin{grammar}
     Names
       & \nu   & ::=& \epsilon \mid k & – empty or keyed \\
@@ -74,6 +74,20 @@
       & \alpha& ::=& b \mid l        & – basic value or label\\
       % &       &\mid& l               & – continue with label \\
   \end{grammar}
+}
+
+\newmacro{G-Inputs}{
+  \begin{grammar*}
+    \nu::=&          & Names \\
+      \mid& \epsilon & – empty \\
+      \mid& k        & – keyed \\
+    \iota::=&        & Inputs \\
+      \mid& k!\alpha & – send \\
+    \alpha::=&       & Actions \\
+      \mid& b        & – basic value \\
+      \mid& l        & – label \\
+      % &       &\mid& l               & – continue with label \\
+  \end{grammar*}
 }
 
 \newmacro{G-Task-contexts}{
