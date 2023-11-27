@@ -7,68 +7,37 @@ In modern society, it is almost unthinkable to run any organization without the 
 From managing customers and patients to monitoring systems and situations, software has become a crucial component.
 
 Traditionally, these systems are developed using tools that offer a rather low level of abstraction.
-Standard Object-Oriented approaches allow some superficial domain modeling and best practices like the Unified Process from the late 90's provide developers with some guidance.
+Standard Object-Oriented approaches allow some superficial domain modelling and best practices like the Unified Process from the late 90's provide developers with some guidance.
 
 However, many researchers found that more powerful abstractions are needed to develop these all-too-common systems in a way that results in more robust and reliable systems.
-Since then, a lot of work has been published on better describing and implementing business processes, such as the workflow patterns by van der Aalst et al., Workflow nets, (INSERT SOME MORE HERE).
-Most notably is the by Koopman et al. and Plasmeijer et al. on iTasks.
-They present an abstraction over workflow systems implemented as a DSL in the functional programming language CLEAN.
-The idea behind their paradigm is to model collaboration patterns, and to abstract away from things like GUI, client-server communication, and databases,
-Their work proved to be successful, with several extensions and the technology now being used in a spin-off company.
+Since then, a lot of work has been published on better describing and implementing business processes, such as the workflow patterns by \citeauthor{journals/dpd/AalstHKB03}, Workflow Nets \cite{journals/jcsc/Aalst98}, and business process calculi like \BPEL\ \cite{bpel}.
 
-Even though iTasks is implemented as a DSL in a functional programming language, the paradigm lacks any formal semantics.
-This heavily restricts the amount of formal reasoning that can be done on iTasks programs.
+Most notably is the work by \citet{conf/ifl/KoopmanPA08} and \citet{conf/ppdp/PlasmeijerLMAK12} on \ITASKS.
+They present an abstraction over workflow systems implemented as a \DSL\ in the functional programming language \CLEAN\ \cite{plasmeijer2002clean}.
+The idea behind their paradigm is to model collaboration patterns, and to abstract away from things like \GUI, client-server communication, and databases.
+Their work proved to be successful, with several extensions and the technology now being used in a spin-off company \cite{com/tss/viia}.
 
-To overcome this downside, TopHat was introduced.
-Built on top of the lambda calculus, TopHat is a TOP implementation that has a completely formal semantics.
-Several works leverage this to perform symbolic execution, and (SAY MORE).
+Even though \ITASKS\ is implemented as a \DSL\ in a functional programming language, the paradigm lacks any formal semantics.
+This heavily restricts the amount of formal reasoning that can be done on \ITASKS\ programs.
 
-Compared to the original iTasks system, TopHat is more restrictive in managing tasks itself.
-TopHat programs can only define a static amount of work, whereas iTasks programs can dynamically spool up new tasks and terminate old ones.
+To overcome this downside, \TOPHAT\ was introduced.
+Built on top of the simply typed lambda calculus,
+\TOPHAT\ is a \TOP\ implementation that has a completely formal semantics.
+Several works leverage this to perform symbolic execution \cite{conf/ifl/NausSK19},
+generate next-step hints for end users \cite{conf/sfp/NausS20},
+and reason about equivalence of tasks \cite{conf/sfp/KlijnsmaS22}.
+% A complete and thorough description of all of \TOPHAT's features can be found in \citet{Steenvoorden22}.
+
+Compared to the original \ITASKS\ system, \TOPHAT\ is more restrictive in managing tasks itself.
+\TOPHAT\ programs can only define a static amount of work, whereas \ITASKS\ programs can dynamically spool up new tasks and terminate old ones.
 In this paper, we introduce \DYNTOPHAT, an extension to \TOPHAT\ which allows end users to initialize and kill tasks at runtime.
 Key in our approach is that we do not compromise any of the formal properties when adding this feature.
+% \subsection{Contributions}
 
 (Maybe some more text on what our system can and cannot do).
 
 (SAY SOMETHING ABOUT VALIDATION HERE???)
 
-Section~\ref{sec:tophat} introduces the \TOPHAT\ language as presented in earlier work. Section~\ref{sec:dyntophat} then goes on to present our dynamic version of \TOPHAT.
-Related work is discussed in~\ref{sec:relatedwork}. After a short discussion on the implications of \DYNTOPHAT in Section~\ref{sec:discussion}, we conclude in Section~\ref{sec:conclusion}.
-
-\begin{TASK}[emph={passengers,seats,free}]
-  let main = do
-    free <- share [(r, s) | r <- [1 .. 10], s <- ['A' .. 'D']]
-    watch free <& pool (book free)
-
-  let book free = do
-    enter List Passenger >>= do passengers.
-      all valid passengers |->
-        choose_seats passengers free >>= seats.
-        confirm_booking passengers seats >>= _.
-        assert length passengers == length seats
-        assert unique seats
-        assert seats /< free
-
-  let choose_seats = do passengers free.
-    watch free <&> enter Seats >>= do (fs, seats).
-    seats fs /\ length passengers == length seats
-      |-> confirm_booking passengers seats free
-
-  confirmBooking :: Passengers -> Seats -> Store h Seats -> Task h (Passengers, Seats)
-  let confirm_booking == do passengers seats free
-    free <<= difference seats
-    view (passengers, seats)
-\end{TASK}
-
-  % allValid :: Passengers -> Bool
-  % allValid ps = all isValid ps && any isAdult ps
-
-  % isValid :: Passenger -> Bool
-  % isValid (n, a) = n /= "" && a >= 0
-
-  % isAdult :: Passenger -> Bool
-  % isAdult (_, a) = a >= 18
-
-  % isCorrect :: Seats -> Seats -> Bool
-  % isCorrect ss fs = do
-  %   List.intersect ss fs == ss
+Section~\ref{sec:tophat} introduces the \TOPHAT\ language as presented in \citet{Steenvoorden22}.
+Section~\ref{sec:dyntophat} then goes on to present our dynamic version of \TOPHAT.
+Related work is discussed in~\ref{sec:relatedwork}. After a short discussion on the implications of \DYNTOPHAT\ in Section~\ref{sec:discussion}, we conclude in Section~\ref{sec:conclusion}.
