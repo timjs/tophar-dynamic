@@ -1,0 +1,22 @@
+\section{Properties}
+
+\subsection{Meta theory}
+
+Propositions from \cite{Steenvoorden22} and \cite{Klijnsma2020} that still hold are the following:
+
+\begin{itemize}
+  \item Valued tasks are static
+  \item Steady tasks stay steady
+\end{itemize}
+
+However, because of the dynamic nature of task pools, the following propositions need alteration:
+
+\begin{itemize}
+  \item Static tasks stay static
+  \item Finished tasks stay finished
+\end{itemize}
+
+This is because task pools can always receive the initialise input ($\Init$),
+so tasks containing a task pool will never get to a steady state!
+
+We will discuss the impact on equational reasoning on tasks more thoroughly...
