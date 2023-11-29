@@ -3,10 +3,11 @@
 \section{Dynamic TopHat}
 \label{sec:dyntophat}
 
-\subsection{Language}
+% \subsection{Language}
 
 Although it is possible in \TOPHAT\ to start multiple tasks in parallel,
 the amount of these task should be specified by the programmer at develop time.
+Let us illustrate this with an example.
 
 \begin{example}[Vending machine with shared stock]
   \label{exm:vending-shared}
@@ -31,9 +32,21 @@ the amount of these task should be specified by the programmer at develop time.
   Note that this task results in a pair containing the two bought $\Snack$s.
 \end{example}
 
+Here we see that, at development time, we need to specify the number \var{vend}s that can be done at the same time.
+Although in the physical world, it is quite evident that one can only place a predefined amount of vending machines next to each other,
+in the digital world, one would expect to initialise and kill such processes at any time.
+
+\subsection{Task pools}
+
 \DYNTOPHAT\ is a moderate extension to the \TOPHAT\ base language where we add support for \emph{task pools}.
-A task pool is a new combinator at the task level of the \TOPHAT\ language.
-The combinator ($\Pool^k_{t_0} []$) is parametrised by an unique key $k$, a template task $t_0$ and (initially) an empty task list $[]$.
+Task pools contain zero or more instantiations of a \emph{template task} running in parallel.
+In this regard, they are similar to the pair combinator ($\Pair$).
+End users can interact with all tasks currently running in a pool.
+However, one can initiate a new instance of the template task by sending an \emph{init} signal to the task pool itself.
+Similarly, by sending a \emph{kill} signal, the task pool terminates one of its children.
+
+In the \TOPHAT\ language, a task pool is a new combinator at the task level.
+The combinator $\Pool^k_{t_0} []$ is parametrised by an unique key $k$, a template task $t_0$ and (initially) an empty task list $[]$.
 Each time end users send an \emph{init} action to this pool ($k\Send\Init$),
 the template task is placed in the list of current running tasks,
 in this case resulting in $\Pool^k_{t_0} [t_0]$.
@@ -42,9 +55,15 @@ Tasks in the task list of a pool can also be killed by sending a \emph{kill} act
 In this case the first task in the pool will be killed.
 The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
 
+\begin{figure}[h]
+  \usemacro{G-Dynamic-Ext}
+  \caption{Grammar for \DYNTOPHAT}
+  \label{fig:dynamic-grammar}
+\end{figure}
+
 \begin{example}[Dynamic number of vending machines]
   \label{exm:vending-dynamic}
-  Using the same \var{vend} task from \cref{exm:vending-shared},
+  Using the same \var{vend}$_1$ task from \cref{exm:vending-shared},
   we can now create a vending machine where end users can start an arbitrary amount of vending tasks.
   \begin{TASK}
     let machine$_2$ : Task (List Snack) =
@@ -56,22 +75,33 @@ The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
   Note that this machine, contrary to the one in \cref{exm:vending-shared}, will run indefinitely.
 \end{example}
 
-\begin{figure}[h]
-  \usemacro{G-Dynamic-Ext}
-  \caption{Grammar for \DYNTOPHAT}
-  \label{fig:dynamic-grammar}
-\end{figure}
-
 
 \subsection{Semantics}
 
-Static and dynamic semantics of task pools are given in \cref{fig:semantics-dynamic},
-and extended observations in \cref{fig:observations-dynamic}.
+Static semantics of task pools are given in \cref{fig:dynamic-statics}.
+Here we simply state that a task pool results in a list of values.
 
 \begin{figure}[h]
   \begin{mathpar}
     \boxed{\RelationT} \\
     \userule{T-Pool} \\
+  \end{mathpar}
+  \caption{Typing rules for \DYNTOPHAT}
+  \label{fig:typing-dynamic}
+\end{figure}
+
+Extensions of the dynamic semantics are given in \cref{fig:typing-dynamic}.
+Similar how normalisation works for task pairing (as shown in \cref{fig:semantics-tophat}),
+normalisation of task pools normalises each task in the pool and constructs a new pool.
+Note that the template task is not normalised.
+This means that, every time the template task is added to the task pool,
+it will be normalised after this action.
+Otherwise we would create unwanted sharing.
+\todo{add bad sharing example?}
+If, for example, the template needs to do some setups,
+
+\begin{figure}[h]
+  \begin{mathpar}
     % \userule{E-Pool} \\
     \boxed{\RelationN} \\
     \userule{N-Pool-Name} \\
@@ -85,30 +115,11 @@ and extended observations in \cref{fig:observations-dynamic}.
   \label{fig:semantics-dynamic}
 \end{figure}
 
+and extended observations in \cref{fig:observations-dynamic}.
+\todo{add observations}
+
 \begin{figure}[h]
   \usemacro{O-Dynamic}
   \caption{Observations for \DYNTOPHAT}
   \label{fig:observations-dynamic}
 \end{figure}
-
-
-\subsection{Meta theory}
-
-Propositions from \cite{Steenvoorden22} and \cite{Klijnsma2020} that still hold are the following:
-
-\begin{itemize}
-  \item Valued tasks are static
-  \item Steady tasks stay steady
-\end{itemize}
-
-However, because of the dynamic nature of task pools, the following propositions need alteration:
-
-\begin{itemize}
-  \item Static tasks stay static
-  \item Finished tasks stay finished
-\end{itemize}
-
-This is because task pools can always receive the initialise input ($\Init$),
-so tasks containing a task pool will never get to a steady state!
-
-We will discuss the impact on equational reasoning on tasks more thoroughly...
