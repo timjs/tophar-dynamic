@@ -10,9 +10,14 @@ This symbolic behaviour description can then be used to reason over the properti
 \todo{insert rules and describe them in some level of detail.}
 
 \begin{figure}[h]
-    TODO TODO TODO
-    \caption{Examples of symbolic execution rules for \TOPHAT}
-    \label{fig:symbolic-semantics}
+  \begin{mathpar}
+    \boxed{\RelationSH} \\
+    \usemacro{SH-Enter} \\
+    \usemacro{SH-Pair-Left}
+    \usemacro{SH-Pair-Right} \\
+  \end{mathpar}
+  \caption{Examples of symbolic rules for \TOPHAT}
+  \label{fig:symbolic-semantics}
 \end{figure}
 
 Ultimately, the symbolic execution of a \TOPHAT\ program is then powered by a top-level simulation function, that leverages the symbolic rules to perform symbolic execution.
@@ -28,6 +33,17 @@ Imagine we have a task pool combinator, followed by a step.
 We restrict the number of new task initializations to be no larger than some $n$.
 The step could very well require $n+1$ values before it will allow a step.
 It is clear from this example that limiting task initialization is not a suitable way to deal with the infinite interaction coming from the pool combinator.
+
+\begin{figure}[h]
+  \begin{mathpar}
+    \boxed{\RelationSH} \\
+    \usemacro{SH-Pool} \\
+    \usemacro{SH-Pool-Init} \\
+    \usemacro{SH-Pool-Kill} \\
+  \end{mathpar}
+  \caption{Additional symbolic rules for \DYNTOPHAT}
+  \label{fig:symbolic-semantics-dynamic}
+\end{figure}
 
 The pool combinator breaks traditional symbolic execution as introduced in previous work~\cite{conf/ifl/NausSK19}.
 That does not mean that the symbolic execution of \DYNTOPHAT\ programs is now completely useless.

@@ -179,6 +179,7 @@
 
 \newmacro{highlight}[1]
   {\colorbox{lightgray}{\ensuremath{#1}}}
+\let\shaded\highlight
 
 %% Spacing %%
 
@@ -272,6 +273,8 @@
 \newmacro{hint}[1]
   {\quad\text{\{ #1 \}}}
 
+\newmathcommand{each}[op]
+  {\mathrm{for\ each}}
 \newmathcommand{when}[op]
   {\mathrm{when}}
 \newmathcommand{where}[op]

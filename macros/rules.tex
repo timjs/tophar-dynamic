@@ -87,7 +87,7 @@
   {}
 
 \newrule{T-Record}
-  {\foreach{l} \Quad
+  {\each{l} \Quad
    \Gamma,\Sigma \infers e_l : \tau_l}
   {\Gamma,\Sigma \infers \record{\many{l=e_l}} : \record{\many{l:\tau_l}}}
   {}
@@ -102,7 +102,7 @@
 % \newrule{T-Case-Var}
 %   {\split
 %      {\Gamma,\Sigma \infers e : \variant{\many{l:\tau_l}}}
-%      {\foreach{l} \Quad
+%      {\each{l} \Quad
 %       \infers m_l : \tau_l \To \Delta_l \Quad
 %       \Gamma\cup\Delta_l,\Sigma \infers e_l : \tau}}
 %   {\Gamma,\Sigma \infers \Case e \Of \block{\many{l\ m_l \mapsto e_l}} : \tau}
@@ -110,7 +110,7 @@
 
 \newrule{T-Case}%-Enum
   {\Gamma,\Sigma \infers e : \variant{\many{l}} \Quad
-   \foreach{l} \Quad
+   \each{l} \Quad
    \Gamma,\Sigma \infers e_l : \tau}
   {\Gamma,\Sigma \infers \Case e \Of \block{\many{l \mapsto e_l}} : \tau}
   {}
@@ -434,13 +434,13 @@
   {}
 
 \newrule{S-Rename}
-  {\foreach{x \text{ with } x=y} \Quad
+  {\each{x \text{ with } x=y} \Quad
    m_x \sim v_y \To \theta_x}
   {\record{{x \matches m_x\ ^{x \in X}}} \sim \record{{y = v_y\ ^{y \in Y}}} \To \underset{x}{\bigcirc}\ \theta_x}
   {X \subseteq Y}
 
 \newrule{S-Unpack}
-  {\foreach{l} \Quad
+  {\each{l} \Quad
    l \sim v_l \To \theta_l}
   {\record{..} \sim \record{\many{l=v_l}} \To \underset{l}{\bigcirc}\ \theta_l}
   {}
@@ -498,7 +498,7 @@
 
 
 \newrule{E-Record}
-  {\foreach{l} \Quad
+  {\each{l} \Quad
    e_l \evaluate v_l}
   {\record{\many{l=e_l}} \evaluate \record{\many{l=v_l}}}
   {}
@@ -1067,7 +1067,7 @@
   {e   \symevaluate b\shaded{|_{\phi}} \Quad
    e_l \symevaluate v_l\shaded{|_{\phi_l}}}
   {\Co{e}{\block{\many{l \mapsto e_l}}} \symevaluate v_l\shaded{|_{\phi \land \phi_l \land b \equiv l}}}
-  {\foreach l \in \many{l}}
+  {\each l \in \many{l}}
 
 
 \newrule{SE-Schema}
@@ -1114,17 +1114,17 @@
 
 \newrule{SH-Enter}%XXX: same
   {z' \text{fresh}}
-  {\Enter^k\beta\shaded{|_{\phi}},\sigma \symhandle{\send{k}{z'}} \Update^k z'\shaded{|_{\phi}},\sigma,\nothing}
+  {\Enter^k\beta|_{\phi},\sigma \symhandle{\send{k}{z'}} \Update^k z'|_{\phi},\sigma,\nothing}
   {z' : \beta}
 
 \newrule{SH-Update}
   {z' \text{fresh}}
-  {\Update^k b\shaded{|_{\phi}},\sigma \symhandle{\send{k}{z'}} \Update^k z'\shaded{|_{\phi}},\sigma,\nothing}
+  {\Update^k b|_{\phi},\sigma \symhandle{\send{k}{z'}} \Update^k z'|_{\phi},\sigma,\nothing}
   {b,z' : \beta}
 
 \newrule{SH-Change}
   {z' \text{fresh}}
-  {\Change^k h\shaded{|_{\phi}},\sigma \symhandle{\send{k}{z'}} \Change^k h\shaded{|_{\phi}},[h \mapsto z']\sigma,\set{h}}
+  {\Change^k h|_{\phi},\sigma \symhandle{\send{k}{z'}} \Change^k h|_{\phi},[h \mapsto z']\sigma,\set{h}}
   {\sigma(h),z' : \beta}
 
 \newrule{SH-Select}
@@ -1141,7 +1141,32 @@
 \newrule{SH-Schema}
   {n_i|_{\phi},\sigma \symhandle{\iota} t_i'|_{\phi'},\sigma',\delta'}
   {\Node(\ldots,n_i,\ldots)|_{\phi},\sigma \symhandle{\iota} \Node(\ldots,t_i',\ldots)|_{\phi'},\sigma',\delta'}
-  {\foreach i}
+  {\each i}
+
+\newrule{SH-Pair-Left}
+  {n_1|_{\phi},\sigma \symhandle{\iota} t_1'|_{\phi'},\sigma',\delta'}
+    {n_1 \Pair n_2 |_{\phi}, \sigma \symhandle{\iota} t_1' \Pair n_2 |_{\phi'},\sigma',\delta'}
+  {}
+
+\newrule{SH-Pair-Right}
+  {n_2|_{\phi},\sigma \symhandle{\iota} t_2'|_{\phi'},\sigma',\delta'}
+    {n_1 \Pair n_2 |_{\phi}, \sigma \symhandle{\iota} n_1 \Pair t_2' |_{\phi'},\sigma',\delta'}
+  {}
+
+\newrule{SH-Pool}
+  {n_i|_{\phi}\sigma \symhandle{\iota} t_j'|_{\phi'},\sigma',\delta'}
+  {\Pool^k_{t_0} [\ldots,n_j,\ldots]|_{\phi},\sigma \symhandle{\iota} \Pool^k_{t_0} [\ldots,t_j',\ldots]|_{\phi'},\sigma',\delta'}
+  {\each j}
+
+\newrule{SH-Pool-Init}
+  {}
+  {\Pool^k_{t_0}[\many{n}]|_{\phi},\sigma \symhandle{k\Send\Init} \Pool^k_{t_0}[\many{n},t_0]|_{\phi'},\sigma',\delta'}
+  {}
+
+\newrule{SH-Pool-Kill}
+  {}
+  {\Pool^k_{t_0}[\ldots,n_j,\ldots]|_{\phi},\sigma \symhandle{k\Send\Kill j} \Pool^k_{t_0}[\ldots]|_{\phi'},\sigma',\delta'}
+  {\each j}
 
 
 \newmacro{RelationSP}
@@ -1150,12 +1175,12 @@
 \newrule{SP-Select}
   {}
   {\Select^\nu\block{\many{l \mapsto t_l}} \sympick{l'} t_{l'}}
-  {\foreach l' \in \set{l \mid \lnot\Failing(t_{l})}}
+  {\each l' \in \set{l \mid \lnot\Failing(t_{l})}}
 
 \newrule{SP-Schema}
   {t_i \sympick{l} t_i'}
   {\Node(\ldots,t_i,\ldots) \sympick{l} \Node(\ldots,t_i',\ldots)}
-  {\foreach i}
+  {\each i}
 
 
 
