@@ -943,8 +943,8 @@
 
 \newrule{H-Kill}
   {}
-  {\Pool^k_{t_0}[n_1,\ldots,n_i,\ldots,n_j],\sigma \handle{k \Send \Kill i} \Pool^k_{t_0}[n_1,\ldots,n_j],\sigma,\nothing}
-  {0 \le i \le j}
+  {\Pool^k_{t_0}[\ldots,n_j,\ldots],\sigma \handle{k \Send \Kill j} \Pool^k_{t_0}[\ldots,\cancel{n_j},\ldots],\sigma,\nothing}
+  {\each j}
 
 \newrule{H-Pool}
 	{n_1,\sigma \handle{k' \Send \alpha} n_1',\sigma_1',\delta_1' \Quad
@@ -1154,7 +1154,7 @@
   {}
 
 \newrule{SH-Pool}
-  {n_i|_{\phi}\sigma \symhandle{\iota} t_j'|_{\phi'},\sigma',\delta'}
+  {n_j|_{\phi}\sigma \symhandle{\iota} t_j'|_{\phi'},\sigma',\delta'}
   {\Pool^k_{t_0} [\ldots,n_j,\ldots]|_{\phi},\sigma \symhandle{\iota} \Pool^k_{t_0} [\ldots,t_j',\ldots]|_{\phi'},\sigma',\delta'}
   {\each j}
 
@@ -1165,7 +1165,7 @@
 
 \newrule{SH-Pool-Kill}
   {}
-  {\Pool^k_{t_0}[\ldots,n_j,\ldots]|_{\phi},\sigma \symhandle{k\Send\Kill j} \Pool^k_{t_0}[\ldots]|_{\phi'},\sigma',\delta'}
+  {\Pool^k_{t_0}[\ldots,n_j,\ldots]|_{\phi},\sigma \symhandle{k\Send\Kill j} \Pool^k_{t_0}[\ldots,\cancel{n_j},\ldots]|_{\phi'},\sigma',\delta'}
   {\each j}
 
 
@@ -1188,7 +1188,7 @@
   {n|_{\phi},\sigma \syminteract{\iota} n'|_{\phi'},\sigma'}
 
 \newrule{SI-Handle}%XXX: same
-  {n\shaded{|_{\phi}},\sigma \symhandle{\iota} t'\shaded{|_{\phi'}},\sigma',\delta' \Quad
-   t'\shaded{|_{\phi'}},\sigma',\delta' \symfixate n''\shaded{|_{\phi''}},\sigma''}
-  {n\shaded{|_{\phi}},\sigma \syminteract{\iota} n''\shaded{|_{\phi''}},\sigma''}
+  {n|_{\phi},\sigma \symhandle{\iota} t'|_{\phi'},\sigma',\delta' \Quad
+   t'|_{\phi'},\sigma',\delta' \symfixate n''|_{\phi''},\sigma''}
+  {n|_{\phi},\sigma \syminteract{\iota} n''|_{\phi''},\sigma''}
   {}

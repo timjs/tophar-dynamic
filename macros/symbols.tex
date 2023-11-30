@@ -132,9 +132,10 @@
 \newmacro{interact}[1]  {\overset{#1}{\Too}}
 \newmacro{execute}[1]   {\mathrel{\overset{#1}{\Too}\nobreak\strut\mkern-6mu^*}}
 
-% \newrelation{symevaluate}      {\;\rotatebox[origin=c]{-90}{$\leadsto$}\;}
-% \newrelation{symstride}    {\;\mapstochar\kern+0.1em\leadsto\;}
-% \newrelation{symnormalise} {\;\rotatebox[origin=c]{-90}{$\Leadsto$}\;}
+\newrelation{symevaluate}  {\rotatebox[origin=c]{-90}{$\mapstochar\kern+0.1em\leadsto$}}
+\newrelation{symnormalise} {\rotatebox[origin=c]{-90}{$\leadsto$}}
+\newrelation{symfixate}    {\rotatebox[origin=c]{-90}{$\Leadsto$}}
+
 \newmacro{symhandle}[1]    {\underset{#1}{\leadsto}}
 \newmacro{syminteract}[1]  {\underset{#1}{\Leadsto}}
 \newmacro{simulate}[1]     {\mathrel{\underset{#1}{\Leadsto}\nobreak\strut\mkern-6mu^*}}
