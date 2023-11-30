@@ -1,5 +1,59 @@
+\newmacro{citeprop}[1]{[Prop.~#1]} % {\cite[Prop.~#1]{conf/sfp/KlijnsmaS22}}
 
 \subsection{Task equivalence}
+
+We do this by categorising tasks based on the observations we can make on them.
+The observations we use, are if the task is failing ($\Failing$), if the task can receive any inputs ($\Inputs$), and if the task has a value ($\Value$).
+Based on these three observations, a (fully fixated) task can be in one of five \emph{conditions} which we will summarise below.
+The mentioned properties are proved in \citet{conf/sfp/KlijnsmaS22}.
+We refer to the propositions \todo{}.
+
+\begin{description}
+
+  \item[Failing]
+    A failing task $t$ is a task for which the failing function $\Failing(t)$ yields true.
+    If a task is failing, we can prove that it accepts no more use input and has no value \citeprop{12}.
+    That is, $\Inputs(t) = \empty$ and $\Value(t,\sigma) = \bot$.
+    We also know that, if $\Failing(t) = \True$, it stays failing \citeprop{1},
+    simply because there is no input which can rewrite $t$ to another $t'$.
+    % We have proven this property in \todo{} in the appendix.
+
+  \item[Stuck]
+    A stuck task $t$ is a task which does not fail, does not accept user input, and does not have a value.
+    That is, $\Failing(t) = \False$, $\Inputs(t) = \empty$, and $\Value(t,\sigma) = \bot$.
+    Similar to failing tasks, stuck tasks will always remain stuck because no more user interaction is possible and, by assumption, it is already fully fixated \citeprop{3}.
+
+  \item[Steady]
+    If a task $t$ has a value but it cannot handle any input, we call it \emph{steady}.
+    An example of a steady task is $\View^k 42$.
+    Because this task accepts no more user input, its value will always remain equal to $42$.
+
+  \item[Unsteady]
+    If a task $t$ has a value and it can handle input, we call it \emph{unsteady}.
+    An example of an unsteady task is $\Update^k 42$.
+    This task still accepts user input, and thus its value can keep on changing.
+    Even though this example and $\View^k 42$ yield the same value,
+    they should not be equivalent, since one's value can be changed and the other one's value cannot.
+    If a task $t$ is unsteady, it will never terminate: an unsteady task will always remain unsteady with the same input space, only its value may change \citeprop{2}.
+
+  \item[Running]
+    The last condition is when a task $t$ does not fail, does not have a value, but still accepts user input.
+    Because there is still user interaction possible, it may be the case that with the right input, it transitions to one of the previously described task conditions.
+    The simplest example of a running task is the empty editor $\Enter^k \beta$, which becomes an unsteady task once it receives a valid input event.
+    Although running tasks can keep running forever,
+    we at least can prove that they will not fail \citeprop{4}.
+
+\end{description}
+
+These conditions are mutually exclusive \citeprop{5}.
+
+
+
+
+
+
+
+
 
 Propositions from \cite{Steenvoorden22} and \cite{Klijnsma2020} that still hold are the following:
 
