@@ -2,7 +2,7 @@
 
 \subsection{Task equivalence}
 
-We do this by categorising tasks based on the observations we can make on them.
+We do this by categorizing tasks based on the observations we can make on them.
 The observations we use, are if the task is failing ($\Failing$), if the task can receive any inputs ($\Inputs$), and if the task has a value ($\Value$).
 Based on these three observations, a (fully fixated) task can be in one of five \emph{conditions} which we will summarise below.
 The mentioned properties are proved in \citet{conf/sfp/KlijnsmaS22}.
@@ -47,8 +47,20 @@ We refer to the propositions \todo{}.
 
 These conditions are mutually exclusive \citeprop{5}.
 
+\begin{table}
+  \input{tables/conditions}
+  \caption{Conditions for tasks}
+  \label{tab:task-conditions}
+\end{table}
+
+\begin{figure}
+  \input{figures/conditions}
+  \caption{Possible task conditions and their transitions, where a transition is caused by user interaction ($\interact{\iota}$) for some input $\iota$.}
+  \label{fig:task-conditions}
+\end{figure}
 
 
+---------
 
 
 
