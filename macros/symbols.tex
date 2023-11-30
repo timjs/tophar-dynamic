@@ -24,10 +24,11 @@
 
 %% Arrows %%
 
-\newrelation{too} {\longrightarrow}
-\newrelation{down}{\downarrow}
-\newrelation{Down}{\Downarrow}
-\newrelation{Too} {\Longrightarrow}
+\newrelation{too}     {\longrightarrow}
+\newrelation{down}    {\downarrow}
+\newrelation{Down}    {\Downarrow}
+\newrelation{Too}     {\Longrightarrow}
+\newrelation{Leadsto}{\raisebox{-0.25ex}{$\leadsto$}\mathllap{\raisebox{+0.25ex}{$\leadsto$}}}
 
 
 %% Keywords %%
@@ -131,6 +132,12 @@
 \newmacro{interact}[1]  {\overset{#1}{\Too}}
 \newmacro{execute}[1]   {\mathrel{\overset{#1}{\Too}\nobreak\strut\mkern-6mu^*}}
 
+% \newrelation{simevalu}      {\;\rotatebox[origin=c]{-90}{$\leadsto$}\;}
+% \newrelation{simstride}    {\;\mapstochar\kern+0.1em\leadsto\;}
+% \newrelation{simnormalise} {\;\rotatebox[origin=c]{-90}{$\Leadsto$}\;}
+% \newrelation{simhandle}    {\;\leadsto\;}
+% \newrelation{siminteract}  {\;\Leadsto\;}
+\newmacro{simulate}[1]     {\mathrel{\underset{#1}{\Leadsto}\nobreak\strut\mkern-6mu^*}}
 
 %% Helpers %%
 

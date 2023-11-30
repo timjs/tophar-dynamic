@@ -130,3 +130,13 @@
     \Watching(\Pool^k_{t_0}[\many{n}]) &=& \bigcup_{n_i\in\many{n}} \Watching(n_i) \\
   \end{function}
 }
+
+  \newmacro{O-Hints}{
+    \begin{function}
+      \signature{         \Hints : \mathrm{Normalised\ task} \times \mathrm{State} \times (\mathrm{Value} \to \mathrm{Path\ condition})} \\
+      \signature{\phantom{\Hints :} \to \powerset{\mathrm{Inputs} \times \mathrm{Path\ conditions}}} \\
+
+      \Hints(n, \sigma, \psi) &=& \set{ (\tilde{\iota}, \Psi) \mid n, \sigma \simulate{\tilde{\iota} \cdot \tilde{I}} \tilde{v}|_\Phi,\; \Sat(\Psi)} \\
+                              & & \where\ \Psi = \Phi \land \psi(\tilde{v}) \\
+    \end{function}
+  }
