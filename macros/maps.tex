@@ -17,22 +17,22 @@
     \Value(t_1 \Step e_2, \sigma)                      &=& \bot \\
     \Value(e_1 \Trans t_2, \sigma)                     &=& \left\{
       \begin{array}{ll}
-        v_2'                                           & \ \when\ \Value(t_2,\sigma) = v_2 \land e_1\ v_2 \evaluate v_2' \\
-        \obox{\tuple{v_1, v_2}}{\bot}                  & \ \otherwise \\
+        v_2'                                           & \when\ \Value(t_2,\sigma) = v_2 \land e_1\ v_2 \evaluate v_2' \\
+        \obox{\tuple{v_1, v_2}}{\bot}                  & \otherwise \\
       \end{array}
     \right. \\
   \addlinespace
     \Value(t_1 \Pair t_2, \sigma)                      &=& \left\{
       \begin{array}{ll}
-        \tuple{v_1, v_2}                               & \ \when\ \Value(t_1, \sigma) = v_1 \land \Value(t_2, \sigma) = v_2 \\
-        \bot                                           & \ \otherwise \\
+        \tuple{v_1, v_2}                               & \when\ \Value(t_1, \sigma) = v_1 \land \Value(t_2, \sigma) = v_2 \\
+        \bot                                           & \otherwise \\
       \end{array}
     \right. \\
     \Value(t_1 \Choose t_2, \sigma)                    &=& \left\{
       \begin{array}{ll}
-        v_1                                            & \ \when\ \Value(t_1, \sigma) = v_1 \\
-        v_2                                            & \ \when\ \Value(t_1, \sigma) = \bot \land \Value(t_2, \sigma) = v_2 \\
-        \obox{\tuple{v_1, v_2}}{\bot}                  & \ \otherwise \\
+        v_1                                            & \when\ \Value(t_1, \sigma) = v_1 \\
+        v_2                                            & \when\ \Value(t_1, \sigma) = \bot \land \Value(t_2, \sigma) = v_2 \\
+        \obox{\tuple{v_1, v_2}}{\bot}                  & \otherwise \\
       \end{array}
     \right. \\
   \end{function}

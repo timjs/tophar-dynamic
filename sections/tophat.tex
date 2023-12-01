@@ -26,7 +26,7 @@ Tasks can either be editors or combinators.
 
 Editors are the interaction points of a task program.
 They are an abstraction over widgets or form input fields.
-Editors are type safe,
+Editors are type-safe,
 they only accept values of their specified type.
 The type of an editor can also be used to (generically) render a user interface.
 For example,
@@ -212,4 +212,24 @@ and the set of possible inputs a task can handle.
   \end{mathpar}
   \caption{Example of semantic rules for \TOPHAT}
   \label{fig:semantics-tophat}
+\end{figure}
+
+\todo{Explain observations}
+
+\begin{figure}
+  \usemacro{O-Failing}
+  \caption{Failing observation}
+  \label{fig:observation-failing}
+\end{figure}
+
+\begin{figure}
+  \usemacro{O-Value}
+  \caption{Value observation}
+  \label{fig:observation-value}
+\end{figure}
+
+\begin{figure}
+  \usemacro{O-Inputs}
+  \caption{Inputs observation}
+  \label{fig:observation-inputs}
 \end{figure}
