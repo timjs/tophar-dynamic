@@ -152,45 +152,45 @@ For brevity, we omit the type annotations of variable bindings.
 %   % isCorrect ss fs = do
 %   %   List.intersect ss fs == ss
 
-\begin{TASK}[emph={passengers,seats,free}]
-  let book_flight = do free.
-    enter List Passenger >>= do passengers.
-      all valid passengers |->
-        choose_seats passengers >>= do seats.
-        confirm_booking passengers seats
-        assert length passengers == length seats
-        assert unique seats
-        assert seats /< free
-\end{TASK}
+% \begin{TASK}[emph={passengers,seats,free}]
+%   let book_flight = do free.
+%     enter List Passenger >>= do passengers.
+%       all valid passengers |->
+%         choose_seats passengers >>= do seats.
+%         confirm_booking passengers seats
+%         assert length passengers == length seats
+%         assert unique seats
+%         assert seats /< free
+% \end{TASK}
 
-\begin{TASK}[emph={passengers,seats,free}]
-  book_flight free <&> book_flight free
-\end{TASK}
+% \begin{TASK}[emph={passengers,seats,free}]
+%   book_flight free <&> book_flight free
+% \end{TASK}
 
-\begin{TASK}[emph={passengers,seats,free}]
-  let main =
-    book_flight free
-          <&>
-    book_flight free
-          <&>
-    book_flight free
-          <&>
-           $\vdots$
-\end{TASK}
+% \begin{TASK}[emph={passengers,seats,free}]
+%   let main =
+%     book_flight free
+%           <&>
+%     book_flight free
+%           <&>
+%     book_flight free
+%           <&>
+%            $\vdots$
+% \end{TASK}
 
-\begin{TASK}[emph={passengers,seats,free}]
-  let main =
-    >&<$_\text{\var{book\_flight \emph{free}}}$ []
-\end{TASK}
-\begin{TASK}[emph={passengers,seats,free}]
-  let main =
-    >&<$_\text{\var{book\_flight \emph{free}}}$ [book_flight free]
-\end{TASK}
-\begin{TASK}[emph={passengers,seats,free}]
-  let main =
-    >&<$_\text{\var{book\_flight \emph{free}}}$ [choose_seats ..., book_flight free]
-\end{TASK}
-\begin{TASK}[emph={passengers,seats,free}]
-  let main =
-    >&<$_\text{\var{book\_flight \emph{free}}}$ [choose_seats ...]
-\end{TASK}
+% \begin{TASK}[emph={passengers,seats,free}]
+%   let main =
+%     >&<$_\text{\var{book\_flight \emph{free}}}$ []
+% \end{TASK}
+% \begin{TASK}[emph={passengers,seats,free}]
+%   let main =
+%     >&<$_\text{\var{book\_flight \emph{free}}}$ [book_flight free]
+% \end{TASK}
+% \begin{TASK}[emph={passengers,seats,free}]
+%   let main =
+%     >&<$_\text{\var{book\_flight \emph{free}}}$ [choose_seats ..., book_flight free]
+% \end{TASK}
+% \begin{TASK}[emph={passengers,seats,free}]
+%   let main =
+%     >&<$_\text{\var{book\_flight \emph{free}}}$ [choose_seats ...]
+% \end{TASK}
