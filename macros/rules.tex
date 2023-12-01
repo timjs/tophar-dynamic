@@ -743,17 +743,17 @@
 
 \newrule{N-Pool-Name}
   {k \text{ fresh} \Quad
-   t_1,\sigma \normalise n_1,\sigma_1,\delta_1 \Quad
+   t_1,\sigma \normalise n_1',\sigma_1',\delta_1' \Quad
    \ldots \Quad
-   t_j,\sigma_{j-1} \normalise n_j,\sigma',\delta_j}
-  {\Pool^\epsilon_{t_0} [\many{t}],\sigma \normalise \Pool^k_{t_0} [\many{n}],\sigma',\bigcup_j \delta_j}
+   t_j,\sigma_{j-1}' \normalise n_j',\sigma_j',\delta_j'}
+  {\Pool^\epsilon_{t_0} [\many{t}],\sigma \normalise \Pool^k_{t_0} [\many{n'}],\sigma_j',\delta_1'\cup\ldots\cup\delta_j'}
   {}
 
 \newrule{N-Pool}
-  {t_1,\sigma \normalise n_1,\sigma_1,\delta_1 \Quad
+  {t_1,\sigma \normalise n_1',\sigma_1',\delta_1' \Quad
    \ldots \Quad
-   t_j,\sigma_{j-1} \normalise n_j,\sigma',\delta_j}
-  {\Pool^k_{t_0} [\many{t}],\sigma \normalise \Pool^k_{t_0} [\many{n}],\sigma',\bigcup_j \delta_j}
+   t_j,\sigma_{j-1} \normalise n_j',\sigma_j',\delta_j'}
+  {\Pool^k_{t_0} [\many{t}],\sigma \normalise \Pool^k_{t_0} [\many{n'}],\sigma_j',\delta_1'\cup\ldots\cup\delta_j'}
   {}
 
 
@@ -949,9 +949,9 @@
 \newrule{H-Pool}
 	{n_1,\sigma \handle{k' \Send \alpha} n_1',\sigma_1',\delta_1' \Quad
    \ldots \Quad
-   n_j,\sigma_{j-1} \handle{k' \Send \alpha} n_j',\sigma',\delta_j'
+   n_j,\sigma_{j-1}' \handle{k' \Send \alpha} n_j',\sigma_j',\delta_j'
   }
-	{\Pool^k_{t_0}[\many{n}],\sigma \handle{k' \Send \alpha} \Pool^k_{t_0}[\many{n'}],\sigma',\bigcup_j \delta_j'}
+	{\Pool^k_{t_0}[\many{n}],\sigma \handle{k' \Send \alpha} \Pool^k_{t_0}[\many{n'}],\sigma_j',\delta_1'\cup\ldots\cup\delta_j'}
   {}
 
 
@@ -1154,7 +1154,7 @@
   {}
 
 \newrule{SH-Pool}
-  {n_j|_{\phi}\sigma \symhandle{\iota} t_j'|_{\phi'},\sigma',\delta'}
+  {n_j|_{\phi},\sigma \symhandle{\iota} t_j'|_{\phi'},\sigma',\delta'}
   {\Pool^k_{t_0} [\ldots,n_j,\ldots]|_{\phi},\sigma \symhandle{\iota} \Pool^k_{t_0} [\ldots,t_j',\ldots]|_{\phi'},\sigma',\delta'}
   {\each j}
 
