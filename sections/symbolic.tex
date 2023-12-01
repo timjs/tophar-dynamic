@@ -13,7 +13,7 @@ tasks are augmented with a path condition $\phi$.
 Instead of taking an input $\iota$ (written above the arrow),
 simulation rules generate an input (written below the arrow).
 
-\begin{figure}[h]
+\begin{figure}
   \begin{mathpar}
     \boxed{\RelationSH} \\
     \usemacro{SH-Enter} \\
@@ -52,7 +52,7 @@ We restrict the number of new task initializations to be no larger than some $n$
 The step could very well require $n+1$ values before it will allow a step.
 It is clear from this example that limiting task initialization is not a suitable way to deal with the infinite interaction coming from the pool combinator.
 
-\begin{figure}[h]
+\begin{figure}
   \begin{mathpar}
     \boxed{\RelationSH} \\
     \usemacro{SH-Pool} \\
@@ -69,7 +69,7 @@ Built on top of the symbolic execution engine, \citet{conf/sfp/NausS20} presents
 The basic idea is that symbolic execution can be leveraged to reach some goal $\psi$.
 \cref{fig:next-step-hint} defines a function that calculates these so-called next-step-hints.
 
-\begin{figure}[h]
+\begin{figure}
   \begin{mathpar}
     \usemacro{O-Hints}
   \end{mathpar}
@@ -84,7 +84,7 @@ Instead of calculating all possible hints, one could alter the hints function to
 This allows us to return a hint that guides the user to the shortest path to their goal.
 \cref{fig:next-step-hint-pool} lists an updated definition of the next-step hint function.
 
-\begin{figure}[h]
+\begin{figure}
     TODO TODO TODO
     \caption{Next-step hint generation function}
     \label{fig:next-step-hint-pool}

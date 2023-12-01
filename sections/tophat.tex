@@ -16,8 +16,8 @@ We use pattern matching to project the fields of pairs.
 The grammar of the task layer is given in \cref{fig:task-grammar}.
 Tasks can either be editors or combinators.
 
-\begin{figure}[h]
-  \usemacro{G-Tasks}
+\begin{figure}
+  \usemacro{G-Tasks-compact}
   \caption{Task grammar}
   \label{fig:task-grammar}
 \end{figure}
@@ -49,7 +49,7 @@ As plain editors, shared editors can also be read-only ($\Watch^\nu h$),
 which means their displayed value will only change when the referenced heap location changes,
 but the end user cannot send a value to update the heap location.
 
-\begin{figure}[h]
+\begin{figure}
   \input{figures/editors}
   \caption{Possible states of editors and its transitions}
   \label{fig:editor-state}
@@ -114,8 +114,10 @@ Each editor is keyed with an \emph{unique} key $k$.
 Sending $k \Send b$ to the system will change the value inside the editor with key $k$ to hold value $b$.
 \cref{fig:input-grammar} contains the grammar of inputs and actions accepted by a \TOPHAT\ system.
 
-\begin{figure}[h]
-  \usemacro{G-Inputs-compact}
+\begin{figure}
+  \begin{center}
+    \usemacro{G-Inputs-compact}
+  \end{center}
   \caption{Input grammar}
   \label{fig:input-grammar}
 \end{figure}
@@ -135,29 +137,30 @@ guarantees one can present these values to end users (print them)
 and receive new inputs from end users (parse them).
 Arbitrary tasks and functions do not have this property.
 
-\begin{figure}[h]
-  \usemacro{G-Types}
+\begin{figure}
+  \centering
+  \usemacro{G-Types-compact}
   \caption{Typing grammar}
   \label{fig:typing-grammar}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}
   % \small
   \begin{mathpar}
     \boxed{\RelationT}    \\
     \userule{T-Enter}     \quad
     \userule{T-Update}    \quad
-    \userule{T-View}      \\
-    \userule{T-Change}    \quad
+    % \userule{T-View}      \\
+    % \userule{T-Change}    \quad
     \userule{T-Watch}     \\
-    \userule{T-Trans}     \\
+    % \userule{T-Trans}     \\
     \userule{T-Pair}      \quad
-    \userule{T-Lift}      \\
-    \userule{T-Choose}    \quad
+    % \userule{T-Lift}      \\
+    % \userule{T-Choose}    \quad
     \userule{T-Fail}      \\
     \userule{T-Step}      \\
-    \userule{T-Share}     \quad
-    \userule{T-Assign}
+    % \userule{T-Share}     \quad
+    % \userule{T-Assign}
   \end{mathpar}
   \caption{Typing rules}
   \label{fig:typing-rules}
@@ -168,7 +171,7 @@ Arbitrary tasks and functions do not have this property.
 
 \TOPHAT\ semantics consist of three layers: the host layer, the internal layer, and the external layer.
 
-\begin{figure}[h]
+\begin{figure}
   \usemacro{P-Semantic-Layers}
   \caption{Semantic functions and their relation
     (read $x \bullet\!\!\raisebox{-0.1ex}{\mbox{–}}\ y$ as `$x$ makes use of $y$')}
@@ -198,7 +201,7 @@ and the set of possible inputs a task can handle.
 
 \todo{Explain N and H rules}
 
-\begin{figure}[h]
+\begin{figure}
   \begin{mathpar}
     \boxed{\RelationN} \\
     \userule{N-Name} \\

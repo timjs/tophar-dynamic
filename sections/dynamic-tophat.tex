@@ -55,7 +55,7 @@ Tasks in the task list of a pool can also be killed by sending a \emph{kill} act
 In this case the first task in the pool will be killed.
 The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
 
-\begin{figure}[h]
+\begin{figure}
   \usemacro{G-Dynamic-Ext}
   \caption{Grammar for \DYNTOPHAT}
   \label{fig:dynamic-grammar}
@@ -81,7 +81,7 @@ The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
 Static semantics of task pools are given in \cref{fig:dynamic-statics}.
 Here we simply state that a task pool results in a list of values.
 
-\begin{figure}[h]
+\begin{figure}
   \begin{mathpar}
     \boxed{\RelationT} \\
     \userule{T-Pool} \\
@@ -100,7 +100,7 @@ Otherwise we would create unwanted sharing.
 \todo{add bad sharing example?}
 If, for example, the template needs to do some setups,
 
-\begin{figure}[h]
+\begin{figure}
   \begin{mathpar}
     % \userule{E-Pool} \\
     \boxed{\RelationN} \\
@@ -118,7 +118,7 @@ If, for example, the template needs to do some setups,
 and extended observations in \cref{fig:observations-dynamic}.
 \todo{add observations}
 
-\begin{figure}[h]
+\begin{figure}
   \usemacro{O-Dynamic}
   \caption{Observations for \DYNTOPHAT}
   \label{fig:observations-dynamic}
