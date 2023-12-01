@@ -9,12 +9,13 @@ Here we describe the \TOPHAT\ language as presented in \citet{Steenvoorden22},
 which slightly deviates from presentations in earlier work \cite{conf/ppdp/SteenvoordenNK19,conf/ifl/NausSK19,conf/sfp/NausS20}.
 
 The \TOPHAT\ language consists of two layers: the expression layer and the task layer.
-The expression layer is a \STLC\ with primitive types, pairs, lists and references.
+The expression layer is a \STLC\ with primitive types, pairs, lists, enumerations, and references.
 We use pattern matching to project the fields of pairs.
-% It's grammar can be found in \cref{fig:expr-grammar}.
-%
+As the host language is fairly standard, we omit its details here
+and refer to \citet{Steenvoorden22} for more details.
 The grammar of the task layer is given in \cref{fig:task-grammar}.
-Tasks can either be editors or combinators.
+Tasks can either be editors or combinators,
+which we will discuss in the following subsections.
 
 \begin{figure}
   \usemacro{G-Tasks-compact}
@@ -24,7 +25,7 @@ Tasks can either be editors or combinators.
 
 \paragraph{Editors}
 
-Editors are the interaction points of a task program.
+Editors are the interaction points of task programs.
 They are an abstraction over widgets or form input fields.
 Editors are type-safe,
 they only accept values of their specified type.
@@ -34,51 +35,52 @@ an editor of type $\Bool$ could be rendered as a check box,
 while end users could interact with an editor of type $\Location$ by putting a pin on a map.
 
 Editors can initially be empty, or \emph{unvalued} ($\Enter^\nu \beta$).
-After sending a value $b$ to an editor, the editor is \emph{valued} ($\Update^\nu b$).
-The value of an editor can be changed by sending a new value.
-They cannot be cleared.
+After sending a value $b$ to an editor, the editor is now \emph{valued} ($\Update^\nu b$).
+The value in an editor can be changed by sending new values.
+However, they cannot be cleared.
 Editors can also be declared as \emph{read-only} ($\View^\nu b$).
-This way they show static information to an end user.
-
-Shared editors $\Change^\nu h$ watch over a heap location $h$,
-similar to \ML-style references.
-Changing the value of shared editors,
-changes the value in the heap location.
-Multiple shared editors can watch the same heap location.
-As plain editors, shared editors can also be read-only ($\Watch^\nu h$),
-which means their displayed value will only change when the referenced heap location changes,
-but the end user cannot send a value to update the heap location.
+This way they show static information to an end user which cannot be changed.
+The possible states editors can be in, is depicted in \cref{fig:editor-state}.
 
 \begin{figure}
   \input{figures/editors}
-  \caption{Possible states of editors and its transitions}
+  \caption{Possible states of editors and their transitions}
   \label{fig:editor-state}
 \end{figure}
+
+Shared editors $\Change^\nu h$ watch over a heap location $h$,
+similar to \ML-style references.
+Changing the value of shared editors changes the value in the heap location.
+Multiple shared editors can watch the same heap location.
+As plain editors, shared editors can also be read-only ($\Watch^\nu h$),
+which means their displayed value will only change when the referenced heap location changes,
+but end users cannot send values to update the heap location.
 
 \paragraph{Combinators}
 
 Combinators unite smaller tasks into bigger ones.
-The pair combinator ($t_1 \Pair t_2$) for example,
-pairs two tasks so that both can be worked on concurrently.
+The parallel-and combinator ($t_1 \Pair t_2$) for example,
+combines two tasks so that both can be worked on concurrently.
 The result thereof is a pair containing both the results of $t_1$ and $t_2$.
-The choose combinator ($t_1 \Choose t_2$) on the other hand,
+The parallel-or combinator ($t_1 \Choose t_2$) on the other hand,
 results in either the result of $t_1$ or $t_2$,
 depending on which task first has a result.
-To map a function over the value in a task,
-one can use the transform task ($e_1 \Trans t_2$).
+To map a function over a task's value,
+one can use the transform task ($v_1 \Trans t_2$).
 
 The most important combinator is the step combinator.
-The task $t_1 \Step e_2$ decides when to transition from task $t_1$
-to the task calculated by its continuation $e_2$.
+The task $t_1 \Step v_2$ decides when to transition from task $t_1$
+to the task calculated by its continuation $v_2$.
+The continuation should be a function, taking an ordinary value resulting in a task to continue with.
+The typing rule of this combinator is shown in \cref{fig:typing-rules}.
 The failing task $\Fail$ is used to signal a task that cannot be stepped to.
-Also, it is the identity of the choose task.
-Furthermore, one can create a shared heap location and assign to it.
-The lift task is used to lift a value into the task domain.
-
+Also, it is the identity of parallel-or tasks.
+Furthermore, one can create shared heap locations ($\Share v$) and assign to them ($h_1 \Assign v_2$).
+The lift task ($\Lift v$) is used to lift a value into the task domain.
 
 \begin{example}[Vending machine]
   \label{exm:vending-base}
-  The following example demonstrates the use of external communication and choice.
+  The following example demonstrates the use of editors and the step combinator.
   We have a vending machine that dispenses a biscuit for one coin and a chocolate bar for two coins.
   % \begin{TASK}
   %   let vend : Task Snack = enter Int >>? do n. if n == 1 then view Biscuit
@@ -94,30 +96,29 @@ The lift task is used to lift a value into the task domain.
   \end{TASK}
   The editor $\Enter \Int$ asks the user to enter an amount of money.
   This editor stands for a coin slot in a real machine that freely accepts and returns coins.
-  There is a continue button on the machine, which sends a continue event to the select combinator ($\Select$),
-  which is a derived combinator acting similar to the previously mentioned step combinator.
-  The button is initially disabled, due to the fact that the editor has no value.
+  There is a continue button on the machine, which sends a continue event to the select combinator ($\Select$).
+  This is a derived combinator acting similar to the previously mentioned step combinator.
+  The button is initially disabled because the editor has no value.
   When the user has inserted exactly 1 or 2 coins, the continue button becomes enabled.
   When the user presses the continue button, the machine dispenses either a biscuit or a chocolate bar, depending on the amount of money.
   Other cases result in the failure task $\Fail$, which signals a path that cannot be followed.
-  The vending machine stays in the state to accept and return money.
+  In those cases, the vending machine stays in the state to accept and return money.
   Snacks are modelled using a custom type.
 \end{example}
 
-% \todo{shares}
 
 \paragraph{Inputs}
 
 Editors are the interaction leaves of task-oriented programs.
 They are the only way users can interact with the system.
-Each editor is keyed with an \emph{unique} key $k$.
+Initially, editors are unnamed.
+After the system prepared them for user interaction (a process we call normalisation),
+each editor is keyed with a \emph{unique} key $k$.
 Sending $k \Send b$ to the system will change the value inside the editor with key $k$ to hold value $b$.
 \cref{fig:input-grammar} contains the grammar of inputs and actions accepted by a \TOPHAT\ system.
 
 \begin{figure}
-  \begin{center}
-    \usemacro{G-Inputs-compact}
-  \end{center}
+  \usemacro{G-Inputs-compact}
   \caption{Input grammar}
   \label{fig:input-grammar}
 \end{figure}
@@ -126,12 +127,12 @@ Sending $k \Send b$ to the system will change the value inside the editor with k
 \paragraph{Types}
 
 \cref{fig:typing-grammar} shows the grammar of types.
-The typing rules of all tasks can be found in \cref{fig:typing-rules}.
+Typing rules of some tasks can be found in \cref{fig:typing-rules}.
 Note that editors and references can only contain values of basic types $\beta$.
 In particular, editors and references cannot contain functions or tasks themselves.
 The reason for this restriction is twofold.
-First, prohibiting references to functions keeps our language total.
-This is necessary for the symbolic execution to not enter an infinite loop.
+First, prohibiting references to functions keeps our host language total.
+% This is necessary for the symbolic execution to not enter an infinite loop.
 Second, restricting editors to only contain basic values
 guarantees one can present these values to end users (print them)
 and receive new inputs from end users (parse them).
@@ -159,7 +160,7 @@ Arbitrary tasks and functions do not have this property.
     % \userule{T-Choose}    \quad
     \userule{T-Fail}      \\
     \userule{T-Step}      \\
-    % \userule{T-Share}     \quad
+    \userule{T-Share}     \\
     % \userule{T-Assign}
   \end{mathpar}
   \caption{Typing rules}
@@ -170,6 +171,21 @@ Arbitrary tasks and functions do not have this property.
 \subsection{Semantics}
 
 \TOPHAT\ semantics consist of three layers: the host layer, the internal layer, and the external layer.
+Each is depicted in \cref{fig:semantic-layers}.
+
+\begin{itemize}
+  \item
+    The \emph{host layer} is responsible for evaluating expressions in our host language,
+    the \STLC\ with basic types and references.
+    This layer only contains one big-step evaluation relation ($\evaluate$).
+  \item
+    The \emph{internal layer} only operates on tasks.
+    It prepares tasks so they can be presented to end users to interact with.
+    This layer contains the big-step normalisation ($\normalise$) and fixation ($\fixate$) relations.
+  \item
+    The \emph{external layer} takes inputs from end users and rewrites tasks based on this input.
+    This layer contains two labelled small-step relations: handling ($\handle{\iota}$) and interaction ($\interact{\iota}$).
+\end{itemize}
 
 \begin{figure}
   \usemacro{P-Semantic-Layers}
@@ -178,32 +194,21 @@ Arbitrary tasks and functions do not have this property.
   \label{fig:semantic-layers}
 \end{figure}
 
-\begin{itemize}
-  \item
-    The \emph{host layer} is responsible for evaluating expressions in our host language,
-    the \STLC\ with basic types and references.
-    This layer only contains big-step evaluation relation ($\evaluate$).
-  \item
-    The \emph{internal layer} only operates on tasks.
-    It normalises tasks so that they can be presented to end users to interact with.
-    This layer contains the big-step normalisation ($\normalise$) and fixation ($\fixate$) relations.
-  \item
-    The \emph{external layer} takes inputs from end users and rewrites tasks based on this input.
-    This layer contains two labelled small-step handling ($\handle{\iota}$) and interaction ($\interact{\iota}$) relations.
-\end{itemize}
-
-Next to these semantic relations, \TOPHAT\ uses \emph{observations} on tasks to decide which semantic rule will fire.
-These observations include, amongst others,
-the value of a task,
-if a task is failing or not,
-and the set of possible inputs a task can handle.
-\cref{fig:semantic-layers} shows an overview of all semantic relations and observations used in each layer.
-
-\todo{Explain N and H rules}
+In \cref{fig:semantics-tophat} we give some examples of semantic rules in \TOPHAT.
+The normalisation relation reads $\RelationN$, which means that a task $t$ in state $\sigma$
+is normalised to a normalised task $n'$ in state $\sigma'$ while keeping track of possible dirty references in $\delta'$.
+Rule \refrule{N-Name} generates a fresh and unique key $k$ to annotate any editor.
+\todo{fix order of explenation}
+An example of this, is assigning a value to a heap location, as seen in \seerule{N-Assign}.
+\refrule{N-Pair} exemplifies a rule where each element of a combinator is normalised by threading state $\sigma$ through,
+and the set of dirty references is calculated by taking the union.
+A non-empty set of dirty references signals the fixation rules ($\RelationF$) to fire
+to resolve any dependencies between shared heap locations.
 
 \begin{figure}
   \begin{mathpar}
     \boxed{\RelationN} \\
+    \userule{N-Assign} \\
     \userule{N-Name} \\
     \userule{N-Pair} \\
     \boxed{\RelationH} \\
@@ -213,6 +218,17 @@ and the set of possible inputs a task can handle.
   \caption{Example of semantic rules for \TOPHAT}
   \label{fig:semantics-tophat}
 \end{figure}
+
+
+\paragraph{Observations}
+
+Next to these semantic relations, \TOPHAT\ uses \emph{observations} on tasks to decide which semantic rule will fire.
+These observations include, amongst others,
+the value of a task,
+if a task is failing or not,
+and the set of possible inputs a task can handle.
+\cref{fig:semantic-layers} shows an overview of all semantic relations and observations used in each layer.
+
 
 \todo{Explain observations}
 
