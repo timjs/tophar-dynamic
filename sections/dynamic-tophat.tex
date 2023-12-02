@@ -6,7 +6,7 @@
 % \subsection{Language}
 
 Although it is possible in \TOPHAT\ to start multiple tasks in parallel,
-the amount of these task should be specified by the programmer at develop time.
+the amount of these tasks needs to be known in advance by the programmer.
 Let us illustrate this with an example.
 
 \begin{example}[Vending machine with shared stock]
@@ -14,50 +14,54 @@ Let us illustrate this with an example.
   Take this slightly more complex vending machine,
   where two buyers can purchase a $\Snack$ at the same time from a shared inventory.
 
-  \begin{TASK}[]
-    let vend$_1$ : Task Snack = do ss.
-      enter Int >>= do n.
-      case n of
-        1 |-> decrease Biscuit ss >>= do _.
+  \begin{TASK}[emph={inventory,payment}]
+    let vend$_1$ : Task Snack = do inventory.
+      enter Int >>? do payment.
+      case payment of
+        1 |-> decrease Biscuit inventory >>= do _.
              view Biscuit
-        2 |-> decrease Chocolate ss >>= do _.
+        2 |-> decrease Chocolate inventory >>= do _.
              view Chocolate
         _ |-> fail
     let machine$_1$ : Task (Snack * Snack) =
-      share [(Biscuit, 24), (Chocolate, 16)] >>= do ss.
-      vend$_1$ ss <&> vend$_1$ ss
+      share [(Biscuit, 24), (Chocolate, 16)] >>= do inventory.
+      vend$_1$ inventory <&> vend$_1$ inventory
   \end{TASK}
 
   Here \var{decrease} is a function that decreases the amount of the given snack by one in the shared list of snacks.
   Note that this task results in a pair containing the two bought $\Snack$s.
+
+  We see that, at development time, we need to specify the number of \var{vend} tasks that can be done at the same time.
+  Although in the physical world, it is quite evident that one can only place a predefined amount of vending machines next to each other,
+  in the digital world, one would expect to initialise and kill such processes at any time.
 \end{example}
 
-Here we see that, at development time, we need to specify the number \var{vend}s that can be done at the same time.
-Although in the physical world, it is quite evident that one can only place a predefined amount of vending machines next to each other,
-in the digital world, one would expect to initialise and kill such processes at any time.
+To mitigate this problem in \TOPHAT,
+we introduce \DYNTOPHAT.
+
 
 \subsection{Task pools}
 
 \DYNTOPHAT\ is a moderate extension to the \TOPHAT\ base language where we add support for \emph{task pools}.
 Task pools contain zero or more instantiations of a \emph{template task} running in parallel.
-In this regard, they are similar to the pair combinator ($\Pair$).
+In this regard, task pools are similar to the parallel-and combinator ($\Pair$).
 End users can interact with all tasks currently running in a pool.
-However, one can initiate a new instance of the template task by sending an \emph{init} signal to the task pool itself.
-Similarly, by sending a \emph{kill} signal, the task pool terminates one of its children.
+However, one can initiate a new instance of the template task by sending an \emph{init} event to the task pool.
+Similarly, by sending a \emph{kill} event, the task pool terminates one of its children.
 
-In the \TOPHAT\ language, a task pool is a new combinator at the task level.
-The combinator $\Pool^k_{t_0} []$ is parametrised by an unique key $k$, a template task $t_0$ and (initially) an empty task list $[]$.
-Each time end users send an \emph{init} action to this pool ($k\Send\Init$),
-the template task is placed in the list of current running tasks,
+Language-wise, a task pool is a new combinator at the task level.
+The combinator $\Pool^k_{t_0} []$ is parametrised by a unique key $k$, a template task $t_0$ and an (initially) empty task list $[]$.
+Each time end users send an init action to this pool: $k\Send\Init$.
+The template task is placed in the list of currently running tasks,
 in this case resulting in $\Pool^k_{t_0} [t_0]$.
 This way, an arbitrary amount of tasks can be started at runtime.
-Tasks in the task list of a pool can also be killed by sending a \emph{kill} action to the pool ($k\Send\Kill1$).
-In this case the first task in the pool will be killed.
+Tasks in the list can also be killed by sending a \emph{kill} action to the pool: $k\Send\Kill1$.
+In this case, the first task in the pool will be killed.
 The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
 
 \begin{figure}
-  \usemacro{G-Dynamic-Ext}
-  \caption{Grammar for \DYNTOPHAT}
+  \usemacro{G-Dynamic-extensions}
+  \caption{Grammar for \DYNTOPHAT\ extensions}
   \label{fig:dynamic-grammar}
 \end{figure}
 
@@ -100,6 +104,8 @@ Otherwise we would create unwanted sharing.
 \todo{add bad sharing example?}
 If, for example, the template needs to do some setups,
 
+\todo{explaing extended handing semantics}
+
 \begin{figure}
   \begin{mathpar}
     % \userule{E-Pool} \\
@@ -116,7 +122,7 @@ If, for example, the template needs to do some setups,
 \end{figure}
 
 and extended observations in \cref{fig:observations-dynamic}.
-\todo{add observations}
+\todo{explain observations}
 
 \begin{figure}
   \usemacro{O-Dynamic}
