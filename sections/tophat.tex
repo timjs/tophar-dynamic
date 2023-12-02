@@ -23,7 +23,7 @@ which we will discuss in the following subsections.
   \label{fig:task-grammar}
 \end{figure}
 
-\paragraph{Editors}
+\subsubsection{Editors}
 
 Editors are the interaction points of task programs.
 They are an abstraction over widgets or form input fields.
@@ -56,7 +56,8 @@ As plain editors, shared editors can also be read-only ($\Watch^\nu h$),
 which means their displayed value will only change when the referenced heap location changes,
 but end users cannot send values to update the heap location.
 
-\paragraph{Combinators}
+
+\subsubsection{Combinators}
 
 Combinators unite smaller tasks into bigger ones.
 The parallel-and combinator ($t_1 \Pair t_2$) for example,
@@ -86,10 +87,10 @@ The lift task ($\Lift v$) is used to lift a value into the task domain.
   %   let vend : Task Snack = enter Int >>? do n. if n == 1 then view Biscuit
   %     else if n == 2 then view Chocolate else fail
   % \end{TASK}
-  \begin{TASK}
+  \begin{TASK}[emph={payment}]
     type Snack = [Biscuit, Chocolate]
-    let vend$_0$ : Task Snack = enter Int >>? do n.
-      case n of
+    let vend$_0$ : Task Snack = enter Int >>? do payment.
+      case payment of
         1 |-> view Biscuit
         2 |-> view Chocolate
         _ |-> fail
@@ -107,7 +108,7 @@ The lift task ($\Lift v$) is used to lift a value into the task domain.
 \end{example}
 
 
-\paragraph{Inputs}
+\subsubsection{Inputs}
 
 Editors are the interaction leaves of task-oriented programs.
 They are the only way users can interact with the system.
@@ -124,7 +125,9 @@ Sending $k \Send b$ to the system will change the value inside the editor with k
 \end{figure}
 
 
-\paragraph{Types}
+\subsection{Semantics}
+
+\subsubsection{Typing}
 
 \cref{fig:typing-grammar} shows the grammar of types.
 Typing rules of some tasks can be found in \cref{fig:typing-rules}.
@@ -149,29 +152,36 @@ Arbitrary tasks and functions do not have this property.
   % \small
   \begin{mathpar}
     \boxed{\RelationT}    \\
-    \userule{T-Enter}     \quad
+    % \userule{T-Enter}     \quad
     \userule{T-Update}    \quad
+    \userule{T-Share}     \\
     % \userule{T-View}      \\
     % \userule{T-Change}    \quad
-    \userule{T-Watch}     \\
+    % \userule{T-Watch}     \\
     % \userule{T-Trans}     \\
     \userule{T-Pair}      \quad
     % \userule{T-Lift}      \\
     % \userule{T-Choose}    \quad
     \userule{T-Fail}      \\
     \userule{T-Step}      \\
-    \userule{T-Share}     \\
     % \userule{T-Assign}
   \end{mathpar}
-  \caption{Typing rules}
+  \caption{Example of typing rules}
   \label{fig:typing-rules}
 \end{figure}
 
 
-\subsection{Semantics}
+\subsubsection{Semantic relations}
 
 \TOPHAT\ semantics consist of three layers: the host layer, the internal layer, and the external layer.
 Each is depicted in \cref{fig:semantic-layers}.
+
+\begin{figure}
+  \usemacro{P-Semantic-Layers}
+  \caption{Semantic functions and their relation
+    (read $x \bullet\!\!\raisebox{-0.1ex}{\mbox{–}}\ y$ as `$x$ makes use of $y$')}
+  \label{fig:semantic-layers}
+\end{figure}
 
 \begin{itemize}
   \item
@@ -184,32 +194,15 @@ Each is depicted in \cref{fig:semantic-layers}.
     This layer contains the big-step normalisation ($\normalise$) and fixation ($\fixate$) relations.
   \item
     The \emph{external layer} takes inputs from end users and rewrites tasks based on this input.
-    This layer contains two labelled small-step relations: handling ($\handle{\iota}$) and interaction ($\interact{\iota}$).
+    This layer contains two small-step relations: handling ($\handle{\iota}$) and interaction ($\interact{\iota}$).
+    Both relations are labelled with inputs $\iota$.
 \end{itemize}
-
-\begin{figure}
-  \usemacro{P-Semantic-Layers}
-  \caption{Semantic functions and their relation
-    (read $x \bullet\!\!\raisebox{-0.1ex}{\mbox{–}}\ y$ as `$x$ makes use of $y$')}
-  \label{fig:semantic-layers}
-\end{figure}
-
-In \cref{fig:semantics-tophat} we give some examples of semantic rules in \TOPHAT.
-The normalisation relation reads $\RelationN$, which means that a task $t$ in state $\sigma$
-is normalised to a normalised task $n'$ in state $\sigma'$ while keeping track of possible dirty references in $\delta'$.
-Rule \refrule{N-Name} generates a fresh and unique key $k$ to annotate any editor.
-\todo{fix order of explenation}
-An example of this, is assigning a value to a heap location, as seen in \seerule{N-Assign}.
-\refrule{N-Pair} exemplifies a rule where each element of a combinator is normalised by threading state $\sigma$ through,
-and the set of dirty references is calculated by taking the union.
-A non-empty set of dirty references signals the fixation rules ($\RelationF$) to fire
-to resolve any dependencies between shared heap locations.
 
 \begin{figure}
   \begin{mathpar}
     \boxed{\RelationN} \\
+    \userule{N-Name} \Quad
     \userule{N-Assign} \\
-    \userule{N-Name} \\
     \userule{N-Pair} \\
     \boxed{\RelationH} \\
     \userule{H-Enter} \\
@@ -219,18 +212,29 @@ to resolve any dependencies between shared heap locations.
   \label{fig:semantics-tophat}
 \end{figure}
 
+In \cref{fig:semantics-tophat} we give some examples of semantic rules in \TOPHAT.
+The normalisation relation reads $\RelationN$, which means that a task $t$ in state $\sigma$
+is normalised to a normalised task $n'$ in state $\sigma'$ while keeping track of possible dirty references in $\delta'$.
+Rule \refrule{N-Name} generates a fresh and unique key $k$ to annotate any editor.
+\refrule{N-Pair} exemplifies a rule where each element of a combinator is normalised by threading state $\sigma$,
+and the set of dirty references is calculated by taking the union of the generated dirty sets.
+A heap location is marked dirty when it is modified.
+An example of this is assigning a value, as seen in \seerule{N-Assign}.
+A non-empty set of dirty references signals the fixation rules ($\RelationF$) to fire
+to resolve any dependencies between shared heap locations.
 
-\paragraph{Observations}
+\subsubsection{Observations}
 
-Next to these semantic relations, \TOPHAT\ uses \emph{observations} on tasks to decide which semantic rule will fire.
+Next to the five semantic relations, \TOPHAT\ has the notion of \emph{observations} on tasks.
+Observations are used to decide which semantic rule will fire,
+but are also a central aspect of task equivalence,
+as we will discuss in \cref{sec:equivalence}.
 These observations include, amongst others,
-the value of a task,
-if a task is failing or not,
-and the set of possible inputs a task can handle.
-\cref{fig:semantic-layers} shows an overview of all semantic relations and observations used in each layer.
-
-
-\todo{Explain observations}
+if a task is failing or not ($\Failing$),
+the set of possible inputs a task can handle ($\Inputs$).
+and the value of a task ($\Value$),
+\cref{fig:semantic-layers} shows which layers of the semantics use which observations.
+Next, we describe each of these three observations in more detail.
 
 \begin{figure}
   \usemacro{O-Failing}
@@ -238,14 +242,43 @@ and the set of possible inputs a task can handle.
   \label{fig:observation-failing}
 \end{figure}
 
-\begin{figure}
-  \usemacro{O-Value}
-  \caption{Value observation}
-  \label{fig:observation-value}
-\end{figure}
+Not just $\Fail$ can fail, tasks with failing subtasks can also fail.
+For example, the pairing $\Fail \Pair \Fail$ is also a failing task.
+In some way, it is equivalent to $\Fail$.
+To capture what tasks are failing we define the failing observation $\Failing$ in \cref{fig:observation-failing}.
+Failing is especially useful when used in combination with the step combinator,
+as we have seen in \cref{exm:vending-base}.
+Note that if only one side fails in a parallel-and,
+for example with $\Fail \Pair t$ for $t$ a non-failing task,
+then $\Fail \Pair t$ can still interact with end users if $t$ can.
+Therefore the whole task should not fail if only one side fails.
 
 \begin{figure}
   \usemacro{O-Inputs}
   \caption{Inputs observation}
   \label{fig:observation-inputs}
 \end{figure}
+
+Once a TopHat program is normalised, it is possible to send input to it.
+It is useful to know what inputs a given task accepts.
+The observation function $\Inputs$ returns the set of input events that are currently possible for a given task.
+We consider an input event $\iota$ a valid input event for the task $t$ iff $t \in \Inputs(t)$.
+This observation is proved sound and complete with respect to the handling and interaction relations \cite{Steenvoorden22}.
+The definition of $\Inputs$ is given in \cref{fig:observation-inputs}.
+For the three read-write editors, $\Inputs$ returns all input events $k \Send b$ where $b$ is of the correct type.
+For task combinators, $\Inputs$ is defined recursively.
+For all other tasks, $\Inputs$ returns the empty set.
+$\Inputs$ is only defined on normalised tasks, as those tasks are ready to receive user input.
+
+\begin{figure}
+  \usemacro{O-Value}
+  \caption{Value observation}
+  \label{fig:observation-value}
+\end{figure}
+
+To be able to normalise tasks, we need to have a way to determine the value of them.
+For this, we introduce the task observation $\Value$.
+Given a task $t:\Task\tau$ and its current state $\sigma$ ,
+this function returns the task's value $v$ of type $\tau$.
+It is also possible that a task's value is undefined, in which case we write $\Value(t,\sigma) = \bot$.
+The definition of $\Value$ is given in \cref{fig:observation-value}.

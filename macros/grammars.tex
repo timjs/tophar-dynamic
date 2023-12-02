@@ -143,16 +143,15 @@
   \end{grammar*}
 }
 
-\newmacro{G-Dynamic-Ext}{
-  \begin{grammar*}
-    t::=& \ldots & Tasks \\
-      \mid& \Pool^\nu_{t_0} [\many{t}] & – pool \\
-    n::=& \ldots & Normalised tasks \\
-      \mid& \Pool^\nu_{t_0} [\many{n}] & – pool \\
-    \alpha::=& \ldots & Actions \\
-      \mid& \Init   & – init task in pool \\
-      \mid& \Kill j & – kill task in pool \\
-  \end{grammar*}
+\newmacro{G-Dynamic-extensions}{
+  \begin{grammar}
+    \heading{Tasks} \\
+      & t &::=& \ldots \Mid \Pool^\nu_{t_0} [\many{t}] & – pool \\
+    \heading{Normalised tasks} \\
+      & n &::=& \ldots \Mid \Pool^k_{t_0} [\many{n}] & – pool \\
+    \heading{Actions} \\
+      &\alpha&::=& \ldots \Mid \Init \Mid \Kill j & – init, kill \\
+  \end{grammar}
 }
 
 \newmacro{G-Static-Tasks}{
