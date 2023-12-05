@@ -146,26 +146,29 @@
     \signature{\Hints_1 : \mathrm{Normalised\ task} \times \mathrm{State} \times (\mathrm{Value} \to \mathrm{Path\ condition}) \to \powerset{\mathrm{Inputs} \times \mathrm{Path\ conditions}}} \\
     \Hints_1(n, \sigma, \psi) &=& \Generate(\big\{(n,\sigma,\epsilon,\True)\big\}, \psi) \\
     \addlinespace
-    \signature{         \Generate : \powerset{\mathrm{Normalised\ task} \times \mathrm{State} \times \mathrm{Input\ list} \times \mathrm{Path\ condition}} \times (\mathrm{Value} \to \mathrm{Path\ condition}) \to \powerset{\mathrm{Inputs}}} \\
+    \signature{         \Generate : \powerset{\mathrm{Normalised\ task} \times \mathrm{State} \times \mathrm{Input\ list} \times \mathrm{Path\ condition}} \times (\mathrm{Value} \to \mathrm{Path\ condition}) \to \powerset{\mathrm{Inputs} \times \mathrm{Path\ conditions}}} \\
     \Generate(ts, \psi) &=& \left\{
       \begin{array}{ll}
         hs & \ \when\ hs \neq \nothing \\
         \Generate(\big\{\uad
-            (n',\sigma',\iota' \cdot I, \phi\land\phi') \uad
+            (n',\sigma',\tilde{\iota}'\cdot\tilde{I}, \phi\land\phi') \uad
             \big| \uad
-            ts \ni (n,\sigma,I,\phi) \quad
-            n,\sigma\syminteract{\iota'}n'|_{\phi'},\sigma' \quad
+            ts \ni (n,\sigma,\tilde{I},\phi) \quad
+            n,\sigma\syminteract{\tilde{\iota}'}n'|_{\phi'},\sigma' \quad
             \Sat(\phi\land\phi') \uad
         \big\},\; \psi)
         & \ \when\ hs = \nothing \\
       \end{array}
       \right. \\
-                     & & \where\ hs = \big\{ \uad
-                           \iota \uad
-                           \big| \uad
-                           ts \ni (n,\sigma,\iota\cdot I,\phi) \quad
-                           \Value(n,\sigma) = v \quad
-                           \Sat(\psi(v) \land \phi) \uad
-                         \big\}
+     & & \where\ \begin{array}{r@{\;}l}
+       hs &= \big\{ \uad
+           (\tilde{\iota},\Psi) \uad
+           \big| \uad
+           ts \ni (n,\sigma,\tilde{\iota}\cdot\tilde{I},\phi) \quad
+           \Value(n,\sigma) = \tilde{v} \quad
+           \Sat(\Psi) \uad
+         \big\} \\
+       \Psi &= \phi \land \psi(\tilde{v})
+     \end{array}
   \end{function}
 }

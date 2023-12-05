@@ -107,13 +107,12 @@ The basic idea is that symbolic execution can be leveraged to reach some goal $\
   \label{fig:next-step-hints}
 \end{figure}
 
-\todo{explain the function in this figure, and how it uses symbolic execution.}
-The addition of a symbolic execution rule for the task pool combinator breaks the definition from \cref{fig:next-step-hints}, since the symbolic interaction \textit{traces} are now potentially infinite.
-Instead of calculating all possible hints, one could alter the hints function to perform a breadth-first search through the now infinite trace space.
+The addition of a symbolic execution rule for the task pool combinator breaks the definition from \cref{fig:next-step-hints},
+since the symbolic interaction \textit{traces} are now potentially infinite.
+Instead of calculating all possible hints,
+one could alter the hints function to perform a breadth-first search through the now infinite trace space.
 This allows us to return a hint that guides the user to the shortest path to their goal.
 \cref{fig:next-step-hints-new} lists an updated definition of the next-step hint function.
-
-
 
 \begin{figure*}
   \begin{mathpar}
@@ -122,6 +121,18 @@ This allows us to return a hint that guides the user to the shortest path to the
   \caption{Altered next-step hint generation function}
   \label{fig:next-step-hints-new}
 \end{figure*}
+
+Our new $\Hints_1$ function, instead of generating an infinite amount of possible inputs,
+makes use of the helper function $\Generate$ which does this breadth-first search.
+Starting with a task set~$ts$, containing tuples of normalised tasks, states, input lists, and path conditions,
+we calculate a hints set~$hs$ by checking if the current normalised task $n$ has a (symbolic) value $\tilde{v}$,
+and verifying if the goal function $\psi$ applied to this value is satisfiable together with the current path condition $\phi$.
+If this is the case, we have possible next-step hints and we terminate.
+\todo{explain taking head of input list?}
+In the case that there is no value, or our goal is not yet reached,
+the set~$hs$ is empty.
+Now, we generate possible new inputs over our task set $ts$ by using symbolic interaction ($\syminteract{}$) just once.
+Before going into recursion, we clean-up our generated inputs by removing those with unsatisfiable path conditions.
 
 Coming back to reasoning about task properties, the breadth-first search strategy can also be applied to finding assertion violations.
 \citet{DBLP:conf/tap/NausVSR23} demonstrate a breadth-first search approach to finding assertion violations in low-level programs with potential infinite search spaces.
