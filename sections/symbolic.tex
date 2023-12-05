@@ -5,14 +5,31 @@
 
 Previous work introduced a symbolic execution semantics for \TOPHAT\ programs~\cite{conf/ifl/NausSK19,Naus20,Steenvoorden22}.
 By defining semantic rules that introduce symbols where user input is expected, the behaviour of a \TOP\ program can be fully simulated.
-This simulation can then be used to reason over the properties of the program.
+Simulation of tasks keeps track of \emph{path conditions}.
+By sending these path conditions to \SMT\ solvers,
+simulations can be used to reason over the properties of the program.
 
-\cref{fig:symbolic-semantics} lists a selected number of symbolic execution rules from \TOPHAT.
-Rules for simulation inputs are written $\RelationSH$.
-Compared to the relation that handles inputs, as displayed in \cref{fig:semantics-dynamic},
+Every concrete semantic relation from \cref{fig:semantic-layers} has a symbolic counterpart.
+Notation for these relations is summarised in \cref{tab:symbolic-relations}.
+Compared to the concrete relations,
 tasks are augmented with a path condition $\phi$.
-Instead of taking an input $\iota$ (written above the arrow),
-simulation rules generate an input (written below the arrow).
+For labelled relations, instead of taking inputs $\iota$ written above the arrow,
+simulation rules generate inputs $\iota'$, which are written below the arrow.
+\cref{fig:symbolic-semantics} lists a selected number of symbolic execution rules from \TOPHAT.
+
+\begin{table}
+  \include{tables/symbolics}
+  \caption{Semantic relations for concrete and symbolic execution}
+  \label{tab:symbolic-relations}
+\end{table}
+
+As with end-user input,
+symbols enter the simulation at editors.
+As an example, rule \seerule{SH-Enter} generates a fresh symbol $z'$, returns a valued editor $\Update^k z'$
+and leaves the path condition $\phi$ unaltered.
+For a pair of tasks, instead of one rule, the symbolic semantics contains two rules:
+one for generating input for the left task (\seerule{SH-Pair-Left}), and one for the right (\seerule{SH-Pair-Right}).
+This makes the symbolic semantics non-deterministic.
 
 \begin{figure}
   \begin{mathpar}
@@ -20,49 +37,61 @@ simulation rules generate an input (written below the arrow).
     \usemacro{SH-Enter} \\
     \usemacro{SH-Pair-Left}
     \usemacro{SH-Pair-Right} \\
-    \boxed{\RelationSI} \\
-    \usemacro{SI-Handle} \\
   \end{mathpar}
-  \caption{Examples of symbolic rules for \TOPHAT}
+  \caption{Selected symbolic handling rules}
   \label{fig:symbolic-semantics}
 \end{figure}
 
-As an example, rule \seerule{SH-Enter} generates a fresh symbol $z'$ and returns a valued editor $\Update^k z'$
-and leaves the path condition $\phi$ unaltered.
-For a pair of tasks, instead of one rule, the symbolic semantics contains two rules:
-one for generating input for the left task (\seerule{SH-Pair-Left}), and one for the right (\seerule{SH-Pair-Right}).
-This makes the symbolic semantics non-deterministic.
+For \DYNTOPHAT\ we extend symbolic handling relation with rules for task pools.
+As task pools are in essence a combination of editors and parallel-or,
+the symbolic rules are alike to the ones shown in \cref{fig:symbolic-semantics}.
+First, for every possible subtask in a task pool,
+we add rule \refrule{SH-Pool$_j$} to simulate the $j$-th subtask in a pool.
+This is comparable to rules \refrule{SH-Pair-\{Left,Right\}}.
+Then, also for every possible subtasks,
+we add rule \refrule{SH-Pool-Kill$_j$} to kill the $j$-th subtask.
+Last, we add a rule to symbolically initialise a new task in the pool: \refrule{SH-Pool-Init}.
 
-Top-level simulation of tasks is written $\RelationSI$,
+\begin{figure}
+  \begin{mathpar}
+    \boxed{\RelationSH} \\
+    \usemacro{SH-Pool-Init} \\
+    \usemacro{SH-Pool-Kill$_j$} \\
+    \usemacro{SH-Pool$_j$} \\
+  \end{mathpar}
+  \caption{Symbolic rules for \DYNTOPHAT}
+  \label{fig:symbolic-semantics-dynamic}
+\end{figure}
+
+Top-level symbolic interaction of tasks is written $\RelationSI$,
 meaning that a normalised task $n$ under path condition $\phi$ in state $\sigma$ generates input $\iota$, a new normalised task $n'$ under path condition $\phi'$ in state $\sigma'$.
 Rule \seerule{SI-Handle} initiates simulation
 by using the symbolic handling and fixation semantics.
-Fixation, as in the concrete case,  (not discussed further in this paper).
+Fixation, as in the concrete case, resolves any dependencies between shared heap locations.
 
+\begin{figure}
+  \begin{mathpar}
+    \boxed{\RelationSI} \\
+    \usemacro{SI-Handle} \\
+  \end{mathpar}
+  \caption{Symbolic interaction rule}
+  \label{fig:symbolic-semantics}
+\end{figure}
+
+\todo{alinea herschrijven zodat het bij voorgaande past}
 Ultimately, the symbolic execution of a \TOPHAT\ program is then powered by a top-level simulation function, that leverages the symbolic rules to perform symbolic execution.
 Since a user can update an editor as often as they want, special care is taken to ensure that only \textit{productive} updates are generated by the symbolic execution function.
 An editor can only be updated twice, if the task, modulo the updated value, has changed.
 This allows exactly enough repetition to capture the full program behaviour.
 For example, the second task in a parallel composition might rely on a value being updated in the first task, to make progress.
-\todo{wil je hier ook de simulate functie laten zien?}
 
 When it comes to \DYNTOPHAT, there is an additional opportunity for infinite interaction, namely to spool up a new task.
 Unfortunately, in this case, there is no way to set an upper bound on this interaction without changing the program's behaviour.
+\todo{voorbeeld concreet maken in syntax?}
 Imagine we have a task pool combinator, followed by a step.
 We restrict the number of new task initializations to be no larger than some $n$.
 The step could very well require $n+1$ values before it will allow a step.
 It is clear from this example that limiting task initialization is not a suitable way to deal with the infinite interaction coming from the pool combinator.
-
-\begin{figure}
-  \begin{mathpar}
-    \boxed{\RelationSH} \\
-    \usemacro{SH-Pool} \\
-    \usemacro{SH-Pool-Init} \\
-    \usemacro{SH-Pool-Kill} \\
-  \end{mathpar}
-  \caption{Additional symbolic rules for \DYNTOPHAT}
-  \label{fig:symbolic-semantics-dynamic}
-\end{figure}
 
 The pool combinator breaks traditional symbolic execution as introduced in previous work~\cite{conf/ifl/NausSK19}.
 That does not mean that the symbolic execution of \DYNTOPHAT\ programs is now completely useless.
@@ -78,21 +107,21 @@ The basic idea is that symbolic execution can be leveraged to reach some goal $\
   \label{fig:next-step-hints}
 \end{figure}
 
-
 \todo{explain the function in this figure, and how it uses symbolic execution.}
 The addition of a symbolic execution rule for the task pool combinator breaks the definition from \cref{fig:next-step-hints}, since the symbolic interaction \textit{traces} are now potentially infinite.
 Instead of calculating all possible hints, one could alter the hints function to perform a breadth-first search through the now infinite trace space.
 This allows us to return a hint that guides the user to the shortest path to their goal.
 \cref{fig:next-step-hints-new} lists an updated definition of the next-step hint function.
 
+
+
 \begin{figure*}
   \begin{mathpar}
-    \usemacro{O-Hints-new}
+    \usemacro{O-Generate}
   \end{mathpar}
-  \caption{Next-step hint generation function}
+  \caption{Altered next-step hint generation function}
   \label{fig:next-step-hints-new}
 \end{figure*}
-
 
 Coming back to reasoning about task properties, the breadth-first search strategy can also be applied to finding assertion violations.
 \citet{DBLP:conf/tap/NausVSR23} demonstrate a breadth-first search approach to finding assertion violations in low-level programs with potential infinite search spaces.

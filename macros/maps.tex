@@ -136,18 +136,21 @@
     \signature{         \Hints_0 : \mathrm{Normalised\ task} \times \mathrm{State} \times (\mathrm{Value} \to \mathrm{Path\ condition})} \\
     \signature{\phantom{\Hints_0 :} \to \powerset{\mathrm{Inputs} \times \mathrm{Path\ conditions}}} \\
 
-    \Hints(n, \sigma, \psi) &=& \set{ (\tilde{\iota}, \Psi) \mid n, \sigma \simulate{\tilde{\iota} \cdot \tilde{I}} \tilde{v}|_\Phi,\; \Sat(\Psi)} \\
+    \Hints_0(n, \sigma, \psi) &=& \big\{\uad (\tilde{\iota}, \Psi) \uad\big|\uad n, \sigma \simulate{\tilde{\iota} \cdot \tilde{I}} \tilde{v}|_\Phi \quad \Sat(\Psi) \uad\big\} \\
                             & & \where\ \Psi = \Phi \land \psi(\tilde{v}) \\
   \end{function}
 }
 
-\newmacro{O-Hints-new}{
+\newmacro{O-Generate}{
   \begin{function}
-    \signature{         \Hints : \powerset{\mathrm{Normalised\ task} \times \mathrm{State} \times \mathrm{Input\ list} \times \mathrm{Path\ condition}} \times (\mathrm{Value} \to \mathrm{Path\ condition}) \to \powerset{\mathrm{Inputs}}} \\
-    \Hints(ts, \psi) &=& \left\{
+    \signature{\Hints_1 : \mathrm{Normalised\ task} \times \mathrm{State} \times (\mathrm{Value} \to \mathrm{Path\ condition}) \to \powerset{\mathrm{Inputs} \times \mathrm{Path\ conditions}}} \\
+    \Hints_1(n, \sigma, \psi) &=& \Generate(\big\{(n,\sigma,\epsilon,\True)\big\}, \psi) \\
+    \addlinespace
+    \signature{         \Generate : \powerset{\mathrm{Normalised\ task} \times \mathrm{State} \times \mathrm{Input\ list} \times \mathrm{Path\ condition}} \times (\mathrm{Value} \to \mathrm{Path\ condition}) \to \powerset{\mathrm{Inputs}}} \\
+    \Generate(ts, \psi) &=& \left\{
       \begin{array}{ll}
         hs & \ \when\ hs \neq \nothing \\
-        \Hints(\big\{\uad
+        \Generate(\big\{\uad
             (n',\sigma',\iota' \cdot I, \phi\land\phi') \uad
             \big| \uad
             ts \ni (n,\sigma,I,\phi) \quad
