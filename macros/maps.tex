@@ -131,12 +131,38 @@
   \end{function}
 }
 
-  \newmacro{O-Hints}{
-    \begin{function}
-      \signature{         \Hints : \mathrm{Normalised\ task} \times \mathrm{State} \times (\mathrm{Value} \to \mathrm{Path\ condition})} \\
-      \signature{\phantom{\Hints :} \to \powerset{\mathrm{Inputs} \times \mathrm{Path\ conditions}}} \\
+\newmacro{O-Hints}{
+  \begin{function}
+    \signature{         \Hints_0 : \mathrm{Normalised\ task} \times \mathrm{State} \times (\mathrm{Value} \to \mathrm{Path\ condition})} \\
+    \signature{\phantom{\Hints_0 :} \to \powerset{\mathrm{Inputs} \times \mathrm{Path\ conditions}}} \\
 
-      \Hints(n, \sigma, \psi) &=& \set{ (\tilde{\iota}, \Psi) \mid n, \sigma \simulate{\tilde{\iota} \cdot \tilde{I}} \tilde{v}|_\Phi,\; \Sat(\Psi)} \\
-                              & & \where\ \Psi = \Phi \land \psi(\tilde{v}) \\
-    \end{function}
-  }
+    \Hints(n, \sigma, \psi) &=& \set{ (\tilde{\iota}, \Psi) \mid n, \sigma \simulate{\tilde{\iota} \cdot \tilde{I}} \tilde{v}|_\Phi,\; \Sat(\Psi)} \\
+                            & & \where\ \Psi = \Phi \land \psi(\tilde{v}) \\
+  \end{function}
+}
+
+\newmacro{O-Hints-new}{
+  \begin{function}
+    \signature{         \Hints : \powerset{\mathrm{Normalised\ task} \times \mathrm{State} \times \mathrm{Input\ list} \times \mathrm{Path\ condition}} \times (\mathrm{Value} \to \mathrm{Path\ condition}) \to \powerset{\mathrm{Inputs}}} \\
+    \Hints(ts, \psi) &=& \left\{
+      \begin{array}{ll}
+        hs & \ \when\ hs \neq \nothing \\
+        \Hints(\big\{\uad
+            (n',\sigma',\iota' \cdot I, \phi\land\phi') \uad
+            \big| \uad
+            ts \ni (n,\sigma,I,\phi) \quad
+            n,\sigma\syminteract{\iota'}n'|_{\phi'},\sigma' \quad
+            \Sat(\phi\land\phi') \uad
+        \big\},\; \psi)
+        & \ \when\ hs = \nothing \\
+      \end{array}
+      \right. \\
+                     & & \where\ hs = \big\{ \uad
+                           \iota \uad
+                           \big| \uad
+                           ts \ni (n,\sigma,\iota\cdot I,\phi) \quad
+                           \Value(n,\sigma) = v \quad
+                           \Sat(\psi(v) \land \phi) \uad
+                         \big\}
+  \end{function}
+}

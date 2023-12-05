@@ -85,11 +85,14 @@ Instead of calculating all possible hints, one could alter the hints function to
 This allows us to return a hint that guides the user to the shortest path to their goal.
 \cref{fig:next-step-hint-pool} lists an updated definition of the next-step hint function.
 
-\begin{figure}
-    TODO TODO TODO
-    \caption{Next-step hint generation function}
-    \label{fig:next-step-hint-pool}
-\end{figure}
+\begin{figure*}
+  \begin{mathpar}
+    \usemacro{O-Hints-new}
+  \end{mathpar}
+  \caption{Next-step hint generation function}
+  \label{fig:next-step-hint}
+\end{figure*}
+
 
 Coming back to reasoning about task properties, the breadth-first search strategy can also be applied to finding assertion violations.
 \citet{DBLP:conf/tap/NausVSR23} demonstrate a breadth-first search approach to finding assertion violations in low-level programs with potential infinite search spaces.
