@@ -88,7 +88,7 @@ regardless of the tasks in the pool.
 This has a consequence for the diagram in \cref{fig:task-conditions}.
 
 \begin{example}{Integer task pool}
-  Take for example the simple task $t = \Pool_{\Enter^\epsilon \Int}^k_0 [\Update^k_1 42]$.
+  Take for example the simple task $t = \Pool_{\Enter^\epsilon \Int}^{k_0} [\Update^k_1 42]$.
 
   By definition of $\Value$, it has an observable value, namely the singleton list $[42]$.
   By definition of $\Inputs$, it also has possible inputs,
@@ -98,7 +98,7 @@ This has a consequence for the diagram in \cref{fig:task-conditions}.
   but we can also kill or initialise tasks in the pool.
 
   Say, we send $k_0\Send\Init$ to $t$.
-  Then, $t$ will be rewritten to $\Pool_{\Enter^\epsilon \Int}^k_0 [\Update^k_1 42, \Enter^k_2\Int]$.
+  Then, $t$ will be rewritten to $\Pool_{\Enter^\epsilon \Int}^{k_0} [\Update^k_1 42, \Enter^k_2\Int]$.
   Because $\Enter^k_2\Int$ does not have a value,
   the whole pool does not have a value any more!
   \todo{is this the semantics we want?}
