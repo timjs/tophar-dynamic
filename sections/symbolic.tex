@@ -15,7 +15,7 @@ Compared to the concrete relations,
 tasks are augmented with a path condition $\phi$.
 For labelled relations, instead of taking inputs $\iota$ written above the arrow,
 simulation rules generate inputs $\iota'$, which are written below the arrow.
-\cref{fig:symbolic-semantics} lists a selected number of symbolic execution rules from \TOPHAT.
+\cref{fig:symbolic-handling} lists a selected number of symbolic execution rules from \TOPHAT.
 
 \begin{table}
   \include{tables/symbolics}
@@ -39,12 +39,12 @@ This makes the symbolic semantics non-deterministic.
     \usemacro{SH-Pair-Right} \\
   \end{mathpar}
   \caption{Selected symbolic handling rules}
-  \label{fig:symbolic-semantics}
+  \label{fig:symbolic-handling}
 \end{figure}
 
 For \DYNTOPHAT\ we extend symbolic handling relation with rules for task pools.
 As task pools are in essence a combination of editors and parallel-or,
-the symbolic rules are alike to the ones shown in \cref{fig:symbolic-semantics}.
+the symbolic rules are alike to the ones shown in \cref{fig:symbolic-handling-new}.
 First, for every possible subtask in a task pool,
 we add rule \refrule{SH-Pool$_j$} to simulate the $j$-th subtask in a pool.
 This is comparable to rules \refrule{SH-Pair-\{Left,Right\}}.
@@ -60,7 +60,7 @@ Last, we add a rule to symbolically initialise a new task in the pool: \refrule{
     \usemacro{SH-Pool$_j$} \\
   \end{mathpar}
   \caption{Symbolic rules for \DYNTOPHAT}
-  \label{fig:symbolic-semantics-dynamic}
+  \label{fig:symbolic-handling-new}
 \end{figure}
 
 Top-level symbolic interaction of tasks is written $\RelationSI$,
