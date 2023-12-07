@@ -143,8 +143,9 @@
 
 %% Helpers %%
 
-\newmacro{var}{\textsf}
-\newmacro{ctr}{\textsf}
-\newmacro{cnd}{\textit}
-\newmacro{impl}{\texttt}
+\newmacro{var}[1]{\textsf{\textit{#1}}}
+\newmacro{fun}{\textsf}
+\newmacro{con}{\textsf}
+\newmacro{typ}[1]{\textsf{\textsc{#1}}}
+% \newmacro{impl}{\texttt}
 \newmacro{seerule}{\textsc}
