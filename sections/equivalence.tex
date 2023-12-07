@@ -3,50 +3,70 @@
 \subsection{Task equivalence}
 \label{sec:equivalence}
 
-We do this by categorizing tasks based on the observations we can make on them.
-The observations we use, are if the task is failing ($\Failing$), if the task can receive any inputs ($\Inputs$), and if the task has a value ($\Value$).
-Based on these three observations, a (fully fixated) task can be in one of five \emph{conditions} which we will summarise below.
-The mentioned properties are proved in \citet{conf/sfp/KlijnsmaS22}.
-We refer to the propositions \todo{}.
+Reasoning about task equivalence is useful for two main purposes.
+First, we can argue that two (parts of) workflows, as specified by developers,
+actually have the same impact and are interchangeable in the code.
+Second, we can prove several general transformation laws for tasks,
+which aid in the refactoring of task-oriented code.
+%
+In previous work, we investigated the equivalence of tasks
+and we proved some transformation laws.
+We concluded that the $\Task$ operation on types is a functor,
+but cannot be a monad \cite{conf/sfp/KlijnsmaS22}.
+
+To achieve this,
+we categorise tasks based on the observations we can make on them.
+The observations we use, the ones discussed in \cref{sec:observations}:
+are if the task is failing ($\Failing$),
+if the task can receive any inputs ($\Inputs$),
+and if the task has a value ($\Value$).
+Based on these three observations,
+a (fully fixated) task can be in one of five \emph{conditions} which we will summarise below.
+We refer to the propositions as proved in \citet{conf/sfp/KlijnsmaS22}.
 
 \begin{description}
 
   \item[Failing]
-    A failing task $t$ is a task for which the failing function $\Failing(t)$ yields true.
-    If a task is failing, we can prove that it accepts no more use input and has no value \citeprop{12}.
-    That is, $\Inputs(t) = \empty$ and $\Value(t,\sigma) = \bot$.
-    We also know that, if $\Failing(t) = \True$, it stays failing \citeprop{1},
-    simply because there is no input which can rewrite $t$ to another $t'$.
-    % We have proven this property in \todo{} in the appendix.
+    A failing task $t$ is a task for which the failing function $\Failing(t)$ yields $\True$.
+    If a task is failing, we can prove that it accepts no more user input and has no value \citeprop{12}.
+    That is, $\Inputs(t) = \nothing$ and $\Value(t,\sigma) = \bot$.
+    We also know that, if $\Failing(t)$ holds, it stays failing,
+    simply because there is no input that can rewrite $t$ to another $t'$ \citeprop{1}.
 
   \item[Stuck]
     A stuck task $t$ is a task which does not fail, does not accept user input, and does not have a value.
-    That is, $\Failing(t) = \False$, $\Inputs(t) = \empty$, and $\Value(t,\sigma) = \bot$.
+    That is, $\Failing(t) = \False$, $\Inputs(t) = \nothing$, and $\Value(t,\sigma) = \bot$.
     Similar to failing tasks, stuck tasks will always remain stuck because no more user interaction is possible and, by assumption, it is already fully fixated \citeprop{3}.
 
   \item[Steady]
     If a task $t$ has a value but it cannot handle any input, we call it \emph{steady}.
     An example of a steady task is $\View^k 42$.
     Because this task accepts no more user input, its value will always remain equal to $42$.
+    So steady tasks will stay steady \citeprop{2a}.
 
   \item[Unsteady]
     If a task $t$ has a value and it can handle input, we call it \emph{unsteady}.
     An example of an unsteady task is $\Update^k 42$.
     This task still accepts user input, and thus its value can keep on changing.
-    Even though this example and $\View^k 42$ yield the same value,
-    they should not be equivalent, since one's value can be changed and the other one's value cannot.
-    If a task $t$ is unsteady, it will never terminate: an unsteady task will always remain unsteady with the same input space, only its value may change \citeprop{2}.
+    Even though $\Update^k 42$ and $\View^k 42$ yield the same value,
+    they should not be equivalent, since one's value can be changed and the other's cannot.
+    If a task $t$ is unsteady, it will never terminate: an unsteady task will always remain unsteady with the same input space, only its value may change \citeprop{2b}.
+    We do say, however, that both steady and unsteady tasks are \emph{finished}.
 
   \item[Running]
     The last condition is when a task $t$ does not fail, does not have a value, but still accepts user input.
-    Because there is still user interaction possible, it may be the case that with the right input, it transitions to one of the previously described task conditions.
+    Because there is still user interaction possible, it may be the case that, with the right input,
+    it transitions to one of the previously described task conditions.
     The simplest example of a running task is the empty editor $\Enter^k \beta$, which becomes an unsteady task once it receives a valid input event.
     Although running tasks can keep running forever,
     we at least can prove that they will not fail \citeprop{4}.
 
 \end{description}
 
-These conditions are mutually exclusive \citeprop{5}.
+These five conditions are proved to be mutually exclusive \citeprop{5}.
+\cref{tab:task-conditions} summarises all conditions
+and shows some more example tasks in each condition.
+The possible transitions for tasks from one condition to another are drawn in \cref{fig:task-conditions}.
 
 \begin{table}
   \input{tables/conditions}
@@ -60,6 +80,38 @@ These conditions are mutually exclusive \citeprop{5}.
   \label{fig:task-conditions}
 \end{figure}
 
+Next, we discuss how this theory changes after the addition of task pools.
+It is always possible to send initialise a new task in a task pool.
+As shown in \cref{fig:observations-dynamic},
+the inputs observation $\Inputs$ on a task pool $\Pool_{t_0}^k [\many{n}]$ will contain the input $k\Send\Init$
+regardless of the tasks in the pool.
+This has a consequence for the diagram in \cref{fig:task-conditions}.
+
+\begin{example}{Integer task pool}
+  Take for example the simple task $t = \Pool_{\Enter^\epsilon \Int}^k_0 [\Update^k_1 42]$.
+
+  By definition of $\Value$, it has an observable value, namely the singleton list $[42]$.
+  By definition of $\Inputs$, it also has possible inputs,
+  which is the set $\set{k_0\Send\Init, k_0\Send\Kill1, k_1\Send x \Mid x\in\Int}$.
+  This means we can change the value in editor keyed $k_1$,
+  which will also change the value of the whole task pool,
+  but we can also kill or initialise tasks in the pool.
+
+  Say, we send $k_0\Send\Init$ to $t$.
+  Then, $t$ will be rewritten to $\Pool_{\Enter^\epsilon \Int}^k_0 [\Update^k_1 42, \Enter^k_2\Int]$.
+  Because $\Enter^k_2\Int$ does not have a value,
+  the whole pool does not have a value any more!
+  \todo{is this the semantics we want?}
+  This means $t$ moved from condition unsteady to running.
+\end{example}
+
+Propositions stating that failing tasks stay failing \citeprop{1},
+steady tasks stay steady \citeprop{2a},
+and stuck tasks stay stuck \citeprop{3},
+stay the same.
+Also, by construction, running tasks will not fail \citeprop{4}.
+What will change, however, is Prop.~2b:
+unsteady tasks will not stay unsteady with the same input space after incorporating task pools.
 
 ---------
 
