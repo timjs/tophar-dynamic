@@ -67,6 +67,11 @@ These five conditions are proved to be mutually exclusive \citeprop{5}.
 \cref{tab:task-conditions} summarises all conditions
 and shows some more example tasks in each condition.
 The possible transitions for tasks from one condition to another are drawn in \cref{fig:task-conditions}.
+Moreover, this diagram is complete.
+That is, for any two task conditions $C$ and $C'$ in \cref{fig:task-conditions},
+there is a transition from $C$ to $C'$
+if and only if there exist two tasks $t \in C$ and $t' \in C'$ such that
+$t,\sigma \interact{\iota} t',\sigma'$ for some input $\iota \in \Inputs(t)$ and states $\sigma$ and $\sigma'$ \citeprop{5}.
 
 \begin{table}
   \input{tables/conditions}
@@ -85,56 +90,49 @@ It is always possible to send initialise a new task in a task pool.
 As shown in \cref{fig:observations-dynamic},
 the inputs observation $\Inputs$ on a task pool $\Pool_{t_0}^k [\many{n}]$ will contain the input $k\Send\Init$
 regardless of the tasks in the pool.
-This has a consequence for the diagram in \cref{fig:task-conditions}.
+However, we will argue that this has no consequence for the diagram in \cref{fig:task-conditions}.
+Let us first consider an example.
 
-\begin{example}{Integer task pool}
-  Take for example the simple task $t = \Pool_{\Enter^\epsilon \Int}^{k_0} [\Update^k_1 42]$.
+\begin{example}[Integer task pool]
+  \label{exm:integer-task-pool}
+  Take for example a simple task pool to enter integers:
+  \begin{TASK}
+    >&<$_{\Enter^\epsilon \Int}^{k_0}$ [update$^{k_1}$ 42]
+  \end{TASK}
 
   By definition of $\Value$, it has an observable value, namely the singleton list $[42]$.
-  By definition of $\Inputs$, it also has possible inputs,
+  Also by definition of $\Inputs$, it also has possible inputs,
   which is the set $\set{k_0\Send\Init, k_0\Send\Kill1, k_1\Send x \Mid x\in\Int}$.
   This means we can change the value in editor keyed $k_1$,
   which will also change the value of the whole task pool,
   but we can also kill or initialise tasks in the pool.
+  Because $t$ has inputs and has a value that could change,
+  it is in the unsteady condition.
 
   Say, we send $k_0\Send\Init$ to $t$.
-  Then, $t$ will be rewritten to $\Pool_{\Enter^\epsilon \Int}^{k_0} [\Update^k_1 42, \Enter^k_2\Int]$.
-  Because $\Enter^k_2\Int$ does not have a value,
-  the whole pool does not have a value any more!
-  \todo{is this the semantics we want?}
-  This means $t$ moved from condition unsteady to running.
+  Then, $t$ will be rewritten to:
+  \begin{TASK}
+    >&<$_{\Enter^\epsilon \Int}^{k_0}$ [update$^{k_1}$ 42, enter$^{k_2}$ Int].
+  \end{TASK}
+  The task $\Enter^k_2\Int$ does not have a value,
+  but the value of the pool itself will not change.
+  We can, however, still change its value by sending $k_1\Send37$.
+
+  We see that $t$ still has a value,
+  but there are inputs that can change this value.
+  Therefore it is still in the unsteady condition.
+  Note, however, that the input space did change.
+  We can now also send inputs to $k_2$ or kill this new task.
+  Observation $\Inputs$ will faithfully return
+  $\set{k_0\Send\Init, k_0\Send\Kill1, k_0\Send\Kill2, k_1\Send x, k_2\Send x \Mid x\in\Int}$.
 \end{example}
 
+\todo{move this}
 Propositions stating that failing tasks stay failing \citeprop{1},
 steady tasks stay steady \citeprop{2a},
 and stuck tasks stay stuck \citeprop{3},
 stay the same.
 Also, by construction, running tasks will not fail \citeprop{4}.
 What will change, however, is Prop.~2b:
-unsteady tasks will not stay unsteady with the same input space after incorporating task pools.
-
----------
-
-
-
-
-
-
-Propositions from \cite{Steenvoorden22} and \cite{Klijnsma2020} that still hold are the following:
-
-\begin{itemize}
-  \item Valued tasks are static
-  \item Steady tasks stay steady
-\end{itemize}
-
-However, because of the dynamic nature of task pools, the following propositions need alteration:
-
-\begin{itemize}
-  \item Static tasks stay static
-  \item Finished tasks stay finished
-\end{itemize}
-
-This is because task pools can always receive the initialise input ($\Init$),
-so tasks containing a task pool will never get to a steady state!
-
-We will discuss the impact on equational reasoning on tasks more thoroughly...
+unsteady tasks will still stay unsteady,
+however, as we discussed in \cref{exm:integer-task-pool} the input space \emph{can} change after incorporating task pools.
