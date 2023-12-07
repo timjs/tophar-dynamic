@@ -1,5 +1,8 @@
 % !TEX root=../main.tex
 
+\todo{remove newpage}
+\newpage
+
 \section{Dynamic TopHat}
 \label{sec:dyntophat}
 
@@ -12,10 +15,10 @@ Let us illustrate this with an example.
 \begin{example}[Vending machine with shared stock]
   \label{exm:vending-shared}
   Take this slightly more complex vending machine,
-  where two buyers can purchase a $\Snack$ at the same time from a shared inventory.
+  where two buyers can purchase a \typ{Snack} at the same time from a shared inventory.
 
   \begin{TASK}[emph={inventory,payment}]
-    let vend$_1$ : Task Snack = do inventory.
+    let vend' : Ref (List Snack) -> Task Snack = do inventory.
       enter Int >>? do payment.
       case payment of
         1 |-> decrease Biscuit inventory >>= do _.
@@ -23,26 +26,29 @@ Let us illustrate this with an example.
         2 |-> decrease Chocolate inventory >>= do _.
              view Chocolate
         _ |-> fail
-    let machine$_1$ : Task (Snack * Snack) =
+    let machine : Task (Snack * Snack) =
       share [(Biscuit, 24), (Chocolate, 16)] >>= do inventory.
-      vend$_1$ inventory <&> vend$_1$ inventory
+      vend' inventory <&> vend' inventory
   \end{TASK}
 
-  Here \var{decrease} is a function that decreases the amount of the given snack by one in the shared list of snacks.
-  Note that this task results in a pair containing the two bought $\Snack$s.
-
-  We see that, at development time, we need to specify the number of \var{vend} tasks that can be done at the same time.
-  Although in the physical world, it is quite evident that one can only place a predefined amount of vending machines next to each other,
-  in the digital world, one would expect to initialise and kill such processes at any time.
+  Here \fun{vend'} is similar to \fun{vend} from \cref{exm:vending-base},
+  but now it takes a shared list with snacks as a parameter.
+  \fun{decrease} is a function that decreases the amount of the given snack by one in the shared list of snacks.
+  Task \fun{machine} first creates a shared \var{inventory},
+  containing \con{Biscuit}s and \con{Chocolate}s,
+  and starts two vending machines with these treats.
+  This task results in a pair containing the two bought \typ{Snack}s.
 \end{example}
 
-To mitigate this problem in \TOPHAT,
-we introduce \DYNTOPHAT.
+We see that, at development time, we need to specify the number of \fun{vend} tasks that can be done at the same time.
+Although in the physical world, it is quite evident that one can only place a predefined amount of vending machines next to each other;
+in the digital world, one would expect to initialise and kill such processes at any time.
+To mitigate this problem in \TOPHAT, we extend it with \emph{task pools}.
 
 
 \subsection{Task pools}
 
-\DYNTOPHAT\ is a moderate extension to the \TOPHAT\ base language where we add support for \emph{task pools}.
+\DYNTOPHAT\ is a moderate extension to the \TOPHAT\ base language where we add support for task pools.
 Task pools contain zero or more instantiations of a \emph{template task} running in parallel.
 In this regard, task pools are similar to the parallel-and combinator ($\Pair$).
 End users can interact with all tasks currently running in a pool.
@@ -59,8 +65,6 @@ Tasks in the list can also be killed by sending a \emph{kill} action to the pool
 In this case, the first task in the pool will be killed.
 The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
 
-\todo{say that dup is not possible}
-
 \begin{figure}
   \usemacro{G-Dynamic-extensions}
   \caption{Grammar for \DYNTOPHAT\ extensions}
@@ -69,23 +73,47 @@ The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
 
 \begin{example}[Dynamic number of vending machines]
   \label{exm:vending-dynamic}
-  Using the same \var{vend}$_1$ task from \cref{exm:vending-shared},
-  we can now create a vending machine where end users can start an arbitrary amount of vending tasks.
-  \begin{TASK}
-    let machine$_2$ : Task (List Snack) =
-      share [(Biscuit, 24), (Chocolate, 16)] >>= do ss.
-      >&<$_{\var{vend}_1\,\var{ss}}$ []
+  Using the same \fun{vend'} task from \cref{exm:vending-shared},
+  we can now create a vending machine where end users can start an arbitrary amount of vending tasks
+  by using \fun{vend'} as the template task of a pool.
+  \begin{TASK}[emph={inventory}]
+    let machine' : Task (List Snack) =
+      share [(Biscuit, 24), (Chocolate, 16)] >>= do inventory.
+      >&<$_{\fun{vend'}\,\var{inventory}}$ []
   \end{TASK}
-  Sending $\Init$ to above task creates a new \var{vend} task
-  which will ask for an amount of money and will result in a \var{Biscuit} or \var{Chocolate}.
-  Note that this machine, contrary to the one in \cref{exm:vending-shared}, will run indefinitely.
+  Note that now, \fun{machine'} returns a \typ{List} of \typ{Snack}s.
+  Sending $\Init$ to \fun{machine'} creates a new \fun{vend'} task
+  which will ask for an amount of money and will result in a \fun{Biscuit} or \fun{Chocolate}.
+  One can create an arbitrary number of such tasks.
+
+  Note that a standalone \fun{machine'}, contrary to the one in \cref{exm:vending-shared}, will run indefinitely
+  in the same sense that an editor runs indefinitely.
+  Adding a step to a continuation will break this cycle,
+  as shown in the next example.
+\end{example}
+
+\begin{example}[Summarise sold snacks]
+  \label{exm:summarise}
+  We can write a task that starts our vending machine
+  and only steps when the amount of sold snacks is exactly four.
+  If that's the case, we show the amount of sold \con{Biscuit}s and \con{Chocolate}s.
+  \begin{TASK}[emph={snacks}]
+    let summarise =
+      machine' >>= do snacks.
+      if length snacks == 4 then
+        let bs = show (count Biscuits snacks)
+        let cs = show (count Chocolate snacks)
+        view ("Sold " ++ bs ++ " biscuit(s) and " ++ cs " chocolate(s)")
+      else fail
+  \end{TASK}
 \end{example}
 
 
 \subsection{Semantics}
 
 Typing rules of task pools are given in \cref{fig:typing-dynamic}.
-Here we simply state that a task pool results in a list of values.
+Here we simply state that a task pool results in a list of values of type $\tau$
+if every task in the pool, including the template task, is a $\Task$ of type $\tau$.
 
 \begin{figure}
   \begin{mathpar}
@@ -96,17 +124,11 @@ Here we simply state that a task pool results in a list of values.
   \label{fig:typing-dynamic}
 \end{figure}
 
-Extensions of the dynamic semantics are given in \cref{fig:typing-dynamic}.
-Similar how normalisation works for task pairing (as shown in \cref{fig:semantics-tophat}),
-normalisation of task pools normalises each task in the pool and constructs a new pool.
+Extensions of the normalisation relation of \TOPHAT\ is given in \cref{fig:semantics-dynamic-normalisation}.
+Similar to the way normalisation works for parallel-and (as shown in \cref{fig:semantics-tophat}),
+normalisation of task pools normalises each task in the pool and then constructs a new pool containing these normalised tasks.
 Note that the template task is not normalised.
-This means that, every time the template task is added to the task pool,
-it will be normalised after this action.
-Otherwise we would create unwanted sharing.
-\todo{add bad sharing example?}
-If, for example, the template needs to do some setups,
-
-\todo{explaing extended handing semantics}
+Otherwise, we would create unwanted sharing of editors.
 
 \begin{figure}
   \begin{mathpar}
@@ -114,21 +136,97 @@ If, for example, the template needs to do some setups,
     \boxed{\RelationN} \\
     \userule{N-Pool-Name} \\
     \userule{N-Pool} \\
+  \end{mathpar}
+  \caption{Normalisation rules for task pools}
+  \label{fig:semantics-dynamic-normalisation}
+\end{figure}
+
+\begin{example}[Wrong! Unwanted sharing when normalising template tasks]
+  Take as an example the task pool $\Pool^{k_0}_{\Enter^\epsilon\Int} []$
+  which would simply add editors to the pool asking to enter an integer.
+
+  In case we would normalise the template task,
+  we would have to attach a fresh key $k_1$ to the template task,
+  resulting in:
+  \begin{TASK}
+    >&<$^{k_0}_{\Enter^{k_1}\Int}$ []
+  \end{TASK}
+  If we would now send $k_0\Send\Init$ twice,
+  we would get:
+  \begin{TASK}
+    >&<$^{k_0}_{\Enter^{k_1}\Int}$ [enter$^{k_1}$ Int, enter$^{k_1}$ Int]
+  \end{TASK}
+  This is undesirable because it breaks our demand that every editor should have a \emph{unique} key.
+  It would be unclear what to do with the input $k_1\Send 42$.
+  Therefore, we delay normalisation of the template task until the moment they are added to the pool.
+\end{example}
+
+\DYNTOPHAT's additional handling rules are presented in \cref{fig:semantics-dynamic-handling}.
+Rule \seerule{H-Init} shows that sending $k\Send\Init$ copies the template task to the pool.
+Rule \seerule{H-Kill$_j$} removes the $j$th task from the pool on the input of $k\Send\Kill j$.
+In both cases, the key $k$ in the input should be equal to the key of the task pool.
+If that is not the case, rule \seerule{H-Pool} passes the input on to all tasks in the pool,
+identical to \seerule{H-Pair} in \cref{fig:semantics-tophat}.
+
+\begin{figure}
+  \begin{mathpar}
     \boxed{\RelationH} \\
     \userule{H-Init} \\
     \userule{H-Kill$_j$} \\
     \userule{H-Pool} \\
   \end{mathpar}
-  \caption{Semantic rules for \DYNTOPHAT}
-  \label{fig:semantics-dynamic}
+  \caption{Handling rules for task pools}
+  \label{fig:semantics-dynamic-handling}
 \end{figure}
 
-and extended observations in \cref{fig:observations-dynamic}.
-\todo{explain observations}
-\todo{discuss choice for value}
+Then, we need to extend our failing, inputs, and value observation to deal with task pools.
+\cref{fig:observations-dynamic} shows these additions.
+The failing observation is $\False$ because
+it is alwasy safe to step to task pools.
+After all, one can always initialise a new task in the pool.
+The inputs observation collects inputs from every task in the pool
+together with the $\Init$ input.
+Additionally, it is possible to kill a task at every index in the pool.
+As in previous work, it is easily proved that this is sound and complete with the handling rules presented in \cref{fig:semantics-dynamic-handling} \cite{Steenvoorden22}.
+The value observation returns a list of values for every task in the pool.
+If a task in the pool does not have a value (i.e., $\Value(n_j,\sigma) = \bot$ for some $j$),
+this is simply not included in the list.
+When there are no tasks in the pool, it results in the empty list.
+Only in this way,
+we can make a step from a task pool containing partial work.
 
 \begin{figure}
   \usemacro{O-Dynamic}
   \caption{Observations for \DYNTOPHAT}
   \label{fig:observations-dynamic}
 \end{figure}
+
+\begin{example}[Partial work in pools]
+  Take the \fun{summarise} task from \cref{exm:summarise}.
+  Say we already sold 3 snacks, and two persons are trying to buy another snack.
+  Our \fun{machine'} could be in the state
+  \begin{TASK}
+    >&<$_{\fun{vend'}\,\var{inventory}}$ [view Biscuit, view Chocolate,
+      enter$^{k_3}$ Int >>? ..., view Chocolate, enter$^{k_5}$ Int >>? ...]
+  \end{TASK}
+  Note that, by definition of our value observation $\Value$,
+  this task has the value \TS{[Biscuit, Chocolate, Chocolate]}.
+  In particular, it does not result in $\bot$ because the third and fifth tasks do not have observable values.
+
+  After user five pays the amount of 2 coins for a Chocolate (i.e. we send input $k_3\Send2$),
+  above task will be rewritten to:
+  \begin{TASK}
+    >&<$_{\fun{vend'}\,\var{inventory}}$ [view Biscuit, view Chocolate,
+      enter$^{k_3}$ Int >>? ..., view Chocolate, view Chocolate]
+  \end{TASK}
+  The value observation of this task would return the list \TS{[Biscuit, Chocolate, Chocolate, Chocolate]}.
+  Now we satisfy the guard in the definition of \fun{summarise} that the number of snacks should be four.
+  We can take this step and immediately rewrite the whole task to summarise the different purchases that were made.
+  The result will be:
+  \begin{TASK}
+    view ("Sold 1 biscuit(s) and 3 chocolate(s)")
+  \end{TASK}
+  This means the \fun{vend'} task of user three would be discarded.
+
+  Note that we would not be able to make this step in the case that our value observation would result in $\bot$ when one of the values of the tasks in the pool would result in $\bot$.
+\end{example}
