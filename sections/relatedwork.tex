@@ -22,7 +22,10 @@ Workflow nets are a variation on workflow patterns, where Petri nets are used in
 YAWL builds upon this, extending the workflow nets in such a way that they are directly executable~\cite{journals/is/AalstH05}.
 YAWL systems are programmed visually.
 
-BPEL \todo{write me!}
+BPEL~\cite{bpel} is another popular business process calculus.
+The standardized language allows for the specification of actions within business processes, using an XML format.
+The language is mainly used for coordinating web services.
+Compared to \TOPHAT, BPEL has no support for higher-order processes.
 
 \paragraph{Process algebra}
 
@@ -37,9 +40,17 @@ Two forms of communication between tasks exist: Passing values to continuations 
 This is different from communication in process algebras, which is based on message-passing.
 
 \paragraph{Reactive programming}
-HipHop
-Esterel
-Functional reactive programming
+HipHop~\cite{conf/icdcit/BerryS14,journals/corr/BerryS13} is a programming language tailored to the development of synchronous reactive web systems.
+From a single source, both server and client applications are generated.
+Programs are written in the Hop language, a Scheme dialect.
+The set of HipHop reactive statements is based on those of the Esterel language~\cite{journals/scp/BerryG9}.
+The main difference with \TOPHAT\ is that events and inputs are abstracted away, and are no concern for the programmer, whereas in HipHop, events and inputs have to be explicitly handled.
+Functional reactive programming.
+
+Closer to home is research on Functional Reactive Programming (FRP)~\cite{conf/icfp/ElliottH97}.
+Many variants and implementations exist~\cite{reactive-banana,CooperK04,conf/oopsla/MeyerovichGBCGBK09}, but the underlying principle is the same.
+When comparing to \TOP, the biggest difference is in the goals the two paradigms aim to achieve.
+FRP expresses automatically updating data dependencies, whereas \TOP\ focuses on the modeling of collaboration.
 
 \paragraph{Task-oriented programming}
 
