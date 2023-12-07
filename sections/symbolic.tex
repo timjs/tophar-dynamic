@@ -84,6 +84,7 @@ Since a user can update an editor as often as they want, special care is taken t
 An editor can only be updated twice, if the task, modulo the updated value, has changed.
 This allows exactly enough repetition to capture the full program behaviour.
 For example, the second task in a parallel composition might rely on a value being updated in the first task, to make progress.
+\todo{verduidelijken waarom we echt 2 keer moeten, en 1 niet genoeg is. Wellicht een voorbeeldje toevoegen?}
 
 When it comes to \DYNTOPHAT, there is an additional opportunity for infinite interaction, namely to spool up a new task.
 Unfortunately, in this case, there is no way to set an upper bound on this interaction without changing the program's behaviour.
