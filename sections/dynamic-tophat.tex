@@ -54,7 +54,7 @@ Similarly, by sending a \emph{kill} event, the task pool terminates one of its c
 
 Language-wise, a task pool is a new combinator at the task level.
 The combinator $\Pool^k_{t_0} []$ is parametrised by a unique key $k$, a template task $t_0$ and an (initially) empty task list $[]$.
-Each time end users send an init action to this pool: $k\Send\Init$, the template task is placed in the list of currently running tasks,
+Each time end-users send an init action to this pool: $k\Send\Init$, the template task is placed in the list of currently running tasks,
 in this case resulting in $\Pool^k_{t_0} [t_0]$.
 This way, an arbitrary amount of tasks can be started at runtime.
 Tasks in the list can also be killed by sending a \emph{kill} action to the pool: $k\Send\Kill1$.
@@ -70,7 +70,7 @@ The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
 \begin{example}[Dynamic number of vending machines]
   \label{exm:vending-dynamic}
   Using the same \fun{vend'} task from \cref{exm:vending-shared},
-  we can now create a vending machine where end users can start an arbitrary amount of vending tasks
+  we can now create a vending machine where end-users can start an arbitrary amount of vending tasks
   by using \fun{vend'} as the template task of a pool.
   \begin{TASK}[emph={inventory}]
     let machine' : Task (List Snack) =

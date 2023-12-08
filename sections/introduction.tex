@@ -21,19 +21,19 @@ Even though \ITASKS\ is implemented as a \DSL\ in a functional programming langu
 This heavily restricts the amount of formal reasoning that can be done on \ITASKS\ programs.
 
 To overcome this downside, \TOPHAT\ was introduced~\cite{conf/ppdp/SteenvoordenNK19}.
-Built on top of the simply typed lambda calculus,
+Built on the simply typed lambda calculus,
 \TOPHAT\ is a \TOP\ implementation that has a complete formal semantics.
 Several works leverage this to perform symbolic execution \cite{conf/ifl/NausSK19},
-generate next-step hints for end users \cite{conf/sfp/NausS20},
+generate next-step hints for end-users \cite{conf/sfp/NausS20},
 and reason about equivalence of tasks \cite{conf/sfp/KlijnsmaS22}.
 % A complete and thorough description of all of \TOPHAT's features can be found in \citet{Steenvoorden22}.
 
 Compared to the \ITASKS\ system, \TOPHAT\ is more restrictive in managing tasks itself.
 \TOPHAT\ programs can only define a static amount of work, whereas \ITASKS\ programs can dynamically spool up new tasks and terminate old ones.
-In this paper, we introduce \DYNTOPHAT, an extension to \TOPHAT\ that allows end users to initialize and kill tasks at runtime.
+In this paper, we introduce \DYNTOPHAT, an extension to \TOPHAT\ that allows end-users to initialize and kill tasks at runtime.
 Key in our approach is that we do not compromise the formal properties when adding this feature.
 
-\paragraph{Contributions}
+% \paragraph{Contributions}
 
 Our main contributions are as follows.
 \begin{itemize}
@@ -50,19 +50,19 @@ Our main contributions are as follows.
     We can still reason about the evolution of tasks at runtime
     and prove when two tasks are equal.
     Also, previously published transformation laws on tasks still hold:
-    the $\Task$ operation on types is a functor but cannot be a monad.
+    the \typ{Task} operation on types is a functor but cannot be a monad.
 \end{itemize}
 
 % \todo{Say something about validation and proofs here?}
 
-\paragraph{Structure}
+% \paragraph{Structure}
 
-% The remainder of this paper is structured as follows.
+The remainder of this paper is structured as follows.
 \cref{sec:tophat} introduces the \TOPHAT\ language as presented in \citet{Steenvoorden22}.
 \cref{sec:dyntophat} then goes on to present our dynamic version of \TOPHAT.
 % After having introduced all language constructs, we study a bigger example in \cref{sec:example}.
-We then study the implications on \TOPHAT's properties in \cref{sec:properties},
-discussing the impact of task pools on the symbolic execution mechanism and the language's metatheory.
+We then study the implications on \TOPHAT's properties in \cref{sec:properties}.
+We discuss the impact of task pools on the symbolic execution mechanism and task equivalence.
 Related work is discussed in \cref{sec:relatedwork}.
-After a short discussion on the implications of \DYNTOPHAT\ in \cref{sec:discussion},
+After a short discussion on the design decisions of \DYNTOPHAT\ in \cref{sec:discussion},
 we conclude in \cref{sec:conclusion}.

@@ -35,7 +35,7 @@ they only accept values of their specified type.
 The type of an editor can also be used to (generically) render a user interface.
 For example,
 an editor of type $\Bool$ could be rendered as a check box,
-while end users could interact with an editor of type $\Location$ by putting a pin on a map.
+while end-users could interact with an editor of type $\Location$ by putting a pin on a map.
 
 Editors can initially be empty, or \emph{unvalued} ($\Enter^\nu \beta$).
 After sending a value $b$ to an editor, the editor is now \emph{valued} ($\Update^\nu b$).
@@ -57,7 +57,7 @@ Changing the value of shared editors changes the value in the heap location.
 Multiple shared editors can watch the same heap location.
 As plain editors, shared editors can also be read-only ($\Watch^\nu h$),
 which means their displayed value will only change when the referenced heap location changes,
-but end users cannot send values to update the heap location.
+but end-users cannot send values to update the heap location.
 
 
 \subsubsection{Combinators}
@@ -147,8 +147,8 @@ The reason for this restriction is twofold.
 First, prohibiting references to functions keeps our host language total.
 % This is necessary for the symbolic execution to not enter an infinite loop.
 Second, restricting editors to only contain basic values
-guarantees one can present these values to end users (print them)
-and receive new inputs from end users (parse them).
+guarantees one can present these values to end-users (print them)
+and receive new inputs from end-users (parse them).
 Arbitrary tasks and functions do not have this property.
 
 \begin{figure}
@@ -193,10 +193,10 @@ Each is depicted in \cref{fig:semantic-layers}.
     This layer only contains one big-step evaluation relation ($\evaluate$).
   \item[Internal layer]
     This layer only operates on tasks.
-    It prepares tasks so they can be presented to end users to interact with.
+    It prepares tasks so they can be presented to end-users to interact with.
     This layer contains the big-step normalization ($\normalise$) and fixation ($\fixate$) relations.
   \item[External layer]
-    The external layer takes inputs from end users and rewrites tasks based on this input.
+    The external layer takes inputs from end-users and rewrites tasks based on this input.
     This layer contains two small-step relations: handling ($\handle{\iota}$) and interaction ($\interact{\iota}$).
     Both relations are labeled with inputs $\iota$.
 \end{description}
@@ -254,7 +254,7 @@ Failing is especially useful when used in combination with the step combinator,
 as we have seen in \cref{exm:vending-base}.
 Note that if only one side fails in a parallel-and,
 for example with $\Fail \Pair t$ for $t$ a non-failing task,
-then $\Fail \Pair t$ can still interact with end users if $t$ can.
+then $\Fail \Pair t$ can still interact with end-users if $t$ can.
 Therefore the whole task should not fail if only one side fails.
 
 \begin{figure}
