@@ -70,8 +70,8 @@ These five conditions are proved to be mutually exclusive\citeprop{5}.
 \cref{tab:task-conditions} summarises all conditions
 and shows some more example tasks for each condition.
 The possible transitions for tasks from one condition to another are drawn in \cref{fig:task-conditions}.
-Moreover, this diagram is complete:
-only those transitions shown are possible.
+Moreover, this diagram is proved to be complete:
+only those transitions shown are possible \cite{conf/sfp/KlijnsmaS22}.
 % for any two task conditions $C$ and $C'$ in \cref{fig:task-conditions},
 % there is a transition from $C$ to $C'$
 % if and only if there exist two tasks $t \in C$ and $t' \in C'$ such that
@@ -112,10 +112,10 @@ Let us first consider an example.
   \end{TASK}
 
   By definition of $\Value$, it has an observable value, namely the singleton list $[42]$.
-  Also by definition of $\Inputs$, it has multiple possible inputs,
-  namely inputs from the set $\set{k_0\Send\Init, k_0\Send\Kill1, k_1\Send x \Mid x\in\Int}$.
-  This means we can change the value in the editor keyed with $k_1$.
-  This will change the value of the whole task pool.
+  By definition of $\Inputs$, it has multiple possible inputs,
+  namely inputs the set $\set{k_0\Send\Init, k_0\Send\Kill1, k_1\Send x \Mid x\in\Int}$.
+  This means we can change the value in the editor keyed with $k_1$
+  which will change the value of the whole task pool.
   Next to this, we can also kill or initialize tasks in the pool.
   Because $t$ has observable inputs and an observable value that could change,
   it is in the unsteady condition.
@@ -125,9 +125,11 @@ Let us first consider an example.
   \begin{TASK}
     >&<$_{\Enter^\epsilon \Int}^{k_0}$ [update$^{k_1}$ 42, enter$^{k_2}$ Int].
   \end{TASK}
-  The task $\Enter^k_2\Int$ does not have a value,
-  but the value of the pool itself will not change.
-  We can, however, still change the value of the pool by sending $k_1\Send37$ or $k_2\Send32$.
+  The task $\Enter^{k_2}\Int$ does not have a value,
+  but the value of the pool itself will not change,
+  it stays $[42]$.
+  We can, however, still change the value of the pool by sending
+  $k_1\Send37$ (resulting in $[37]$) or $k_2\Send36$ (resulting in $[37,36]$).
 
   We see that $t$ still has a value,
   but there are inputs that can change this value.
@@ -161,7 +163,7 @@ Stepping rules are unaltered, therefore (4) still holds.
 As we have seen in \cref{exm:integer-task-pool},
 task pools are unsteady but the input space can change.
 Therefore (2c) does not hold any more,
-but it has no impact on the other properties.
+but this is not used in the proofs of the other properties.
 Notably (5) holds by construction and (6) follows from all other properties except (2c).
 
 This means the only property from this list that needs new proof is (2b).
@@ -180,8 +182,8 @@ To do this, we first need to introduce the notion of \emph{stepless tasks}.
 
 \begin{figure}
   \usemacro{G-Stepless-Tasks-compact}
-  \label{fig:stepless-tasks-grammar}
   \caption{Stepless tasks}
+  \label{fig:stepless-tasks-grammar}
 \end{figure}
 
 \begin{proposition}[Valued tasks are stepless]
@@ -217,7 +219,7 @@ and will result in a list of values any way.
 As stepless tasks do not contain steps ($n_1 \Step e_2$) or choices ($n_1 \Choose n_2$),
 their \emph{outer shape} cannot be altered at runtime.
 That is, although new tasks can be spooled up \emph{inside} task pools,
-there is no way for end-users to \emph{discard} the current task
+there is no way for end-users to discard the current task
 and step to a new one.
 Therefore, stepless tasks stay stepless and the value observation will not result in $\bot$.
 
@@ -246,3 +248,8 @@ Using this observation, we can prove property~(2b).
   and therefore will keep having a value.
   In particular, it is not possible for any task $t$ to move from the unsteady to the running condition.
 \end{proof}
+
+Summarizing, we see that after adding task pools to the \TOPHAT\ language,
+its metatheoretical properties stay largely unaltered.
+In particular, we can still reason about task equivalence
+and transformation laws from previous work still hold.
