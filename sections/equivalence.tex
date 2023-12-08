@@ -153,7 +153,6 @@ In previous work we proved several properties on tasks \cite{conf/sfp/KlijnsmaS2
   \item[(6)] transitions in \cref{fig:task-conditions} are complete
   % \item[(12)] failing tasks have no inputs and no value
 \end{enumerate}
-
 Most of these still hold after the addition of task pools to the language.
 This reinforces our belief that the given definitions and semantics for task pools are the right choice.
 As pools cannot be failing, steady or stuck by construction,
@@ -174,7 +173,7 @@ To do this, we first need to introduce the notion of \emph{stepless tasks}.
   a valued editor,
   pairs of stepless tasks,
   transforms of stepless tasks,
-  or task pools of stepless tasks.
+  or task pools of normalised tasks.
   That is, they confirm to the grammar presented in \cref{fig:stepless-tasks-grammar}.
   Note that stepless tasks are a subset of normalised tasks.
 \end{definition}
@@ -194,8 +193,8 @@ To do this, we first need to introduce the notion of \emph{stepless tasks}.
     then $n$ is stepless.
 \end{proposition}
 \begin{proof}
-  We have that $\Value(n,\sigma) = v : \beta$.
-  When taking the definition of $\Value$ into account (as given in \cref{fig:observation-value}),
+  We know that $\Value(n,\sigma) = v : \beta$.
+  When taking the definition of $\Value$ into account (as given in \cref{fig:observation-value} and \cref{fig:observations-dynamic}),
   we see that $n$ can only be in one of five shapes:
   \begin{itemize}
     \item a valued editor $d$ (that is $d \neq \Enter\beta$);
@@ -207,16 +206,20 @@ To do this, we first need to introduce the notion of \emph{stepless tasks}.
   Especially, step ($n_1 \Step e_2$) and fail ($\Fail$) are ruled out, because they have no value.
   Choice ($n_1 \Choose n_2$) is ruled out
   because the only way that this combinator can survive normalisation is for both $n_1$ and $n_2$ to not have a value,
-  which should be the case here.
+  but we consider normalised task by assumption.
   Now, by induction, we have that $n$ is stepless and meets the grammar in \cref{fig:stepless-tasks-grammar}.
 \end{proof}
 
+Note that inside task pools we admit normalised subtasks instead of stepless subtasks.
+This is because our value observation ignores subtasks for which $\Value(n_j,\sigma) = \bot$
+and will result in a list of values any way.
+
 As stepless tasks do not contain steps ($n_1 \Step e_2$) or choices ($n_1 \Choose n_2$),
-their shape cannot be altered at runtime.
-That is, although new tasks can be spooled up in task pools,
+their \emph{outer shape} cannot be altered at runtime.
+That is, although new tasks can be spooled up \emph{inside} task pools,
 there is no way for end-users to \emph{discard} the current task
-and step to another one.
-Therefore it stays stepless and the value observation will not result in $\bot$.
+and step to a new one.
+Therefore, stepless tasks stay stepless and the value observation will not result in $\bot$.
 
 \begin{corollary}[Stepless tasks stay stepless]
   \label{cor:stepless-stays-stepless}
@@ -224,9 +227,11 @@ Therefore it stays stepless and the value observation will not result in $\bot$.
   % that is $\Gamma,\Sigma \infers n:\Task\tau$ and $\Gamma,\Sigma \infers \sigma$,
   we have that
     if $n$ is stepless,
-    its shape cannot be altered at runtime.
+    their shape cannot be altered at runtime
+    and will stay stepless.
 \end{corollary}
 
+Using this observation, we can prove property~(2b).
 \begin{proposition}[Unsteady tasks stay unsteady]
   For all unsteady tasks $t$,
   we have that for all inputs $\iota \in \Inputs(t)$:
@@ -236,5 +241,8 @@ Therefore it stays stepless and the value observation will not result in $\bot$.
 \begin{proof}
   By definition of the unsteady condition, $t$ has a value,
   that is $\Value(t,\sigma) = v \neq \bot$.
-  By
+  By \cref{prp:valued-means-stepless}, we know this means that $t$ is stepless.
+  Using \cref{cor:stepless-stays-stepless}, we know $t$ stays stepless
+  and therefore will keep having a value.
+  In particular, it is not possible for any task $t$ to move from the unsteady to the running condition.
 \end{proof}
