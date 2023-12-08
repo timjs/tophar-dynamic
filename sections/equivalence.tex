@@ -1,10 +1,10 @@
-\newmacro{citeprop}[1]{[Prop.~#1]} % {\cite[Prop.~#1]{conf/sfp/KlijnsmaS22}}
+\newmacro{citeprop}[1]{} % {[Prop.~#1]} % {\cite[Prop.~#1]{conf/sfp/KlijnsmaS22}}
 
 \subsection{Task equivalence}
 \label{sec:equivalence}
 
-Reasoning about task equivalence is useful for two main purposes.
-First, we can argue that two (parts of) workflows, as specified by developers,
+Reasoning about task equivalence is useful for two purposes.
+First, we can argue that two (parts of) workflows
 actually have the same impact and are interchangeable in the code.
 Second, we can prove several general transformation laws for tasks,
 which aid in the refactoring of task-oriented code.
@@ -14,35 +14,36 @@ and we proved some transformation laws.
 We concluded that the $\Task$ operation on types is a functor,
 but cannot be a monad \cite{conf/sfp/KlijnsmaS22}.
 
-To achieve this,
+To be able to make statements about task equivalence,
 we categorise tasks based on the observations we can make on them.
-The observations we use, the ones discussed in \cref{sec:observations}:
-are if the task is failing ($\Failing$),
+The observations we use are the ones discussed in \cref{sec:observations}:
+if the task is failing ($\Failing$),
 if the task can receive any inputs ($\Inputs$),
 and if the task has a value ($\Value$).
 Based on these three observations,
 a (fully fixated) task can be in one of five \emph{conditions} which we will summarise below.
-We refer to the propositions as proved in \citet{conf/sfp/KlijnsmaS22}.
+% We refer to propositions as proved in \citet{conf/sfp/KlijnsmaS22}.
 
 \begin{description}
 
   \item[Failing]
     A failing task $t$ is a task for which the failing function $\Failing(t)$ yields $\True$.
-    If a task is failing, we can prove that it accepts no more user input and has no value \citeprop{12}.
+    If a task is failing, we can prove that it accepts no more user input and has no value\citeprop{12}.
     That is, $\Inputs(t) = \nothing$ and $\Value(t,\sigma) = \bot$.
     We also know that, if $\Failing(t)$ holds, it stays failing,
-    simply because there is no input that can rewrite $t$ to another $t'$ \citeprop{1}.
+    simply because there is no input that can rewrite $t$ to another $t'$\citeprop{1}.
 
   \item[Stuck]
     A stuck task $t$ is a task which does not fail, does not accept user input, and does not have a value.
     That is, $\Failing(t) = \False$, $\Inputs(t) = \nothing$, and $\Value(t,\sigma) = \bot$.
-    Similar to failing tasks, stuck tasks will always remain stuck because no more user interaction is possible and, by assumption, it is already fully fixated \citeprop{3}.
+    An example of a stuck task is $\View^k 42 \Step \lambda. \Fail$.
+    Similar to failing tasks, stuck tasks will always remain stuck because no more user interaction is possible and, by assumption, it is already fully fixated\citeprop{3}.
 
   \item[Steady]
     If a task $t$ has a value but it cannot handle any input, we call it \emph{steady}.
     An example of a steady task is $\View^k 42$.
     Because this task accepts no more user input, its value will always remain equal to $42$.
-    So steady tasks will stay steady \citeprop{2a}.
+    So steady tasks will stay steady\citeprop{2a}.
 
   \item[Unsteady]
     If a task $t$ has a value and it can handle input, we call it \emph{unsteady}.
@@ -50,28 +51,31 @@ We refer to the propositions as proved in \citet{conf/sfp/KlijnsmaS22}.
     This task still accepts user input, and thus its value can keep on changing.
     Even though $\Update^k 42$ and $\View^k 42$ yield the same value,
     they should not be equivalent, since one's value can be changed and the other's cannot.
-    If a task $t$ is unsteady, it will never terminate: an unsteady task will always remain unsteady with the same input space, only its value may change \citeprop{2b}.
+    Unsteady tasks will never terminate.
+    They will always remain unsteady with the same input space, only its value may change\citeprop{2b}.
     We do say, however, that both steady and unsteady tasks are \emph{finished}.
 
   \item[Running]
     The last condition is when a task $t$ does not fail, does not have a value, but still accepts user input.
     Because there is still user interaction possible, it may be the case that, with the right input,
-    it transitions to one of the previously described task conditions.
-    The simplest example of a running task is the empty editor $\Enter^k \beta$, which becomes an unsteady task once it receives a valid input event.
+    it transitions to the stuck, steady or unsteady conditions.
+    The simplest example of a running task is the empty editor $\Enter^k \beta$,
+    which becomes an unsteady task once it receives a valid input event.
     Although running tasks can keep running forever,
-    we at least can prove that they will not fail \citeprop{4}.
+    we at least can prove that they will not fail\citeprop{4}.
 
 \end{description}
 
-These five conditions are proved to be mutually exclusive \citeprop{5}.
+These five conditions are proved to be mutually exclusive\citeprop{5}.
 \cref{tab:task-conditions} summarises all conditions
-and shows some more example tasks in each condition.
+and shows some more example tasks for each condition.
 The possible transitions for tasks from one condition to another are drawn in \cref{fig:task-conditions}.
-Moreover, this diagram is complete.
-That is, for any two task conditions $C$ and $C'$ in \cref{fig:task-conditions},
-there is a transition from $C$ to $C'$
-if and only if there exist two tasks $t \in C$ and $t' \in C'$ such that
-$t,\sigma \interact{\iota} t',\sigma'$ for some input $\iota \in \Inputs(t)$ and states $\sigma$ and $\sigma'$ \citeprop{5}.
+Moreover, this diagram is complete:
+only those transitions shown are possible.
+% for any two task conditions $C$ and $C'$ in \cref{fig:task-conditions},
+% there is a transition from $C$ to $C'$
+% if and only if there exist two tasks $t \in C$ and $t' \in C'$ such that
+% $t,\sigma \interact{\iota} t',\sigma'$ for some input $\iota \in \Inputs(t)$ and states $\sigma$ and $\sigma'$\citeprop{6}.
 
 \begin{table}
   \input{tables/conditions}
@@ -85,28 +89,35 @@ $t,\sigma \interact{\iota} t',\sigma'$ for some input $\iota \in \Inputs(t)$ and
   \label{fig:task-conditions}
 \end{figure}
 
-Next, we discuss how this theory changes after the addition of task pools.
-It is always possible to send initialise a new task in a task pool.
+
+\subsubsection{Impact of task pools}
+
+Next, we discuss how our theory of task equivalence changes after the addition of task pools.
+It is always possible to initialise tasks in pools.
 As shown in \cref{fig:observations-dynamic},
 the inputs observation $\Inputs$ on a task pool $\Pool_{t_0}^k [\many{n}]$ will contain the input $k\Send\Init$
 regardless of the tasks in the pool.
-However, we will argue that this has no consequence for the diagram in \cref{fig:task-conditions}.
+Also, by definition of $\Value$ in \cref{fig:observations-dynamic},
+task pools always have a value.
+This value is initially the empty list
+and can change at runtime depending on finished tasks in the pool.
+We will argue that this has no consequence for the diagram in \cref{fig:task-conditions}.
 Let us first consider an example.
 
 \begin{example}[Integer task pool]
   \label{exm:integer-task-pool}
-  Take for example a simple task pool to enter integers:
+  Take this simple task pool to enter integers:
   \begin{TASK}
-    >&<$_{\Enter^\epsilon \Int}^{k_0}$ [update$^{k_1}$ 42]
+    let t = >&<$_{\Enter^\epsilon \Int}^{k_0}$ [update$^{k_1}$ 42]
   \end{TASK}
 
   By definition of $\Value$, it has an observable value, namely the singleton list $[42]$.
-  Also by definition of $\Inputs$, it also has possible inputs,
-  which is the set $\set{k_0\Send\Init, k_0\Send\Kill1, k_1\Send x \Mid x\in\Int}$.
-  This means we can change the value in editor keyed $k_1$,
-  which will also change the value of the whole task pool,
-  but we can also kill or initialise tasks in the pool.
-  Because $t$ has inputs and has a value that could change,
+  Also by definition of $\Inputs$, it has multiple possible inputs,
+  namely inputs from the set $\set{k_0\Send\Init, k_0\Send\Kill1, k_1\Send x \Mid x\in\Int}$.
+  This means we can change the value in the editor keyed with $k_1$.
+  This will change the value of the whole task pool.
+  Next to this, we can also kill or initialise tasks in the pool.
+  Because $t$ has observable inputs and an observable value that could change,
   it is in the unsteady condition.
 
   Say, we send $k_0\Send\Init$ to $t$.
@@ -116,23 +127,114 @@ Let us first consider an example.
   \end{TASK}
   The task $\Enter^k_2\Int$ does not have a value,
   but the value of the pool itself will not change.
-  We can, however, still change its value by sending $k_1\Send37$.
+  We can, however, still change the value of the pool by sending $k_1\Send37$ or $k_2\Send32$.
 
   We see that $t$ still has a value,
   but there are inputs that can change this value.
   Therefore it is still in the unsteady condition.
-  Note, however, that the input space did change.
-  We can now also send inputs to $k_2$ or kill this new task.
-  Observation $\Inputs$ will faithfully return
-  $\set{k_0\Send\Init, k_0\Send\Kill1, k_0\Send\Kill2, k_1\Send x, k_2\Send x \Mid x\in\Int}$.
+  Note, however, that the input space can change:
+  because of dynamically spooled or killed tasks it grows or shrinks.
+  % Observation $\Inputs$ will faithfully return
+  % $\set{k_0\Send\Init, k_0\Send\Kill1, k_0\Send\Kill2, k_1\Send x, k_2\Send x \Mid x\in\Int}$.
 \end{example}
 
-\todo{move this}
-Propositions stating that failing tasks stay failing \citeprop{1},
-steady tasks stay steady \citeprop{2a},
-and stuck tasks stay stuck \citeprop{3},
-stay the same.
-Also, by construction, running tasks will not fail \citeprop{4}.
-What will change, however, is Prop.~2b:
-unsteady tasks will still stay unsteady,
-however, as we discussed in \cref{exm:integer-task-pool} the input space \emph{can} change after incorporating task pools.
+
+\subsubsection{Task properties}
+
+In previous work we proved several properties on tasks \cite{conf/sfp/KlijnsmaS22,Steenvoorden22}:
+\begin{enumerate}
+  \item[(1)] failing tasks stay failing
+  \item[(2a)] steady tasks stay steady
+  \item[(2b)] unsteady tasks stay unsteady
+  \item[(2c)] finished tasks retain their input space
+  \item[(3)] stuck tasks stay stuck
+  \item[(4)] running tasks will not fail
+  \item[(5)] conditions in \cref{fig:task-conditions} are exclusive
+  \item[(6)] transitions in \cref{fig:task-conditions} are complete
+  % \item[(12)] failing tasks have no inputs and no value
+\end{enumerate}
+
+Most of these still hold after the addition of task pools to the language.
+This reinforces our belief that the given definitions and semantics for task pools are the right choice.
+As pools cannot be failing, steady or stuck by construction,
+proving (1), (2a), and (3) is trivial.
+Stepping rules are unaltered, therefore (4) still holds.
+As we have seen in \cref{exm:integer-task-pool},
+task pools are unsteady but the input space can change.
+Therefore (2c) does not hold any more,
+but it has no impact on the other properties.
+Notably (5) holds by construction and (6) follows from all other properties except (2c).
+
+This means the only property from this list that needs new proof is (2b).
+To do this, we first need to introduce the notion of \emph{stepless tasks}.
+
+\begin{definition}[Stepless task]
+  \label{def:stepless-task}
+  We call tasks \emph{stepless} when they consist of
+  a valued editor,
+  pairs of stepless tasks,
+  transforms of stepless tasks,
+  or task pools of stepless tasks.
+  That is, they confirm to the grammar presented in \cref{fig:stepless-tasks-grammar}.
+  Note that stepless tasks are a subset of normalised tasks.
+\end{definition}
+
+\begin{figure}
+  \usemacro{G-Stepless-Tasks-compact}
+  \label{fig:stepless-tasks-grammar}
+  \caption{Stepless tasks}
+\end{figure}
+
+\begin{proposition}[Valued tasks are stepless]
+  \label{prp:valued-means-stepless}
+  For all well typed normalised tasks $n$ and states $\sigma$,
+  that is $\Gamma,\Sigma \infers n:\Task\tau$ and $\Gamma,\Sigma \infers \sigma$,
+  we have that
+    if $\Value(n,\sigma) = v$,
+    then $n$ is stepless.
+\end{proposition}
+\begin{proof}
+  We have that $\Value(n,\sigma) = v : \beta$.
+  When taking the definition of $\Value$ into account (as given in \cref{fig:observation-value}),
+  we see that $n$ can only be in one of five shapes:
+  \begin{itemize}
+    \item a valued editor $d$ (that is $d \neq \Enter\beta$);
+    \item a pair $n_1 \Pair n_2$, for which $\Value(n_1,\sigma) = v_1$ and $\Value(n_2,\sigma) = v_2$;
+    \item a transform $e_1 \Trans n_2$, for which $\Value(n_2,\sigma) = v_2$;
+    \item a lift $\Lift v$;
+    \item a pool $\Pool_{t_0} [\many{n}]$.
+  \end{itemize}
+  Especially, step ($n_1 \Step e_2$) and fail ($\Fail$) are ruled out, because they have no value.
+  Choice ($n_1 \Choose n_2$) is ruled out
+  because the only way that this combinator can survive normalisation is for both $n_1$ and $n_2$ to not have a value,
+  which should be the case here.
+  Now, by induction, we have that $n$ is stepless and meets the grammar in \cref{fig:stepless-tasks-grammar}.
+\end{proof}
+
+As stepless tasks do not contain steps ($n_1 \Step e_2$) or choices ($n_1 \Choose n_2$),
+their shape cannot be altered at runtime.
+That is, although new tasks can be spooled up in task pools,
+there is no way for end-users to \emph{discard} the current task
+and step to another one.
+Therefore it stays stepless and the value observation will not result in $\bot$.
+
+\begin{corollary}[Stepless tasks stay stepless]
+  \label{cor:stepless-stays-stepless}
+  For all well typed normalised tasks $n$ and states $\sigma$,
+  % that is $\Gamma,\Sigma \infers n:\Task\tau$ and $\Gamma,\Sigma \infers \sigma$,
+  we have that
+    if $n$ is stepless,
+    its shape cannot be altered at runtime.
+\end{corollary}
+
+\begin{proposition}[Unsteady tasks stay unsteady]
+  For all unsteady tasks $t$,
+  we have that for all inputs $\iota \in \Inputs(t)$:
+    if $t,\sigma \interact{\iota} t',\sigma'$
+    then again $t'$ is an unsteady task.
+\end{proposition}
+\begin{proof}
+  By definition of the unsteady condition, $t$ has a value,
+  that is $\Value(t,\sigma) = v \neq \bot$.
+  By
+\end{proof}
