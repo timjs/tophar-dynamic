@@ -64,7 +64,7 @@ Last, we add a rule to symbolically initialise a new task in the pool: \refrule{
 \end{figure}
 
 Top-level symbolic interaction of tasks is written $\RelationSI$,
-meaning that a normalised task $n$ under path condition $\phi$ in state $\sigma$ generates input $\iota$, a new normalised task $n'$ under path condition $\phi'$ in state $\sigma'$.
+meaning that a normalized task $n$ under path condition $\phi$ in state $\sigma$ generates input $\iota$, a new normalized task $n'$ under path condition $\phi'$ in state $\sigma'$.
 Rule \seerule{SI-Handle} initiates simulation
 by using the symbolic handling and fixation semantics.
 Fixation, as in the concrete case, resolves any dependencies between shared heap locations.
@@ -125,8 +125,8 @@ This allows us to return a hint that guides the user to the shortest path to the
 
 Our new $\Hints_1$ function, instead of generating an infinite amount of possible inputs,
 makes use of the helper function $\Generate$ which does this breadth-first search.
-Starting with a task set~$ts$, containing tuples of normalised tasks, states, input lists, and path conditions,
-we calculate a hints set~$hs$ by checking if the current normalised task $n$ has a (symbolic) value $\tilde{v}$,
+Starting with a task set~$ts$, containing tuples of normalized tasks, states, input lists, and path conditions,
+we calculate a hints set~$hs$ by checking if the current normalized task $n$ has a (symbolic) value $\tilde{v}$,
 and verifying if the goal function $\psi$ applied to this value is satisfiable together with the current path condition $\phi$.
 If this is the case, we have next-step hints and we terminate.
 In the case that there is no value, or our goal is not yet reached,

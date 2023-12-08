@@ -1079,18 +1079,18 @@
 
 
 \newmacro{RelationSN}
-  {t|_{\phi},\sigma \symnormalise n'|_{\phi'},\sigma',\delta'}
+  {t|_{\phi},\sigma \symnormalize n'|_{\phi'},\sigma',\delta'}
 
 \newrule{SN-Assert}%XXX: same
   {}
-  {\Assert b\shaded{|_{\phi}}, \sigma \symnormalise \Lift b\shaded{|_{\phi \land b}}, \sigma, \nothing}
+  {\Assert b\shaded{|_{\phi}}, \sigma \symnormalize \Lift b\shaded{|_{\phi \land b}}, \sigma, \nothing}
   {}
 
 \newrule{SN-Schema}
-  {t_1|_{\phi_0},\sigma_0 \symnormalise n_1|_{\phi_1},\sigma_1,\delta_1 \Quad
+  {t_1|_{\phi_0},\sigma_0 \symnormalize n_1|_{\phi_1},\sigma_1,\delta_1 \Quad
    \ldots \Quad
-   t_j|_{\phi_{j-1}},\sigma_{j-1} \symnormalise n_j|_{\phi_j},\sigma_j,\delta_j}
-  {\Node(t_1,\ldots,t_j)|_{\phi_0},\sigma_0 \symnormalise \Node(n_1,\ldots,n_j)|_{\phi_j},\sigma_j,\delta_1\cup\ldots\cup\delta_j}
+   t_j|_{\phi_{j-1}},\sigma_{j-1} \symnormalize n_j|_{\phi_j},\sigma_j,\delta_j}
+  {\Node(t_1,\ldots,t_j)|_{\phi_0},\sigma_0 \symnormalize \Node(n_1,\ldots,n_j)|_{\phi_j},\sigma_j,\delta_1\cup\ldots\cup\delta_j}
   {}
 
 
@@ -1098,12 +1098,12 @@
   {t|_{\phi},\sigma,\delta \symfixate n'|_{\phi'},\sigma'}
 
 \newrule{SF-Done}
-  {t\shaded{|_\phi},\sigma \symnormalise n'\shaded{|_{\phi'}},\sigma',\delta'}
+  {t\shaded{|_\phi},\sigma \symnormalize n'\shaded{|_{\phi'}},\sigma',\delta'}
   {t\shaded{|_\phi},\sigma,\delta \symfixate n'\shaded{|_{\phi'}},\sigma'}
   {(\delta \cup \delta') \cap \Watching(n') = \nothing}
 
 \newrule{SF-Loop}
-  {t\shaded{|_\phi},\sigma \symnormalise n'\shaded{|_{\phi'}},\sigma',\delta' \Quad
+  {t\shaded{|_\phi},\sigma \symnormalize n'\shaded{|_{\phi'}},\sigma',\delta' \Quad
    n'\shaded{|_{\phi'}},\sigma',\delta' \symfixate n''\shaded{|_{\phi''}},\sigma''}
   {t\shaded{|_\phi},\sigma,\delta \symfixate n''\shaded{|_{\phi''}},\sigma''}
   {(\delta \cup \delta') \cap \Watching(n') \neq \nothing}

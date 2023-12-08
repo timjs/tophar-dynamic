@@ -173,9 +173,9 @@ To do this, we first need to introduce the notion of \emph{stepless tasks}.
   a valued editor,
   pairs of stepless tasks,
   transforms of stepless tasks,
-  or task pools of normalised tasks.
+  or task pools of normalized tasks.
   That is, they confirm to the grammar presented in \cref{fig:stepless-tasks-grammar}.
-  Note that stepless tasks are a subset of normalised tasks.
+  Note that stepless tasks are a subset of normalized tasks.
 \end{definition}
 
 \begin{figure}
@@ -186,7 +186,7 @@ To do this, we first need to introduce the notion of \emph{stepless tasks}.
 
 \begin{proposition}[Valued tasks are stepless]
   \label{prp:valued-means-stepless}
-  For all well typed normalised tasks $n$ and states $\sigma$,
+  For all well typed normalized tasks $n$ and states $\sigma$,
   that is $\Gamma,\Sigma \infers n:\Task\tau$ and $\Gamma,\Sigma \infers \sigma$,
   we have that
     if $\Value(n,\sigma) = v$,
@@ -206,11 +206,11 @@ To do this, we first need to introduce the notion of \emph{stepless tasks}.
   Especially, step ($n_1 \Step e_2$) and fail ($\Fail$) are ruled out, because they have no value.
   Choice ($n_1 \Choose n_2$) is ruled out
   because the only way that this combinator can survive normalisation is for both $n_1$ and $n_2$ to not have a value,
-  but we consider normalised task by assumption.
+  but we consider normalized task by assumption.
   Now, by induction, we have that $n$ is stepless and meets the grammar in \cref{fig:stepless-tasks-grammar}.
 \end{proof}
 
-Note that inside task pools we admit normalised subtasks instead of stepless subtasks.
+Note that inside task pools we admit normalized subtasks instead of stepless subtasks.
 This is because our value observation ignores subtasks for which $\Value(n_j,\sigma) = \bot$
 and will result in a list of values any way.
 
@@ -223,7 +223,7 @@ Therefore, stepless tasks stay stepless and the value observation will not resul
 
 \begin{corollary}[Stepless tasks stay stepless]
   \label{cor:stepless-stays-stepless}
-  For all well typed normalised tasks $n$ and states $\sigma$,
+  For all well typed normalized tasks $n$ and states $\sigma$,
   % that is $\Gamma,\Sigma \infers n:\Task\tau$ and $\Gamma,\Sigma \infers \sigma$,
   we have that
     if $n$ is stepless,

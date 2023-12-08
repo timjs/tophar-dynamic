@@ -221,7 +221,7 @@ Each contains one or two semantic relations, as depicted in \cref{fig:semantic-l
 
 In \cref{fig:semantics-normalisation} we give some examples of normalisation rules in \TOPHAT.
 The normalisation relation reads $\RelationN$, which means that a task $t$ in state $\sigma$
-is normalised to a normalised task $n'$ in state $\sigma'$ while keeping track of possible dirty references in $\delta'$.
+is normalized to a normalized task $n'$ in state $\sigma'$ while keeping track of possible dirty references in $\delta'$.
 Normalised tasks are a subset of tasks.
 Their grammar can be found in \cref{fig:task-grammar}.
 
@@ -231,7 +231,7 @@ A non-empty set of dirty references signals the fixation rules ($\RelationF$) to
 to resolve any dependencies between shared heap locations.
 
 Rule \refrule{N-Name} generates a fresh and unique key $k$ to annotate any editor.
-\refrule{N-Pair} exemplifies a rule where each element of a combinator is normalised by threading state $\sigma$,
+\refrule{N-Pair} exemplifies a rule where each element of a combinator is normalized by threading state $\sigma$,
 and the set of dirty references is calculated by taking the union of the generated dirty sets.
 
 \begin{figure}
@@ -295,7 +295,7 @@ Therefore the whole task should not fail if only one side fails.
   \label{fig:observation-value}
 \end{figure}
 
-Once a TopHat program is normalised, it is possible to send input to it.
+Once a TopHat program is normalized, it is possible to send input to it.
 It is useful to know what inputs a given task accepts.
 The observation function $\Inputs$ returns the set of input events that are currently possible for a given task.
 We consider an input event $\iota$ a valid input event for the task $t$ iff $t \in \Inputs(t)$.
@@ -304,7 +304,7 @@ The definition of $\Inputs$ is given in \cref{fig:observation-inputs}.
 For the three read-write editors, $\Inputs$ returns all input events $k \Send b$ where $b$ is of the correct type.
 For task combinators, $\Inputs$ is defined recursively.
 For all other tasks, $\Inputs$ returns the empty set.
-$\Inputs$ is only defined on normalised tasks, as those tasks are ready to receive user input.
+$\Inputs$ is only defined on normalized tasks, as those tasks are ready to receive user input.
 
 To be able to normalize tasks, we need to have a way to determine the value of them.
 For this, we introduce the task observation $\Value$.
