@@ -13,8 +13,8 @@ Every concrete semantic relation from \cref{fig:semantic-layers} has a symbolic 
 Notation for these relations is summarised in \cref{tab:symbolic-relations}.
 Compared to the concrete relations,
 tasks are augmented with a path condition $\phi$.
-For labelled relations, instead of taking inputs $\iota$ written above the arrow,
-simulation rules generate inputs $\iota'$, which are written below the arrow.
+For labeled relations, instead of \textit{taking} inputs $\iota$ written above the arrow,
+simulation rules \textit{generate} inputs $\iota'$, which are written below the arrow.
 \cref{fig:symbolic-handling} lists a selected number of symbolic execution rules from \TOPHAT.
 
 \begin{table}
@@ -24,7 +24,7 @@ simulation rules generate inputs $\iota'$, which are written below the arrow.
 \end{table}
 
 As with end-user input,
-symbols enter the simulation at editors.
+symbols enter the symbolic execution at editors.
 As an example, rule \seerule{SH-Enter} generates a fresh symbol $z'$, returns a valued editor $\Update^k z'$
 and leaves the path condition $\phi$ unaltered.
 For a pair of tasks, instead of one rule, the symbolic semantics contains two rules:
@@ -42,9 +42,9 @@ This makes the symbolic semantics non-deterministic.
   \label{fig:symbolic-handling}
 \end{figure}
 
-For \DYNTOPHAT\ we extend symbolic handling relation with rules for task pools.
+For \DYNTOPHAT\ we extend symbolic handling relation with rules for task pools, as shown in \cref{fig:symbolic-handling-new}.
 As task pools are in essence a combination of editors and parallel-or,
-the symbolic rules are alike to the ones shown in \cref{fig:symbolic-handling-new}.
+the symbolic rules are alike to the ones shown in \cref{fig:symbolic-handling}.
 First, for every possible subtask in a task pool,
 we add rule \refrule{SH-Pool$_j$} to simulate the $j$-th subtask in a pool.
 This is comparable to rules \refrule{SH-Pair-\{Left,Right\}}.
@@ -128,12 +128,12 @@ makes use of the helper function $\Generate$ which does this breadth-first searc
 Starting with a task set~$ts$, containing tuples of normalised tasks, states, input lists, and path conditions,
 we calculate a hints set~$hs$ by checking if the current normalised task $n$ has a (symbolic) value $\tilde{v}$,
 and verifying if the goal function $\psi$ applied to this value is satisfiable together with the current path condition $\phi$.
-If this is the case, we have possible next-step hints and we terminate.
-\todo{explain taking head of input list?}
+If this is the case, we have next-step hints and we terminate.
 In the case that there is no value, or our goal is not yet reached,
 the set~$hs$ is empty.
 Now, we generate possible new inputs over our task set $ts$ by using symbolic interaction ($\syminteract{}$) just once.
 Before going into recursion, we clean-up our generated inputs by removing those with unsatisfiable path conditions.
+Simply returning the first symbolic input from the traces that lead to the goal, provides users with information on what to do next.
 
 Coming back to reasoning about task properties, the breadth-first search strategy can also be applied to finding assertion violations.
 \citet{DBLP:conf/tap/NausVSR23} demonstrate a breadth-first search approach to finding assertion violations in low-level programs with potential infinite search spaces.

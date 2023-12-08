@@ -40,10 +40,10 @@ Let us illustrate this with an example.
   This task results in a pair containing the two bought \typ{Snack}s.
 \end{example}
 
-We see that, at development time, we need to specify the number of \fun{vend} tasks that can be done at the same time.
+We see that, at development time, we need to specify the number of \fun{vend} tasks that can be executed at the same time.
 Although in the physical world, it is quite evident that one can only place a predefined amount of vending machines next to each other;
-in the digital world, one would expect to initialise and kill such processes at any time.
-To mitigate this problem in \TOPHAT, we extend it with \emph{task pools}.
+in the digital world, one would expect to initialize and kill such processes at any time.
+To mitigate this shortcoming of \TOPHAT, we extend it with \emph{task pools}.
 
 
 \subsection{Task pools}
@@ -57,12 +57,11 @@ Similarly, by sending a \emph{kill} event, the task pool terminates one of its c
 
 Language-wise, a task pool is a new combinator at the task level.
 The combinator $\Pool^k_{t_0} []$ is parametrised by a unique key $k$, a template task $t_0$ and an (initially) empty task list $[]$.
-Each time end users send an init action to this pool: $k\Send\Init$.
-The template task is placed in the list of currently running tasks,
+Each time end users send an init action to this pool: $k\Send\Init$, the template task is placed in the list of currently running tasks,
 in this case resulting in $\Pool^k_{t_0} [t_0]$.
 This way, an arbitrary amount of tasks can be started at runtime.
 Tasks in the list can also be killed by sending a \emph{kill} action to the pool: $k\Send\Kill1$.
-In this case, the first task in the pool will be killed.
+In this case, the first task in the pool will be killed, as indicated by the index 1.
 The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
 
 \begin{figure}
@@ -124,10 +123,10 @@ if every task in the pool, including the template task, is a $\Task$ of type $\t
   \label{fig:typing-dynamic}
 \end{figure}
 
-Extensions of the normalisation relation of \TOPHAT\ is given in \cref{fig:semantics-dynamic-normalisation}.
-Similar to the way normalisation works for parallel-and (as shown in \cref{fig:semantics-tophat}),
-normalisation of task pools normalises each task in the pool and then constructs a new pool containing these normalised tasks.
-Note that the template task is not normalised.
+Extensions of the normalization relation of \TOPHAT\ is given in \cref{fig:semantics-dynamic-normalisation}.
+Similar to the way normalization works for parallel-and (as shown in \cref{fig:semantics-tophat}),
+normalization of task pools normalizes each task in the pool and then constructs a new pool containing these normalized tasks.
+Note that the template task is not normalized.
 Otherwise, we would create unwanted sharing of editors.
 
 \begin{figure}
@@ -141,11 +140,11 @@ Otherwise, we would create unwanted sharing of editors.
   \label{fig:semantics-dynamic-normalisation}
 \end{figure}
 
-\begin{example}[Wrong! Unwanted sharing when normalising template tasks]
+\begin{example}[Wrong! Unwanted sharing when normalizing template tasks]
   Take as an example the task pool $\Pool^{k_0}_{\Enter^\epsilon\Int} []$
   which would simply add editors to the pool asking to enter an integer.
 
-  In case we would normalise the template task,
+  In case we would normalize the template task,
   we would have to attach a fresh key $k_1$ to the template task,
   resulting in:
   \begin{TASK}
@@ -156,9 +155,9 @@ Otherwise, we would create unwanted sharing of editors.
   \begin{TASK}
     >&<$^{k_0}_{\Enter^{k_1}\Int}$ [enter$^{k_1}$ Int, enter$^{k_1}$ Int]
   \end{TASK}
-  This is undesirable because it breaks our demand that every editor should have a \emph{unique} key.
+  This is undesirable because it breaks our requirement that every editor should have a \emph{unique} key.
   It would be unclear what to do with the input $k_1\Send 42$.
-  Therefore, we delay normalisation of the template task until the moment they are added to the pool.
+  Therefore, we delay normalization of the template task until the moment they are added to the pool.
 \end{example}
 
 \DYNTOPHAT's additional handling rules are presented in \cref{fig:semantics-dynamic-handling}.
@@ -179,11 +178,11 @@ identical to \seerule{H-Pair} in \cref{fig:semantics-tophat}.
   \label{fig:semantics-dynamic-handling}
 \end{figure}
 
-Then, we need to extend our failing, inputs, and value observation to deal with task pools.
+Naturally, we also need to extend our failing, inputs, and value observation to deal with task pools.
 \cref{fig:observations-dynamic} shows these additions.
 The failing observation is $\False$ because
-it is alwasy safe to step to task pools.
-After all, one can always initialise a new task in the pool.
+it is always safe to step to task pools.
+After all, one can always initialize a new task in the pool.
 The inputs observation collects inputs from every task in the pool
 together with the $\Init$ input.
 Additionally, it is possible to kill a task at every index in the pool.
@@ -220,7 +219,7 @@ we can make a step from a task pool containing partial work.
       enter$^{k_3}$ Int >>? ..., view Chocolate, view Chocolate]
   \end{TASK}
   The value observation of this task would return the list \TS{[Biscuit, Chocolate, Chocolate, Chocolate]}.
-  Now we satisfy the guard in the definition of \fun{summarise} that the number of snacks should be four.
+  We now satisfy the guard in the definition of \fun{summarise} that the number of snacks should be four.
   We can take this step and immediately rewrite the whole task to summarise the different purchases that were made.
   The result will be:
   \begin{TASK}
