@@ -95,7 +95,7 @@ The lift task ($\Lift v$) is used to lift a value into the task domain.
   % \end{TASK}
   \begin{TASK}[emph={payment}]
     type Snack = [Biscuit, Chocolate]
-    let vend : Task Snack = enter Int >>= do payment.
+    let vend$_0$ : Task Snack = enter Int >>= do payment.
       case payment of
         1 |-> view Biscuit
         2 |-> view Chocolate

@@ -11,11 +11,11 @@ which aid in the refactoring of task-oriented code.
 %
 In previous work, we investigated the equivalence of tasks
 and we proved some transformation laws.
-We concluded that the $\Task$ operation on types is a functor,
+We concluded that the \typ{Task} operation on types is a functor,
 but cannot be a monad \cite{conf/sfp/KlijnsmaS22}.
 
 To be able to make statements about task equivalence,
-we categorise tasks based on the observations we can make on them.
+we categorize tasks based on the observations we can make on them.
 The observations we use are the ones discussed in \cref{sec:observations}:
 if the task is failing ($\Failing$),
 if the task can receive any inputs ($\Inputs$),
@@ -93,7 +93,7 @@ only those transitions shown are possible.
 \subsubsection{Impact of task pools}
 
 Next, we discuss how our theory of task equivalence changes after the addition of task pools.
-It is always possible to initialise tasks in pools.
+It is always possible to initialize tasks in pools.
 As shown in \cref{fig:observations-dynamic},
 the inputs observation $\Inputs$ on a task pool $\Pool_{t_0}^k [\many{n}]$ will contain the input $k\Send\Init$
 regardless of the tasks in the pool.
@@ -106,7 +106,7 @@ Let us first consider an example.
 
 \begin{example}[Integer task pool]
   \label{exm:integer-task-pool}
-  Take this simple task pool to enter integers:
+  Let us again revisit our simple task pool to enter integers:
   \begin{TASK}
     let t = >&<$_{\Enter^\epsilon \Int}^{k_0}$ [update$^{k_1}$ 42]
   \end{TASK}
@@ -116,7 +116,7 @@ Let us first consider an example.
   namely inputs from the set $\set{k_0\Send\Init, k_0\Send\Kill1, k_1\Send x \Mid x\in\Int}$.
   This means we can change the value in the editor keyed with $k_1$.
   This will change the value of the whole task pool.
-  Next to this, we can also kill or initialise tasks in the pool.
+  Next to this, we can also kill or initialize tasks in the pool.
   Because $t$ has observable inputs and an observable value that could change,
   it is in the unsteady condition.
 

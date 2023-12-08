@@ -15,7 +15,7 @@ Let us illustrate this with an example.
   where two buyers can purchase a \typ{Snack} at the same time from a shared inventory.
 
   \begin{TASK}[emph={inventory,payment}]
-    let vend' : Ref (List Snack) -> Task Snack = do inventory.
+    let vend$_1$ : Ref (List Snack) -> Task Snack = do inventory.
       enter Int >>= do payment.
       case payment of
         1 |-> decrease Biscuit inventory >>= do _.
@@ -23,21 +23,21 @@ Let us illustrate this with an example.
         2 |-> decrease Chocolate inventory >>= do _.
              view Chocolate
         _ |-> fail
-    let machine : Task (Snack * Snack) =
+    let machine$_1$ : Task (Snack * Snack) =
       share [(Biscuit, 24), (Chocolate, 16)] >>= do inventory.
-      vend' inventory <&> vend' inventory
+      vend$_1$ inventory <&> vend$_1$ inventory
   \end{TASK}
 
-  Here \fun{vend'} is similar to \fun{vend} from \cref{exm:vending-base},
+  Here \fun{vend$_1$} is similar to \fun{vend$_0$} from \cref{exm:vending-base},
   but now it takes a shared list with snacks as a parameter.
   \fun{decrease} is a function that decreases the amount of the given snack by one in the shared list of snacks.
-  Task \fun{machine} first creates a shared \var{inventory},
+  Task \fun{machine$_1$} first creates a shared \var{inventory},
   containing \con{Biscuit}s and \con{Chocolate}s,
   and starts two vending machines with these treats.
   This task results in a pair containing the two bought \typ{Snack}s.
 \end{example}
 
-We see that, at development time, we need to specify the number of \fun{vend} tasks that can be executed at the same time.
+We see that, at development time, we need to specify the number of \fun{vend$_1$} tasks that can be executed at the same time.
 Although in the physical world, it is quite evident that one can only place a predefined amount of vending machines next to each other;
 in the digital world, one would expect to initialize and kill such processes at any time.
 To mitigate this shortcoming of \TOPHAT, we extend it with \emph{task pools}.
@@ -70,20 +70,20 @@ The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
 
 \begin{example}[Dynamic number of vending machines]
   \label{exm:vending-dynamic}
-  Using the same \fun{vend'} task from \cref{exm:vending-shared},
+  Using the same \fun{vend$_1$} task from \cref{exm:vending-shared},
   we can now create a vending machine where end-users can start an arbitrary amount of vending tasks
-  by using \fun{vend'} as the template task of a pool.
+  by using \fun{vend$_1$} as the template task of a pool.
   \begin{TASK}[emph={inventory}]
-    let machine' : Task (List Snack) =
+    let machine$_2$ : Task (List Snack) =
       share [(Biscuit, 24), (Chocolate, 16)] >>= do inventory.
-      >&<$_{\fun{vend'}\,\var{inventory}}$ []
+      >&<$_{\fun{vend}_1\,\var{inventory}}$ []
   \end{TASK}
-  Note that now, \fun{machine'} returns a \typ{List} of \typ{Snack}s.
-  Sending $\Init$ to \fun{machine'} creates a new \fun{vend'} task
+  Note that now, \fun{machine$_2$} returns a \typ{List} of \typ{Snack}s.
+  Sending $\Init$ to \fun{machine$_2$} creates a new \fun{vend$_1$} task
   which will ask for an amount of money and will result in a \fun{Biscuit} or \fun{Chocolate}.
   One can create an arbitrary number of such tasks.
 
-  Also note that a standalone \fun{machine'}, contrary to the one in \cref{exm:vending-shared}, will run indefinitely
+  Also note that a standalone \fun{machine$_2$}, contrary to the one in \cref{exm:vending-shared}, will run indefinitely
   in the same sense that an editor runs indefinitely.
   Adding a step to a continuation will break this cycle,
   as shown in the next example.
@@ -96,7 +96,7 @@ The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
   If that's the case, we show the amount of sold \con{Biscuit}s and \con{Chocolate}s.
   \begin{TASK}[emph={snacks}]
     let summarise =
-      machine' >>= do snacks.
+      machine$_2$ >>= do snacks.
       if length snacks == 4 then
         let bs = show (count Biscuits snacks)
         let cs = show (count Chocolate snacks)
@@ -139,6 +139,7 @@ Otherwise, we would create unwanted sharing of editors.
 \end{figure}
 
 \begin{example}[Wrong! Unwanted sharing when normalizing template tasks]
+  \label{exm:unwanted-sharing}
   Take as an example the task pool $\Pool^{k_0}_{\Enter^\epsilon\Int} []$
   which would simply add editors to the pool asking to enter an integer.
 
@@ -204,9 +205,9 @@ we can make a step from a task pool containing partial work.
 \begin{example}[Partial work in pools]
   Take the \fun{summarise} task from \cref{exm:summarise}.
   Say we already sold 3 snacks, and two persons are trying to buy another snack.
-  Our \fun{machine'} could be in the state
+  Our \fun{machine$_2$} could be in the state
   \begin{TASK}
-    >&<$_{\fun{vend'}\,\var{inventory}}$ [view Biscuit, view Chocolate,
+    >&<$_{\fun{vend}_1\,\var{inventory}}$ [view Biscuit, view Chocolate,
       enter$^{k_3}$ Int >>= ..., view Chocolate, enter$^{k_5}$ Int >>= ...]
   \end{TASK}
   Note that, by definition of our value observation $\Value$,
@@ -216,7 +217,7 @@ we can make a step from a task pool containing partial work.
   After user five pays the amount of 2 coins for a Chocolate (i.e. we send input $k_3\Send2$),
   above task will be rewritten to:
   \begin{TASK}
-    >&<$_{\fun{vend'}\,\var{inventory}}$ [view Biscuit, view Chocolate,
+    >&<$_{\fun{vend}_1\,\var{inventory}}$ [view Biscuit, view Chocolate,
       enter$^{k_3}$ Int >>= ..., view Chocolate, view Chocolate]
   \end{TASK}
   The value observation of this task would return the list \TS{[Biscuit, Chocolate, Chocolate, Chocolate]}.
@@ -226,7 +227,7 @@ we can make a step from a task pool containing partial work.
   \begin{TASK}
     view "Sold 1 biscuit(s) and 3 chocolate(s)"
   \end{TASK}
-  This means the \fun{vend'} task of user three would be discarded.
+  This means the \fun{vend$_1$} task of user three would be discarded.
 
   Note that we would not be able to make this step in the case that our value observation would result in $\bot$ when one of the values of the tasks in the pool would result in $\bot$.
 \end{example}
