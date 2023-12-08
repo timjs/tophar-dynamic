@@ -3,15 +3,17 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-We presented the problem that programmers need to specify the number of parallel tasks in \TOPHAT\ during development time
-and introduced \emph{task pools} as a solution.
-In the resulting language \DYNTOPHAT\ is a moderate extension to \TOPHAT\ with more dynamic properties.
+We started with the problem that programmers need to specify the number of parallel tasks in \TOPHAT\ during development time.
+As a solution, we extended the language with \emph{task pools}.
+The resulting language \DYNTOPHAT\ is a moderate extension to \TOPHAT\ with more dynamic properties.
+
 At runtime, end-users can initialize and kill tasks in a pool at will.
-We presented the static and dynamic semantics of task pools extending \TOPHAT\ multiple semantic layers.
-We were able to do this in such a way that the impact on formal reasoning of \TOPHAT\ programs is minimal.
+We presented the static and dynamic semantics of task pools by extending \TOPHAT's multiple semantic layers
+and compared this to an alternative approach.
+We were able to extend the language in such a way that the impact on formal properties of \TOPHAT\ programs is minimal.
+
 Although symbolic execution could end in an infinite loop,
 we altered our next-step hint generation system so that it can still support end-users during workflow execution.
 Also, our semantic extensions were defined in such a way, that equational reasoning on tasks is still possible
 and transformation laws proved in earlier work still hold.
-
-This reinforces our belief that the given definitions and semantics for task pools are the right choice.
+This reinforces our belief that the presented definitions and semantics for task pools are the right choice.

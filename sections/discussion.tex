@@ -7,9 +7,10 @@
 
 One could think of an alternative implementation of task pools,
 using already existing \TOPHAT\ language constructs.
-A possible solution could be by using a shared reference to a list of running tasks,
+A possible solution could be a shared reference to a list of running tasks,
 and creating custom tasks to remove a task by its index from this list
 or append the template task to this list.
+Packing these operations together using an infinite loop would seemingly implement task pools:
 \begin{TASK}
   let kill = do ts. enter Int >>= do i. remove i ts
   let init = do t. do ts. enter Unit >>= do _. append t ts
@@ -17,7 +18,6 @@ or append the template task to this list.
     share [] >>= do ts.
     forever (watch h <&> kill ts <&> init t ts)
 \end{TASK}
-
 This is effectively the way that \ITASKS\ implements dynamic task lists \cite{conf/pepm/PlasmeijerAKLNG11}.
 However, there are two reasons this is not a good fit for \TOPHAT.
 
@@ -25,15 +25,15 @@ The first is that the forever combinator ($\Forever$), is not definable in \TOPH
 Our goal is to keep our host language total.
 The combinator could be added explicitly to the task layer,
 but this would impose severe restrictions on the symbolic execution engine,
-in the same way non-total functions would do.
+in the same way, non-total functions would do.
 
-The second is that it would require references and editors over the $\Task$ type constructor.
+The second is that it would require references and editors over the \typ{Task} type constructor.
 Currently, both are restricted to basic types,
 because basic types are trivially displayable, parsable and equatable.
-This last property is used by \cite{Klijnsma2020} as a basis to reason about task equivalence.
+This last property is used as a basis to reason about task equivalence \cite{conf/sfp/KlijnsmaS22}.
 
 This raises the question if tasks are more like basic types, or if they should behave more like functions.
-What would $\Update (Update\ 42)$ mean?
+What would $\Update (\Update 42)$ mean?
 How can end-users dynamically enter a task that results in an integer?
 Could they create new tasks at will?
 Or should they pick from a list?

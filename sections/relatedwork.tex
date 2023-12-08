@@ -4,11 +4,11 @@
 \label{sec:relatedwork}
 
 The development of workflow software has shaped computer science and the IT industry almost from its inception onwards.
-The earliest example of this is the development of the object-oriented (OO) programming paradigm.
+The earliest example of this is the development of the Object-Oriented (OO) programming paradigm.
 OO offers features such as abstractions in terms of objects, inheritance, encapsulation and event-driven programming, that are tailored toward modeling and programming business processes.
 
 OO also comes with its own set of challenges.
-In the late 90s, the Unified Process was presented to overcome some of the struggles developers were having~\cite{DBLP:books/daglib/0000196}.
+In the late 90s, the Unified Process was presented to overcome some of the struggles developers were having~\cite{books/daglib/0000196}.
 
 Since then, more powerful abstractions have been developed to deal with the automation of workflow processes.
 Below, we list a few of these directions and key works associated with them.
@@ -17,44 +17,46 @@ Below, we list a few of these directions and key works associated with them.
 \paragraph{Workflow modeling}
 
 Research on workflow modeling tends to focus on describing control flow, mostly in a \textit{boxes and arrows} type of way.
-The Workflow patterns by \citet{journals/dpd/AalstHKB03} are a prime example of this.
+The workflow patterns by \citet{journals/dpd/AalstHKB03} are a prime example of this.
 Common patterns in workflow software, akin to the design patterns in software engineering, are described as control flow graphs.
 Workflow nets are a variation on workflow patterns, where Petri nets are used instead of control flow graphs~\cite{journals/infsof/LassenA09,journals/jcsc/Aalst98}.
-YAWL builds upon this, extending the workflow nets in such a way that they are directly executable~\cite{journals/is/AalstH05}.
-YAWL systems are programmed visually.
+\YAWL\ builds upon this, extending workflow nets in such a way that they are directly executable~\cite{journals/is/AalstH05}.
+\YAWL\ systems are programmed visually.
 
-BPEL~\cite{bpel} is another popular business process calculus.
-The standardized language allows for the specification of actions within business processes, using an XML format.
+\BPEL \cite{bpel} is another popular business process calculus.
+The standardized language allows for the specification of actions within business processes, using an \XML\ format.
 The language is mainly used for coordinating web services.
-Compared to \TOPHAT, BPEL has no support for higher-order processes.
+Compared to \TOPHAT, \BPEL\ has no support for higher-order processes.
 
 
 \paragraph{Process algebra}
 
 Process algebras model concurrency.
 They allow for the high-level description of interaction, communication and synchronization between different processes.
-Well known examples of process algebras are CSP~\cite{books/ph/Hoare85}, CCS~\cite{books/ph/Milner89}, and $\pi$~\cite{DBLP:books/daglib/0098267}.
+Well known examples of process algebras are \CSP\ \cite{books/ph/Hoare85}, \CCS\ \cite{books/ph/Milner89}, and the \PICALC\ \cite{books/daglib/0098267}.
 There are two main differences between \TOP\ and process algebras.
-Firstly, process algebras focus on modeling the input/output behavior of processes, by explicitly stating which actions are sent and received.
+Firstly, process algebras focus on modeling the input/output behavior of processes by explicitly stating which actions are sent and received.
 \TOP\ on the other hand is aimed at modeling collaboration patterns, with the explicit goal of not having to specify how exactly subtasks communicate.
 The second difference concerns internal communication.
-Two forms of communication between tasks exist: Passing values to continuations and sharing data.
+Two forms of communication between tasks exist: passing values to continuations and sharing data.
 This is different from communication in process algebras, which is based on message-passing.
 
 
 \paragraph{Reactive programming}
 
-HipHop~\cite{conf/icdcit/BerryS14,journals/corr/BerryS13} is a programming language tailored to the development of synchronous reactive web systems.
+\HIPHOP\ \cite{conf/icdcit/BerryS14,journals/corr/BerryS13} is a programming language tailored to the development of synchronous reactive web systems.
 From a single source, both server and client applications are generated.
-Programs are written in the Hop language, a Scheme dialect.
-The set of HipHop reactive statements is based on those of the Esterel language~\cite{journals/scp/BerryG92}.
-The main difference with \TOPHAT\ is that events and inputs are abstracted away, and are no concern for the programmer, whereas in HipHop, events and inputs have to be explicitly handled.
-Functional reactive programming.
+Programs are written in the \HOP\ language, a \SCHEME\ dialect.
+The set of \HIPHOP\ reactive statements is based on those of the \ESTEREL\ language~\cite{journals/scp/BerryG92}.
+The main difference with \TOPHAT\ is that events and inputs are abstracted away, and are no concern for the programmer, whereas in \HIPHOP, events and inputs have to be explicitly handled.
 
-Closer to home is research on Functional Reactive Programming (FRP)~\cite{conf/icfp/ElliottH97}.
-Many variants and implementations exist~\cite{reactive-banana,CooperK04,conf/oopsla/MeyerovichGBCGBK09}, but the underlying principle is the same.
+
+\paragraph{Functional reactive programming}
+
+Closer to home is research on Functional Reactive Programming (\FRP) \cite{conf/icfp/ElliottH97}.
+Many variants and implementations exist \cite{reactive-banana,CooperK04,conf/oopsla/MeyerovichGBCGBK09}, but the underlying principle is the same.
 When comparing to \TOP, the biggest difference is in the goals the two paradigms aim to achieve.
-FRP expresses automatically updating data dependencies, whereas \TOP\ focuses on the modeling of collaboration.
+\FRP\ expresses automatically updating data dependencies, whereas \TOP\ focuses on the modeling of collaboration.
 
 
 \paragraph{Task-oriented programming}
@@ -63,9 +65,9 @@ FRP expresses automatically updating data dependencies, whereas \TOP\ focuses on
 \citet{conf/icfp/PlasmeijerAK07} present the foundations of having a workflow specification that is embedded in a functional language and is actually executable.
 Later work presents a full implementation of \TOP\ in the form of \ITASKS, a framework embedded in \CLEAN\ to develop web-based interactive workflow programs~\cite{conf/ppdp/PlasmeijerLMAK12}.
 
-Since then, a broad range of tools and extensions have been presented in various works, such as a distributed version~\cite{conf/ifl/OortgieseGAP17}, a task visualization system~\cite{conf/sfp/StutterheimPA14,conf/cefp/StutterheimAP15}, tasks for embedded systems~\cite{conf/cgo/KoopmanLP18,conf/ifl/LubbersKP18,conf/mipro/LubbersKP19,conf/ifl/LubbersKP19}, just to name a few.
+Since then, a broad range of tools and extensions have been presented in various works, such as a distributed version~\cite{conf/ifl/OortgieseGAP17}, a task visualization system~\cite{conf/sfp/StutterheimPA14,conf/cefp/StutterheimAP15}, and tasks for embedded systems~\cite{conf/cgo/KoopmanLP18,conf/ifl/LubbersKP18,conf/mipro/LubbersKP19,conf/ifl/LubbersKP19}, just to name a few.
 
-Even though \ITASKS\ and its many extensions are implemented as DSL in a functional language, it lacks a formal foundation, making it harder to reason about \TOP\ programs.
+Even though \ITASKS\ and its many extensions are implemented as a \DSL\ in a functional language, it lacks a formal foundation, making it harder to reason about \TOP\ programs.
 To facilitate reasoning over program correctness, asserting program properties and performing symbolic execution, a more formal implementation of \TOP\ is needed.
 
 This is why \TOPHAT\ was developed~\cite{conf/ppdp/SteenvoordenNK19}.
