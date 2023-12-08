@@ -11,6 +11,12 @@ The sections below present the language, its syntax and semantics, and observati
 Here we describe the \TOPHAT\ language as presented in \citet{Steenvoorden22},
 which slightly deviates from presentations in earlier work \cite{conf/ppdp/SteenvoordenNK19,conf/ifl/NausSK19,conf/sfp/NausS20}.
 
+\begin{figure}[b]
+  \usemacro{G-Tasks-compact}
+  \caption{Task grammar}
+  \label{fig:task-grammar}
+\end{figure}
+
 The \TOPHAT\ language consists of two layers: the expression layer and the task layer.
 The expression layer is a \STLC\ with primitive types, pairs, lists, enumerations, and references.
 We use pattern matching to project the fields of pairs.
@@ -19,12 +25,6 @@ and refer to \citet{Steenvoorden22} for more details.
 The grammar of the task layer is given in \cref{fig:task-grammar}.
 Tasks can either be editors or combinators,
 which we will discuss in the following subsections.
-
-\begin{figure}
-  \usemacro{G-Tasks-compact}
-  \caption{Task grammar}
-  \label{fig:task-grammar}
-\end{figure}
 
 \subsubsection{Editors}
 
@@ -132,6 +132,13 @@ Sending $k \Send b$ to the system will change the value inside the editor with k
 
 \subsubsection{Typing}
 
+\begin{figure}[b]
+  \centering
+  \usemacro{G-Types-compact}
+  \caption{Typing grammar}
+  \label{fig:typing-grammar}
+\end{figure}
+
 \cref{fig:typing-grammar} shows the grammar of types.
 Typing rules of some tasks can be found in \cref{fig:typing-rules}.
 Note that editors and references can only contain values of basic types $\beta$.
@@ -143,13 +150,6 @@ Second, restricting editors to only contain basic values
 guarantees one can present these values to end users (print them)
 and receive new inputs from end users (parse them).
 Arbitrary tasks and functions do not have this property.
-
-\begin{figure}
-  \centering
-  \usemacro{G-Types-compact}
-  \caption{Typing grammar}
-  \label{fig:typing-grammar}
-\end{figure}
 
 \begin{figure}
   % \small
@@ -186,20 +186,20 @@ Each is depicted in \cref{fig:semantic-layers}.
   \label{fig:semantic-layers}
 \end{figure}
 
-\begin{itemize}
-  \item
-    The \emph{host layer} is responsible for evaluating expressions in our host language,
+\begin{description}
+  \item[Host layer]
+    The host layer is responsible for evaluating expressions in our host language,
     the \STLC\ with basic types and references.
     This layer only contains one big-step evaluation relation ($\evaluate$).
-  \item
-    The \emph{internal layer} only operates on tasks.
+  \item[Internal layer]
+    This layer only operates on tasks.
     It prepares tasks so they can be presented to end users to interact with.
-    This layer contains the big-step normalisation ($\normalise$) and fixation ($\fixate$) relations.
-  \item
-    The \emph{external layer} takes inputs from end users and rewrites tasks based on this input.
+    This layer contains the big-step normalization ($\normalise$) and fixation ($\fixate$) relations.
+  \item[External layer]
+    The external layer takes inputs from end users and rewrites tasks based on this input.
     This layer contains two small-step relations: handling ($\handle{\iota}$) and interaction ($\interact{\iota}$).
-    Both relations are labelled with inputs $\iota$.
-\end{itemize}
+    Both relations are labeled with inputs $\iota$.
+\end{description}
 
 \begin{figure}
   \begin{mathpar}

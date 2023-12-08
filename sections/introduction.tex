@@ -22,7 +22,7 @@ This heavily restricts the amount of formal reasoning that can be done on \ITASK
 
 To overcome this downside, \TOPHAT\ was introduced~\cite{conf/ppdp/SteenvoordenNK19}.
 Built on top of the simply typed lambda calculus,
-\TOPHAT\ is a \TOP\ implementation that has a completely formal semantics.
+\TOPHAT\ is a \TOP\ implementation that has a complete formal semantics.
 Several works leverage this to perform symbolic execution \cite{conf/ifl/NausSK19},
 generate next-step hints for end users \cite{conf/sfp/NausS20},
 and reason about equivalence of tasks \cite{conf/sfp/KlijnsmaS22}.
@@ -31,20 +31,38 @@ and reason about equivalence of tasks \cite{conf/sfp/KlijnsmaS22}.
 Compared to the \ITASKS\ system, \TOPHAT\ is more restrictive in managing tasks itself.
 \TOPHAT\ programs can only define a static amount of work, whereas \ITASKS\ programs can dynamically spool up new tasks and terminate old ones.
 In this paper, we introduce \DYNTOPHAT, an extension to \TOPHAT\ that allows end users to initialize and kill tasks at runtime.
-Key in our approach is that we do not compromise any of the formal properties when adding this feature.
+Key in our approach is that we do not compromise the formal properties when adding this feature.
 
 \paragraph{Contributions}
 
-\todo{Add contributions.}
-\todo{Maybe some more text on what our system can and cannot do.}
-\todo{Say something about validation here.}
+Our main contributions are as follows.
+\begin{itemize}
+  \item
+    We extend the basic \TOPHAT\ language with dynamic \emph{task pools},
+    allowing end-users to initialize and kill tasks at runtime.
+    We call this extension \DYNTOPHAT.
+  \item
+    We reason that symbolic execution of tasks containing pools can result in infinite simulation.
+    However, we show that it is still possible to use symbolic execution to generate next-step hints for end-users
+    by altering our algorithm from previous work.
+  \item
+    We prove that the addition of task pools has a small impact on the metatheoretical properties of \TOPHAT.
+    We can still reason about the evolution of tasks at runtime
+    and prove when two tasks are equal.
+    Also, previously published transformation laws on tasks still hold:
+    the $\Task$ operation on types is a functor but cannot be a monad.
+\end{itemize}
+
+% \todo{Say something about validation and proofs here?}
 
 \paragraph{Structure}
 
+% The remainder of this paper is structured as follows.
 \cref{sec:tophat} introduces the \TOPHAT\ language as presented in \citet{Steenvoorden22}.
 \cref{sec:dyntophat} then goes on to present our dynamic version of \TOPHAT.
 % After having introduced all language constructs, we study a bigger example in \cref{sec:example}.
-We then study the implications on \TOPHAT's properties in \cref{sec:properties}, discussing the impact of dynamic tasks on the symbolic execution mechanism, task equivalence, and visualization of tasks.
+We then study the implications on \TOPHAT's properties in \cref{sec:properties},
+discussing the impact of task pools on the symbolic execution mechanism and the language's metatheory.
 Related work is discussed in \cref{sec:relatedwork}.
 After a short discussion on the implications of \DYNTOPHAT\ in \cref{sec:discussion},
 we conclude in \cref{sec:conclusion}.

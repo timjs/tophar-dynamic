@@ -9,7 +9,7 @@ It allows developers to specify workflows and business processes in a formal lan
 reason about their equality
 and use symbolic execution to verify their correctness.
 % Inquiry
-\TOPHAT\ can run a specification supporting collaborators during the execution of a workflow.
+\TOPHAT\ can run a workflow specification supporting collaborators during its execution.
 However, it can only do so for a statically specified amount of work.
 That is, the number of tasks running in parallel is always predefined by the developer.
 In contrast, other \TOP\ engines like \ITASKS\ and \MTASKS\ act like an operating system,
@@ -22,7 +22,7 @@ a moderate extension to the \TOPHAT\ calculus which allows end users to initiali
 % Knowledge
 Although this is a restricted version of the dynamic task lists found in \ITASKS,
 where the system itself can initialize new tasks,
-we show that all common use cases of this feature are still expressible in \DYNTOPHAT.
+we show that common use cases of this feature are still expressible in \DYNTOPHAT.
 Also, our proposed solution does not compromise the formal reasoning properties of \TOPHAT.
 % Grounding
 \TOPHAT's metatheory is formalized in the dependently typed programming language \IDRIS\

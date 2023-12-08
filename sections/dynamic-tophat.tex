@@ -1,8 +1,5 @@
 % !TEX root=../main.tex
 
-\todo{remove newpage}
-\newpage
-
 \section{Dynamic TopHat}
 \label{sec:dyntophat}
 
@@ -160,14 +157,7 @@ Otherwise, we would create unwanted sharing of editors.
   Therefore, we delay normalization of the template task until the moment they are added to the pool.
 \end{example}
 
-\DYNTOPHAT's additional handling rules are presented in \cref{fig:semantics-dynamic-handling}.
-Rule \seerule{H-Init} shows that sending $k\Send\Init$ copies the template task to the pool.
-Rule \seerule{H-Kill$_j$} removes the $j$th task from the pool on the input of $k\Send\Kill j$.
-In both cases, the key $k$ in the input should be equal to the key of the task pool.
-If that is not the case, rule \seerule{H-Pool} passes the input on to all tasks in the pool,
-identical to \seerule{H-Pair} in \cref{fig:semantics-tophat}.
-
-\begin{figure}
+\begin{figure}[b]
   \begin{mathpar}
     \boxed{\RelationH} \\
     \userule{H-Init} \\
@@ -177,6 +167,13 @@ identical to \seerule{H-Pair} in \cref{fig:semantics-tophat}.
   \caption{Handling rules for task pools}
   \label{fig:semantics-dynamic-handling}
 \end{figure}
+
+Additional handling rules for \DYNTOPHAT\ are presented in \cref{fig:semantics-dynamic-handling}.
+Rule \seerule{H-Init} shows that sending $k\Send\Init$ copies the template task to the pool.
+Rule \seerule{H-Kill$_j$} removes the $j$th task from the pool on the input of $k\Send\Kill j$.
+In both cases, the key $k$ in the input should be equal to the key of the task pool.
+If that is not the case, rule \seerule{H-Pool} passes the input on to all tasks in the pool,
+identical to \seerule{H-Pair} in \cref{fig:semantics-tophat}.
 
 Naturally, we also need to extend our failing, inputs, and value observation to deal with task pools.
 \cref{fig:observations-dynamic} shows these additions.
