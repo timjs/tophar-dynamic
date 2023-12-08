@@ -16,7 +16,7 @@ Let us illustrate this with an example.
 
   \begin{TASK}[emph={inventory,payment}]
     let vend' : Ref (List Snack) -> Task Snack = do inventory.
-      enter Int >>? do payment.
+      enter Int >>= do payment.
       case payment of
         1 |-> decrease Biscuit inventory >>= do _.
              view Biscuit
@@ -48,22 +48,23 @@ To mitigate this shortcoming of \TOPHAT, we extend it with \emph{task pools}.
 \DYNTOPHAT\ is a moderate extension to the \TOPHAT\ base language where we add support for task pools.
 Task pools contain zero or more instantiations of a \emph{template task} running in parallel.
 In this regard, task pools are similar to the parallel-and combinator ($\Pair$).
-End users can interact with all tasks currently running in a pool.
-However, one can initiate a new instance of the template task by sending an \emph{init} event to the task pool.
+End-users can interact with all tasks currently running in a pool.
+However, one can initiate a new instance of the template task by sending an \emph{init} event to the task pool at any time.
 Similarly, by sending a \emph{kill} event, the task pool terminates one of its children.
 
 Language-wise, a task pool is a new combinator at the task level.
-The combinator $\Pool^k_{t_0} []$ is parametrised by a unique key $k$, a template task $t_0$ and an (initially) empty task list $[]$.
-Each time end-users send an init action to this pool: $k\Send\Init$, the template task is placed in the list of currently running tasks,
-in this case resulting in $\Pool^k_{t_0} [t_0]$.
+The combinator $\Pool^\nu_{t_0} []$ is parametrised by a name $\nu$, a template task $t_0$ and an (initially) empty task list $[]$.
+After normalization, pools, as editors, the name is instantiated with a unique key $k$.
+Each time end-users send an init action to a pool ($k\Send\Init$), the template task is placed in the list of currently running tasks.
+In this case resulting in $\Pool^k_{t_0} [t_0]$.
 This way, an arbitrary amount of tasks can be started at runtime.
-Tasks in the list can also be killed by sending a \emph{kill} action to the pool: $k\Send\Kill1$.
+Tasks in the list can also be killed by sending a \emph{kill} action to the pool ($k\Send\Kill1$).
 In this case, the first task in the pool will be killed, as indicated by the index 1.
 The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
 
 \begin{figure}
   \usemacro{G-Dynamic-extensions}
-  \caption{Grammar for \DYNTOPHAT\ extensions}
+  \caption{Grammar additions for \DYNTOPHAT}
   \label{fig:dynamic-grammar}
 \end{figure}
 
@@ -82,7 +83,7 @@ The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
   which will ask for an amount of money and will result in a \fun{Biscuit} or \fun{Chocolate}.
   One can create an arbitrary number of such tasks.
 
-  Note that a standalone \fun{machine'}, contrary to the one in \cref{exm:vending-shared}, will run indefinitely
+  Also note that a standalone \fun{machine'}, contrary to the one in \cref{exm:vending-shared}, will run indefinitely
   in the same sense that an editor runs indefinitely.
   Adding a step to a continuation will break this cycle,
   as shown in the next example.
@@ -109,18 +110,18 @@ The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
 
 Typing rules of task pools are given in \cref{fig:typing-dynamic}.
 Here we simply state that a task pool results in a list of values of type $\tau$
-if every task in the pool, including the template task, is a $\Task$ of type $\tau$.
+if every task in the pool, including the template task, is a \typ{Task} of type $\tau$.
 
 \begin{figure}
   \begin{mathpar}
     \boxed{\RelationT} \\
     \userule{T-Pool} \\
   \end{mathpar}
-  \caption{Typing rules for \DYNTOPHAT}
+  \caption{Typing rule for task pools}
   \label{fig:typing-dynamic}
 \end{figure}
 
-Extensions of the normalization relation of \TOPHAT\ is given in \cref{fig:semantics-dynamic-normalisation}.
+Additions to the normalization relation of \TOPHAT\ are given in \cref{fig:semantics-dynamic-normalisation}.
 Similar to the way normalization works for parallel-and (as shown in \cref{fig:semantics-normalisation}),
 normalization of task pools normalizes each task in the pool and then constructs a new pool containing these normalized tasks.
 Note that the template task is not normalized.
@@ -157,7 +158,7 @@ Otherwise, we would create unwanted sharing of editors.
   Therefore, we delay normalization of the template task until the moment they are added to the pool.
 \end{example}
 
-\begin{figure}[b]
+\begin{figure}
   \begin{mathpar}
     \boxed{\RelationH} \\
     \userule{H-Init} \\
@@ -177,13 +178,16 @@ identical to \seerule{H-Pair} in \cref{fig:semantics-handling}.
 
 Naturally, we also need to extend our failing, inputs, and value observation to deal with task pools.
 \cref{fig:observations-dynamic} shows these additions.
-The failing observation is $\False$ because
-it is always safe to step to task pools.
+The failing observation is $\False$.
+Because one can always interact with a task pool,
+it is safe to step to them.
 After all, one can always initialize a new task in the pool.
+
 The inputs observation collects inputs from every task in the pool
 together with the $\Init$ input.
 Additionally, it is possible to kill a task at every index in the pool.
 As in previous work, it is easily proved that this is sound and complete with the handling rules presented in \cref{fig:semantics-dynamic-handling} \cite{Steenvoorden22}.
+
 The value observation returns a list of values for every task in the pool.
 If a task in the pool does not have a value (i.e., $\Value(n_j,\sigma) = \bot$ for some $j$),
 this is simply not included in the list.
@@ -193,7 +197,7 @@ we can make a step from a task pool containing partial work.
 
 \begin{figure}
   \usemacro{O-Dynamic}
-  \caption{Observations for \DYNTOPHAT}
+  \caption{Observations on task pools}
   \label{fig:observations-dynamic}
 \end{figure}
 
@@ -203,7 +207,7 @@ we can make a step from a task pool containing partial work.
   Our \fun{machine'} could be in the state
   \begin{TASK}
     >&<$_{\fun{vend'}\,\var{inventory}}$ [view Biscuit, view Chocolate,
-      enter$^{k_3}$ Int >>? ..., view Chocolate, enter$^{k_5}$ Int >>? ...]
+      enter$^{k_3}$ Int >>= ..., view Chocolate, enter$^{k_5}$ Int >>= ...]
   \end{TASK}
   Note that, by definition of our value observation $\Value$,
   this task has the value \TS{[Biscuit, Chocolate, Chocolate]}.
@@ -213,14 +217,14 @@ we can make a step from a task pool containing partial work.
   above task will be rewritten to:
   \begin{TASK}
     >&<$_{\fun{vend'}\,\var{inventory}}$ [view Biscuit, view Chocolate,
-      enter$^{k_3}$ Int >>? ..., view Chocolate, view Chocolate]
+      enter$^{k_3}$ Int >>= ..., view Chocolate, view Chocolate]
   \end{TASK}
   The value observation of this task would return the list \TS{[Biscuit, Chocolate, Chocolate, Chocolate]}.
   We now satisfy the guard in the definition of \fun{summarise} that the number of snacks should be four.
-  We can take this step and immediately rewrite the whole task to summarise the different purchases that were made.
+  We can take the step and immediately rewrite the whole task to summarise the different purchases that were made.
   The result will be:
   \begin{TASK}
-    view ("Sold 1 biscuit(s) and 3 chocolate(s)")
+    view "Sold 1 biscuit(s) and 3 chocolate(s)"
   \end{TASK}
   This means the \fun{vend'} task of user three would be discarded.
 
