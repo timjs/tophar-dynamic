@@ -201,7 +201,7 @@ Each contains one or two semantic relations, as depicted in \cref{fig:semantic-l
   \item[Internal layer]
     The internal layer only operates on tasks.
     It prepares tasks so they can be presented to end-users to interact with.
-    This layer contains the big-step normalization ($\normalise$) and fixation ($\fixate$) relations.
+    This layer contains the big-step normalization ($\normalize$) and fixation ($\fixate$) relations.
   \item[External layer]
     The external layer takes inputs from end-users and rewrites tasks based on this input.
     This layer contains two small-step relations: handling ($\handle{\iota}$) and interaction ($\interact{\iota}$).
@@ -306,7 +306,7 @@ For task combinators, $\Inputs$ is defined recursively.
 For all other tasks, $\Inputs$ returns the empty set.
 $\Inputs$ is only defined on normalised tasks, as those tasks are ready to receive user input.
 
-To be able to normalise tasks, we need to have a way to determine the value of them.
+To be able to normalize tasks, we need to have a way to determine the value of them.
 For this, we introduce the task observation $\Value$.
 Given a task $t:\Task\tau$ and the current state $\sigma$ ,
 this function returns the task's value $v$ of type $\tau$.

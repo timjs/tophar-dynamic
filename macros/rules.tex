@@ -656,29 +656,29 @@
 
 
 \newmacro{RelationN}
-  {t,\sigma \normalise n',\sigma',\delta'}
+  {t,\sigma \normalize n',\sigma',\delta'}
 
 
 %% Step %%
 
 \newrule{N-StepNone}
-  {t_1,\sigma \normalise n_1',\sigma',\delta'}
-  {t_1 \Step v_2,\sigma \normalise n_1' \Step v_2,\sigma',\delta'}
+  {t_1,\sigma \normalize n_1',\sigma',\delta'}
+  {t_1 \Step v_2,\sigma \normalize n_1' \Step v_2,\sigma',\delta'}
   {\Value(n_1',\sigma') = \bot}
 
 \newrule{N-StepFail}
-  {t_1,\sigma \normalise n_1',\sigma',\delta' \Quad
+  {t_1,\sigma \normalize n_1',\sigma',\delta' \Quad
    v_2\ v_1 \evaluate t_2}
-  {t_1 \Step v_2,\sigma \normalise n_1' \Step v_2,\sigma',\delta'}
+  {t_1 \Step v_2,\sigma \normalize n_1' \Step v_2,\sigma',\delta'}
   {\startcases
      \NC \Value(n_1',\sigma') = v_1 \NR
      \NC \Failing(t_2)              \NR
    \stopcases}
 
 \newrule{N-StepWait}
-  {t_1,\sigma \normalise n_1',\sigma',\delta' \Quad
+  {t_1,\sigma \normalize n_1',\sigma',\delta' \Quad
    v_2\ v_1 \evaluate t_2}
-  {t_1 \Step v_2,\sigma \normalise n_1' \Step v_2,\sigma',\delta'}
+  {t_1 \Step v_2,\sigma \normalize n_1' \Step v_2,\sigma',\delta'}
   {\startcases
      \NC \Value(n_1',\sigma') = v_1  \NR
      \NC \lnot\Failing(t_2)          \NR
@@ -686,10 +686,10 @@
    \stopcases}
 
 \newrule{N-StepCont}
-  {t_1,\sigma \normalise n_1',\sigma',\delta'
+  {t_1,\sigma \normalize n_1',\sigma',\delta'
     \Quad v_2\ v_1 \evaluate t_2
-    \Quad t_2,\sigma' \normalise n_2',\sigma'',\delta''}
-  {t_1 \Step v_2,\sigma \normalise n_2',\sigma'',\delta'\cup\delta''}
+    \Quad t_2,\sigma' \normalize n_2',\sigma'',\delta''}
+  {t_1 \Step v_2,\sigma \normalize n_2',\sigma'',\delta'\cup\delta''}
   {\startcases
      \NC \Value(n_1',\sigma') = v_1 \NR
      \NC \lnot\Failing(t_2)         \NR
@@ -700,23 +700,23 @@
 %% Choose %%
 
 \newrule{N-ChooseLeft}
-  {t_1,\sigma  \normalise n_1',\sigma',\delta'}
-  {t_1 \Choose t_2,\sigma \normalise n_1',\sigma',\delta'}
+  {t_1,\sigma  \normalize n_1',\sigma',\delta'}
+  {t_1 \Choose t_2,\sigma \normalize n_1',\sigma',\delta'}
   {\Value(n_1',\sigma') = v_1}
 
 \newrule{N-ChooseRight}
-  {t_1,\sigma  \normalise n_1',\sigma',\delta'  \Quad
-   t_2,\sigma' \normalise n_2',\sigma'',\delta''}
-  {t_1 \Choose t_2,\sigma \normalise n_2',\sigma'',\delta'\cup\delta''}
+  {t_1,\sigma  \normalize n_1',\sigma',\delta'  \Quad
+   t_2,\sigma' \normalize n_2',\sigma'',\delta''}
+  {t_1 \Choose t_2,\sigma \normalize n_2',\sigma'',\delta'\cup\delta''}
   {\startcases
      \NC \Value(n_1',\sigma') = \bot \NR
      \NC \Value(n_2',\sigma'') = v_2 \NR
    \stopcases}
 
 \newrule{N-ChooseNone}
-  {t_1,\sigma  \normalise n_1',\sigma',\delta'  \Quad
-   t_2,\sigma' \normalise n_2',\sigma'',\delta''}
-  {t_1 \Choose t_2,\sigma \normalise n_1' \Choose n_2',\sigma'',\delta'\cup\delta''}
+  {t_1,\sigma  \normalize n_1',\sigma',\delta'  \Quad
+   t_2,\sigma' \normalize n_2',\sigma'',\delta''}
+  {t_1 \Choose t_2,\sigma \normalize n_1' \Choose n_2',\sigma'',\delta'\cup\delta''}
   {\startcases
      \NC \Value(n_1',\sigma') = \bot  \NR
      \NC \Value(n_2',\sigma'') = \bot \NR
@@ -726,34 +726,34 @@
 %% Evaluate %%
 
 \newrule{N-Trans}
-	{t_2,\sigma \normalise n_2',\sigma',\delta'}
-	{v_1 \Trans t_2,\sigma \normalise v_1 \Trans n_2',\sigma',\delta'}
+	{t_2,\sigma \normalize n_2',\sigma',\delta'}
+	{v_1 \Trans t_2,\sigma \normalize v_1 \Trans n_2',\sigma',\delta'}
   {}
 
 \newrule{N-Repeat}
-	{t,\sigma \normalise n',\sigma',\delta'}
-	{\Repeat t,\sigma \normalise n' \Step \lambda x. \Select\block{\lbl{Repeat} \mapsto \Repeat t, \lbl{Exit} \mapsto \Lift x},\sigma',\delta'}
+	{t,\sigma \normalize n',\sigma',\delta'}
+	{\Repeat t,\sigma \normalize n' \Step \lambda x. \Select\block{\lbl{Repeat} \mapsto \Repeat t, \lbl{Exit} \mapsto \Lift x},\sigma',\delta'}
   {}
 
 \newrule{N-Pair}
-	{t_1,\sigma \normalise n_1',\sigma',\delta' \Quad
-	 t_2,\sigma' \normalise n_2',\sigma'',\delta''}
-	{t_1 \Pair t_2,\sigma \normalise n_1' \Pair n_2',\sigma'',\delta'\cup\delta''}
+	{t_1,\sigma \normalize n_1',\sigma',\delta' \Quad
+	 t_2,\sigma' \normalize n_2',\sigma'',\delta''}
+	{t_1 \Pair t_2,\sigma \normalize n_1' \Pair n_2',\sigma'',\delta'\cup\delta''}
   {}
 
 \newrule{N-Pool-Name}
   {k \text{ fresh} \Quad
-   t_1,\sigma \normalise n_1',\sigma_1',\delta_1' \Quad
+   t_1,\sigma \normalize n_1',\sigma_1',\delta_1' \Quad
    \ldots \Quad
-   t_j,\sigma_{j-1}' \normalise n_j',\sigma_j',\delta_j'}
-  {\Pool^\epsilon_{t_0} [\many{t}],\sigma \normalise \Pool^k_{t_0} [\many{n'}],\sigma_j',\delta_1'\cup\ldots\cup\delta_j'}
+   t_j,\sigma_{j-1}' \normalize n_j',\sigma_j',\delta_j'}
+  {\Pool^\epsilon_{t_0} [\many{t}],\sigma \normalize \Pool^k_{t_0} [\many{n'}],\sigma_j',\delta_1'\cup\ldots\cup\delta_j'}
   {}
 
 \newrule{N-Pool}
-  {t_1,\sigma \normalise n_1',\sigma_1',\delta_1' \Quad
+  {t_1,\sigma \normalize n_1',\sigma_1',\delta_1' \Quad
    \ldots \Quad
-   t_j,\sigma_{j-1} \normalise n_j',\sigma_j',\delta_j'}
-  {\Pool^k_{t_0} [\many{t}],\sigma \normalise \Pool^k_{t_0} [\many{n'}],\sigma_j',\delta_1'\cup\ldots\cup\delta_j'}
+   t_j,\sigma_{j-1} \normalize n_j',\sigma_j',\delta_j'}
+  {\Pool^k_{t_0} [\many{t}],\sigma \normalize \Pool^k_{t_0} [\many{n'}],\sigma_j',\delta_1'\cup\ldots\cup\delta_j'}
   {}
 
 
@@ -762,17 +762,17 @@
 %% FIXME: \not\in
 \newrule{N-Share}
 	{h \not\in \mathrm{dom}(\sigma)}
-	{\Share b, \sigma \normalise \Lift h, [h \mapsto b]\sigma, \nothing}
+	{\Share b, \sigma \normalize \Lift h, [h \mapsto b]\sigma, \nothing}
   {}
 
 \newrule{N-Assign}
 	{}
-	{h \Assign b, \sigma \normalise \Lift \unit, [h \mapsto b]\sigma, \set{h}}
+	{h \Assign b, \sigma \normalize \Lift \unit, [h \mapsto b]\sigma, \set{h}}
   {}
 
 \newrule{N-Assert}
   {}
-  {\Assert b, \sigma \normalise \Lift b, \sigma, \nothing}
+  {\Assert b, \sigma \normalize \Lift b, \sigma, \nothing}
   {}
 
 
@@ -780,12 +780,12 @@
 
 \newrule{N-Name}
   {k \text{ fresh}}
-  {d^{(\epsilon)},\sigma \normalise d^{(k)},\sigma,\nothing}
+  {d^{(\epsilon)},\sigma \normalize d^{(k)},\sigma,\nothing}
   {}
 
 \newrule{N-Editor}
   {}
-  {d^{(k)},\sigma \normalise d^{(k)},\sigma,\nothing}
+  {d^{(k)},\sigma \normalize d^{(k)},\sigma,\nothing}
   {}
 
 
@@ -793,56 +793,56 @@
 
 \newrule{N-Lift}
   {}
-  {\Lift v,\sigma \normalise \Lift v,\sigma,\nothing}
+  {\Lift v,\sigma \normalize \Lift v,\sigma,\nothing}
   {}
 
 \newrule{N-Enter}
   {}
-  {\Enter\beta,\sigma \normalise \Enter\beta,\sigma,\nothing}
+  {\Enter\beta,\sigma \normalize \Enter\beta,\sigma,\nothing}
   {}
 
 \newrule{N-Update}
   {}
-  {\Update b,\sigma \normalise \Update b,\sigma,\nothing}
+  {\Update b,\sigma \normalize \Update b,\sigma,\nothing}
   {}
 
 \newrule{N-View}
   {}
-  {\View b,\sigma \normalise \View b,\sigma,\nothing}
+  {\View b,\sigma \normalize \View b,\sigma,\nothing}
   {}
 
 \newrule{N-Select}
   {}
-  {\Select \block{\many{l_i \mapsto t_i}},\sigma \normalise \Select \block{\many{l_i \mapsto t_i}},\sigma,\nothing}
+  {\Select \block{\many{l_i \mapsto t_i}},\sigma \normalize \Select \block{\many{l_i \mapsto t_i}},\sigma,\nothing}
   {}
 
 \newrule{N-Change}
   {}
-  {\Change h,\sigma \normalise \Change h,\sigma,\nothing}
+  {\Change h,\sigma \normalize \Change h,\sigma,\nothing}
   {}
 
 \newrule{N-Watch}
   {}
-  {\Watch h,\sigma \normalise \Watch h,\sigma,\nothing}
+  {\Watch h,\sigma \normalize \Watch h,\sigma,\nothing}
   {}
 
 \newrule{N-Fail}
   {}
-  {\Fail,\sigma \normalise \Fail,\sigma,\nothing}
+  {\Fail,\sigma \normalize \Fail,\sigma,\nothing}
   {}
 
 
 \newrule{N-Lift-Old}
   {e,\sigma \evaluate t,\sigma' \Quad
    t,\sigma' \stride t',\sigma''}
-  {e,\sigma \normalise t,\sigma'}
+  {e,\sigma \normalize t,\sigma'}
   {\sigma'=\sigma'' \land t=t'}
 
 \newrule{N-Repeat-Old}
   {e,\sigma \evaluate t,\sigma'  \Quad
    t,\sigma' \stride t',\sigma''  \Quad
-   t',\sigma'' \normalise t'',\sigma'''}
-  {e,\sigma \normalise t'',\sigma'''}
+   t',\sigma'' \normalize t'',\sigma'''}
+  {e,\sigma \normalize t'',\sigma'''}
   {\sigma'\neq \sigma''\vee t\neq t'}
 
 
@@ -1009,12 +1009,12 @@
   {t,\sigma,\delta \fixate n',\sigma'}
 
 \newrule{F-Done}
-  {t,\sigma \normalise n',\sigma',\delta'}
+  {t,\sigma \normalize n',\sigma',\delta'}
   {t,\sigma,\delta \fixate n',\sigma'}
   {(\delta \cup \delta') \cap \Watching(n') = \nothing}
 
 \newrule{F-Loop}
-  {t,\sigma \normalise n',\sigma',\delta' \Quad
+  {t,\sigma \normalize n',\sigma',\delta' \Quad
    n',\sigma',\delta' \fixate n'',\sigma''}
   {t,\sigma,\delta \fixate n'',\sigma''}
   {(\delta \cup \delta') \cap \Watching(n') \neq \nothing}
