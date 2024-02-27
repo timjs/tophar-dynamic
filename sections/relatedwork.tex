@@ -74,3 +74,15 @@ This is why \TOPHAT\ was developed~\cite{conf/ppdp/SteenvoordenNK19}.
 The \TOPHAT\ language, as introduced in Section~\ref{sec:tophat}, has a formal syntax and semantics.
 This allowed for the development of a symbolic execution semantics~\cite{conf/ifl/NausSK19}, a user feedback system~\cite{conf/sfp/NausS20} and equivalence reasoning over programs~\cite{conf/sfp/KlijnsmaS22}.
 Details on these systems have been given above in Section~\ref{sec:properties}.
+
+\paragraph{Other related work}
+
+Besides research on workflow abstractions, work on symbolic execution is also relevant here.
+Symbolic execution~\cite{Boyer1975, DBLP:conf/relsoft/King75} is typically applied on imperative programs.
+\citet*{JaffarMNS2012} for example, use symbolic execution to verify safety properties in C and
+\citet*{CadarDE2008} uses symbolic execution for the generation of test cases.
+
+In recent years, symbolic execution has also been applied to functional languages.
+Most notably the work by \citet*{HallahanXP2017,conf/pldi/HallahanXBJP19} for Haskell and \citet*{GiantsiosPS2017} for a subset of Erlang.
+The biggest challenge here is the symbolic execution of higher-order values.
+The approach presented in this paper and in our earlier works~\cite{conf/sfp/NausS20} only performs symbolic execution on closed terms, avoiding this problem alltogether.
