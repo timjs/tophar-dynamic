@@ -99,7 +99,7 @@ Unfortunately, in this case, there is no way to set an upper bound on this inter
   If we restrict the number of new task initializations to be no larger than 2,
   we will have the problem that this task will never progress symbolically.
   Even though it has a clear condition when to progress.
-\end{example}
+\hfill$\therefore$\end{example}
 In general, a step could very well require $n+1$ values before it will allow to progress.
 It is clear from this example that limiting task initialization is not a suitable way to deal with the infinite interaction coming from the pool combinator.
 
@@ -136,7 +136,7 @@ Our new $\Hints_1$ function, instead of generating an infinite amount of possibl
 makes use of the helper function $\Generate$ which does this breadth-first search.
 Starting with a task set~$ts$, containing tuples of normalized tasks, states, input lists, and path conditions,
 we calculate a hints set~$hs$ by checking if the current normalized task $n$ has a (symbolic) value $\tilde{v}$,
-and verifying if the goal function $\psi$ applied to this value is satisfiable together with the current path condition $\phi$.
+and verifying if the goal function $\psi$ applied to this value is satisfiable ($\Sat$) together with the current path condition $\phi$.
 If this is the case, we have next-step hints and we terminate.
 In the case that there is no value, or our goal is not yet reached,
 the set~$hs$ is empty.

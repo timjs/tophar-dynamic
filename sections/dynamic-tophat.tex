@@ -37,7 +37,7 @@ Let us illustrate this with an example.
   containing \con{Biscuit}s and \con{Chocolate}s,
   and starts two vending machines with these treats.
   This task results in a pair containing the two bought \typ{Snack}s.
-\end{example}
+\hfill$\therefore$\end{example}
 
 We see that, at development time, we need to specify the number of \fun{vend$_1$} tasks that can be executed at the same time.
 Although in the physical world, it is quite evident that one can only place a predefined amount of vending machines next to each other;
@@ -89,7 +89,7 @@ The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
   in the same sense that an editor runs indefinitely.
   Adding a step to a continuation will break this cycle,
   as shown in the next example.
-\end{example}
+\hfill$\therefore$\end{example}
 
 \begin{example}[Summarize sold snacks]
   \label{exm:summarize}
@@ -105,7 +105,7 @@ The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
         view ("Sold " ++ bs ++ " biscuit(s) and " ++ cs " chocolate(s)")
       else fail
   \end{TASK}
-\end{example}
+\hfill$\therefore$\end{example}
 
 
 \subsection{Semantics}
@@ -160,7 +160,7 @@ Otherwise, we would create unwanted sharing of editors.
   This is undesirable because it breaks our requirement that every editor should have a \emph{unique} key.
   It would be unclear what to do with the input $k_1\Send 42$.
   Therefore, we delay normalization of the template task until the moment they are added to the pool.
-\end{example}
+\hfill$\therefore$\end{example}
 
 Additional handling rules for \DYNTOPHAT\ are presented in \cref{fig:semantics-dynamic-handling}.
 Rule \seerule{H-Init} shows that sending $k\Send\Init$ copies the template task to the pool.
@@ -234,4 +234,4 @@ we can make a step from a task pool containing partial work.
   This means the \fun{vend$_1$} task of user three would be discarded.
 
   Note that we would not be able to make this step in the case that our value observation would result in $\bot$ when one of the values of the tasks in the pool would result in $\bot$.
-\end{example}
+\hfill$\therefore$\end{example}
