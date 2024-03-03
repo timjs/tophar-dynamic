@@ -742,11 +742,12 @@
   {}
 
 \newrule{N-Pool-Name}
-  {k \text{ fresh} \Quad
-   t_1,\sigma \normalize n_1',\sigma_1',\delta_1' \Quad
-   \ldots \Quad
-   t_j,\sigma_{j-1}' \normalize n_j',\sigma_j',\delta_j'}
-  {\Pool^\epsilon_{t_0} [\many{t}],\sigma \normalize \Pool^k_{t_0} [\many{n'}],\sigma_j',\delta_1'\cup\ldots\cup\delta_j'}
+  {k \text{ fresh}} %\Quad
+  %  t_1,\sigma \normalize n_1',\sigma_1',\delta_1' \Quad
+  %  \ldots \Quad
+  %  t_j,\sigma_{j-1}' \normalize n_j',\sigma_j',\delta_j'}
+  % {\Pool^\epsilon_{t_0} [\many{t}],\sigma \normalize \Pool^k_{t_0} [\many{n'}],\sigma_j',\delta_1'\cup\ldots\cup\delta_j'}
+  {\Pool^\epsilon_{t_0} [\ ],\sigma \normalize \Pool^k_{t_0} [\ ],\sigma,\nothing}
   {}
 
 \newrule{N-Pool}

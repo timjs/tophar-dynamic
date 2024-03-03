@@ -10,11 +10,13 @@ Traditionally, these systems are developed using tools that offer a rather low l
 Standard Object-Oriented approaches allow some superficial domain modelling and best practices like the Unified Process from the late 90's provide developers with some guidance.
 
 Many researchers found that more powerful abstractions are needed to develop these all-too-common systems in a way that results in more robust and reliable systems.
-Since then, a lot of work has been published on better describing and implementing business processes, such as the workflow patterns by \citeauthor{journals/dpd/AalstHKB03}, Workflow Nets \cite{journals/jcsc/Aalst98}, and business process calculi like \BPEL\ \cite{bpel}.
+Since then, a lot of work has been published on better describing and implementing business processes,
+such as the workflow patterns by \citeauthor{journals/dpd/AalstHKB03}, Workflow Nets \cite{journals/jcsc/Aalst98}, and business process calculi like \BPEL\ \cite{bpel}.
 
 Most notable is the work by \citet{conf/ifl/KoopmanPA08} and \citet{conf/ppdp/PlasmeijerLMAK12} on \ITASKS.
 They present an abstraction over workflow systems implemented as a \DSL\ in the functional programming language \CLEAN\ \cite{plasmeijer2002clean}.
-The idea behind their paradigm is to model collaboration patterns, and to abstract away from things like \GUI, client-server communication, and databases.
+The idea behind their paradigm is to model collaboration patterns
+and to abstract away from things like \GUI, client-server communication, and databases.
 Their work proved to be successful, with several extensions and the technology now being used in a spin-off company \cite{com/tss/viia}.
 
 Even though \ITASKS\ is implemented as a \DSL\ in a functional programming language, the paradigm lacks any formal semantics.
@@ -30,6 +32,7 @@ and reason about equivalence of tasks \cite{conf/sfp/KlijnsmaS22}.
 
 Compared to the \ITASKS\ system, \TOPHAT\ is more restrictive in managing tasks itself.
 \TOPHAT\ programs can only define a static amount of work, whereas \ITASKS\ programs can dynamically spool up new tasks and terminate old ones.
+This feature is used in many existing \ITASKS\ programs \cite{conf/iscram/JansenLP10,conf/iscram/LijnseJNP11,com/tss/viia}.
 In this paper, we introduce \DYNTOPHAT, an extension to \TOPHAT\ that allows end-users to initialize and kill tasks at runtime.
 Key in our approach is that we do not compromise the formal properties when adding this feature.
 

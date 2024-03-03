@@ -20,11 +20,15 @@ This slightly deviates from presentations in earlier work \cite{conf/ppdp/Steenv
 The \TOPHAT\ language consists of two layers: the expression layer and the task layer.
 The expression layer is a \STLC\ with primitive types, pairs, lists, enumerations, and references.
 We use pattern matching to project the fields of pairs.
+We use $e$ for unevaluated expressions, $v$ for values, and $b$ for values of a basic type $\beta$.
+% (We will discuss basic types in \cref{sub:typing}.)
+Tuples are written in curly braces $\record{e_1, e_2}$ and heap locations are denoted by $h$.
 As the host language is fairly standard, we omit its details here
 and refer to \citet{Steenvoorden22} for a thorough description.
 The grammar of the task layer is given in \cref{fig:task-grammar}.
-Tasks can either be editors or combinators.
+Tasks ($t$) can either be editors ($d$) or combinators.
 We will discuss both in the following subsections.
+We will revisit basic types and normalized tasks ($n$) when introducing the static and dynamic semantics in \cref{sec:semantics}.
 
 \subsubsection{Editors}
 
@@ -43,7 +47,8 @@ The value in an editor can be changed by sending new values.
 However, they cannot be cleared.
 Editors can also be declared as \emph{read-only} ($\View^\nu b$).
 This way they show information to end-users that cannot be changed.
-Editors are tagged by a name $\nu$.
+Editors are tagged by a name $\nu$
+and can only contain values of a basic type.
 Names are used to distinguish editors when sending input events (see \cref{sub:inputs} later on).
 Possible states editors can be in are depicted in \cref{fig:editor-state}.
 
@@ -111,7 +116,7 @@ The lift task ($\Lift v$) is used to lift a value into the task domain.
   The machine dispenses either a biscuit or a chocolate bar, depending on the amount of money.
   Other cases result in the failure task $\Fail$, which signals a path that cannot be followed.
   In those cases, the vending machine stays in the state to accept and return money.
-  Snacks are modeled using a custom type.
+  Snacks are modeled using an enumeration type.
 \end{example}
 
 
@@ -136,22 +141,25 @@ we omit names and keys when they are not relevant to the example.
 
 
 \subsection{Semantics}
+\label{sec:semantics}
 
 \subsubsection{Typing}
+\label{sub:typing}
 
-\begin{figure}[b]
+\cref{fig:typing-grammar} shows the grammar of types.
+We use the notation $\overline{x,}$ to denote a sequence of comma-separated $x$-productions.
+Typing rules of a selected number of tasks can be found in \cref{fig:typing-rules}.
+Note that environments $\Gamma$ and $\Sigma$ are not touched on the task level,
+they are only used on the level of the host language.
+
+\begin{figure}
   \centering
   \usemacro{G-Types-compact}
   \caption{Typing grammar}
   \label{fig:typing-grammar}
 \end{figure}
 
-\cref{fig:typing-grammar} shows the grammar of types.
-We use the notation $\overline{x,}$ to denote a sequence of comma separated $x$-productions.
-Typing rules of a selected number of tasks can be found in \cref{fig:typing-rules}.
-Note that editors and references can only contain values of basic types $\beta$.
-Also, environments $\Gamma$ and $\Sigma$ are not touched on the task level,
-they are only used on the level of the host language.
+In rules \seerule{T-Update} and \seerule{T-Share} we see that editors and references can only contain values of basic types $\beta$.
 In particular, editors and references cannot contain functions or tasks themselves.
 The reason for this restriction is twofold.
 First, prohibiting references to functions keeps our host language total.
@@ -211,6 +219,12 @@ Each contains one or two semantic relations, as depicted in \cref{fig:semantic-l
     Both relations are labeled with inputs $\iota$.
 \end{description}
 
+In \cref{fig:semantics-normalization} we give some examples of normalization rules in \TOPHAT.
+The normalisation relation reads $\RelationN$, which means that a task $t$ in state $\sigma$
+is normalized to a normalized task $n'$ in state $\sigma'$ while keeping track of possible dirty references in $\delta'$.
+Normalized tasks are a subset of tasks.
+Their grammar can be found in \cref{fig:normalized-task-grammar}.
+
 \begin{figure}
   \begin{mathpar}
     \boxed{\RelationN} \\
@@ -219,19 +233,20 @@ Each contains one or two semantic relations, as depicted in \cref{fig:semantic-l
     \userule{N-Pair} \\
   \end{mathpar}
   \caption{Selected normalisation rules}
-  \label{fig:semantics-normalisation}
+  \label{fig:semantics-normalization}
 \end{figure}
 
-In \cref{fig:semantics-normalisation} we give some examples of normalisation rules in \TOPHAT.
-The normalisation relation reads $\RelationN$, which means that a task $t$ in state $\sigma$
-is normalized to a normalized task $n'$ in state $\sigma'$ while keeping track of possible dirty references in $\delta'$.
-Normalised tasks are a subset of tasks.
-Their grammar can be found in \cref{fig:task-grammar}.
+\begin{figure}
+  \usemacro{G-Normalized-Tasks-compact}
+  \caption{Normalized task grammar}
+  \label{fig:normalized-task-grammar}
+\end{figure}
 
 A heap location is added to the dirty reference set $\delta$ when it is modified.
 An example of this is assigning a value, as seen in \seerule{N-Assign}.
 A non-empty set of dirty references signals the fixation rules ($\RelationF$) to fire
 to resolve any dependencies between shared heap locations.
+Fixation will repeatedly apply normalization rules until the dirty set is empty.
 
 Rule \refrule{N-Name} generates a fresh and unique key $k$ to annotate any editor.
 \refrule{N-Pair} exemplifies a rule where each element of a combinator is normalized by threading state $\sigma$,
@@ -253,6 +268,9 @@ Note that the key in the input event should match the key of the editor.
 Also, the type of the basic value should match the type the editor expects.
 Sending input events to a parallel-and will pass it on to its components
 and merge the resulting tasks and dirty sets (\seerule{H-Pair}).
+
+Interaction ($\RelationI$) will simply handle one input $\iota$ by using the handling rules,
+and thereafter use normalization to prepare the current task for the next user input.
 
 
 \subsubsection{Observations}
@@ -276,7 +294,7 @@ Next, we describe each of these three observations in more detail.
 \end{figure}
 
 Not just $\Fail$ can fail, tasks with failing subtasks can also fail.
-With failing we mean it is non-sensible to make a step to:
+By failing we mean it is non-sensible to make a step to:
 they do not have a value and no way to produce one.
 For example, the pairing $\Fail \Pair \Fail$ is also a failing task.
 In some way, it is equivalent to $\Fail$.
@@ -294,12 +312,6 @@ Therefore the whole task should not fail if only one side fails.
   \label{fig:observation-inputs}
 \end{figure}
 
-\begin{figure}[b]
-  \usemacro{O-Value}
-  \caption{Value observation}
-  \label{fig:observation-value}
-\end{figure}
-
 Once a TopHat program is normalized, it is possible to send input to it.
 It is useful to know what inputs a given task accepts.
 The observation function $\Inputs$ returns the set of input events that are currently possible for a given task.
@@ -311,12 +323,18 @@ For task combinators, $\Inputs$ is defined recursively.
 For all other tasks, $\Inputs$ returns the empty set.
 $\Inputs$ is only defined on normalized tasks, as those tasks are ready to receive user input.
 
+\begin{figure}
+  \usemacro{O-Value}
+  \caption{Value observation}
+  \label{fig:observation-value}
+\end{figure}
+
 To be able to normalize tasks, we need to have a way to determine the value of them.
 For this, we introduce the task observation $\Value$.
-Given a task $t:\Task\tau$ and the current state $\sigma$ ,
+Given a task $t:\Task\tau$ and the current state $\sigma$,
 this function returns the task's value $v$ of type $\tau$.
 It is also possible that a task's value is undefined, in which case we write $\Value(t,\sigma) = \bot$.
 This is also the case for the step ($\Step$) combinator,
-as determination of this value would require to normalise all following steps and tasks,
+as determination of this value would require to normalize all following steps and tasks,
 which may need user interaction.
 The definition of $\Value$ is given in \cref{fig:observation-value}.

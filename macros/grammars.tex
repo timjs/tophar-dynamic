@@ -39,24 +39,43 @@
   \end{grammar}
 }
 
-\newmacro{G-Expression-contexts}{
+\newmacro{G-Expressions}{
   \begin{grammar*}
-    E::=&                      & Contexts         \\
+    e::=&                      & Contexts         \\
   \addlinespace
     \mid& \cdot                & – hole             \\
-    \mid& \lambda m:\tau.\ E   & – abstraction      \\
-    \mid& E_1\ E_2             & – application      \\
+    \mid& \lambda m:\tau.\ e   & – abstraction      \\
+    \mid& e_1\ e_2             & – application      \\
     \mid& x                    & – variable         \\
     \mid& h                    & – heap location    \\
   \addlinespace
-    \mid& \Ite{E_1}{E_2}{E_3}  & – conditional      \\
+    \mid& \Ite{e_1}{e_2}{e_3}  & – conditional      \\
     \mid& \unit                & – unit             \\
-    \mid& \record{E_1, E_2}    & – tuple            \\
+    \mid& \record{e_1, e_2}    & – tuple            \\
   \addlinespace
     \mid& c                    & – constant         \\
     \mid& P                    & – pre-task context \\
   \end{grammar*}
 }
+
+\newmacro{G-Host-compact}{
+  \begin{grammar}
+    \heading{Expressions} \\
+      & e &::= & x \Mid e_1\ e_2                         & – variable, application \\
+      &   &\Mid& \lambda m:\tau.\ e \Mid h \Mid p        & – abstraction, location, pre-task \\
+      &   &\Mid& \Ite{e_1}{e_2}{e_3}                     & – conditional \\
+      &   &\Mid& \unit \Mid \record{e_1, e_2} \Mid c     & – unit, tuple, constant \\
+      &   &\Mid& l \Mid \alist{\ }_\tau \Mid e_1 \Cons e_2 & – label, nil cons \\
+    \heading{Values} \\
+      & v &::= & \lambda m:\tau.\ e \Mid h \Mid t        & – abstraction, location, task \\
+      &   &\Mid& \unit \Mid \record{v_1, v_2} \Mid c     & – unit, tuple, constant \\
+      &   &\Mid& l \Mid \alist{\ }_\tau \Mid v_1 \Cons v_2 & – label, nil cons \\
+    \heading{Basic values} \\
+      & b &::= & \unit \Mid \record{b_1, b_2} \Mid c      & – unit, tuple, constant \\
+      &   &\Mid& l \Mid \alist{\ }_\beta \Mid b_1 \Cons b_2 & – label, nil cons \\
+  \end{grammar}
+}
+
 \newmacro{G-Tasks}{
   \begin{grammar*}
     d::=&                     & Editors \\
@@ -88,6 +107,11 @@
       &   & \Mid& v_1 \Trans t_2 \Mid t_1 \Step v_2    & – transform, step \\
       &   & \Mid& t_1 \Pair t_2 \Mid t_1 \Choose t_2   & – pair, choose \\
       &   & \Mid& \Share b \Mid h_1 \Assign b_2        & – share, assign \\
+  \end{grammar}
+}
+
+\newmacro{G-Normalized-Tasks-compact}{
+  \begin{grammar}
     \heading{Normalised tasks} \\
       & n & ::= & d \Mid \Lift v \Mid \Fail            & – editor, lift, fail \\
       &   & \Mid& v_1 \Trans n_2 \Mid n_1 \Step v_2    & – transform, step \\

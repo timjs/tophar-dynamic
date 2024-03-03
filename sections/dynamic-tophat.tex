@@ -91,8 +91,8 @@ The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
   as shown in the next example.
 \end{example}
 
-\begin{example}[Summarise sold snacks]
-  \label{exm:summarise}
+\begin{example}[Summarize sold snacks]
+  \label{exm:summarize}
   We can write a task that starts our vending machine
   and only steps when the amount of sold snacks is exactly four.
   If that's the case, we show the amount of sold \con{Biscuit}s and \con{Chocolate}s.
@@ -109,6 +109,7 @@ The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
 
 
 \subsection{Semantics}
+\label{sub:dynamic-semantics}
 
 Typing rules of task pools are given in \cref{fig:typing-dynamic}.
 Here we simply state that a task pool results in a list of values of type $\tau$
@@ -123,8 +124,8 @@ if every task in the pool, including the template task, is a \typ{Task} of type 
   \label{fig:typing-dynamic}
 \end{figure}
 
-Additions to the normalization relation of \TOPHAT\ are given in \cref{fig:semantics-dynamic-normalisation}.
-Similar to the way normalization works for parallel-and (as shown in \cref{fig:semantics-normalisation}),
+Additions to the normalization relation of \TOPHAT\ are given in \cref{fig:semantics-dynamic-normalization}.
+Similar to the way normalization works for parallel-and (as shown in \cref{fig:semantics-normalization}),
 normalization of task pools normalizes each task in the pool and then constructs a new pool containing these normalized tasks.
 Note that the template task is not normalized.
 Otherwise, we would create unwanted sharing of editors.
@@ -137,7 +138,7 @@ Otherwise, we would create unwanted sharing of editors.
     \userule{N-Pool} \\
   \end{mathpar}
   \caption{Normalisation rules for task pools}
-  \label{fig:semantics-dynamic-normalisation}
+  \label{fig:semantics-dynamic-normalization}
 \end{figure}
 
 \begin{example}[Wrong! Unwanted sharing when normalizing template tasks]
@@ -161,6 +162,13 @@ Otherwise, we would create unwanted sharing of editors.
   Therefore, we delay normalization of the template task until the moment they are added to the pool.
 \end{example}
 
+Additional handling rules for \DYNTOPHAT\ are presented in \cref{fig:semantics-dynamic-handling}.
+Rule \seerule{H-Init} shows that sending $k\Send\Init$ copies the template task to the pool.
+Rule \seerule{H-Kill$_j$} removes the $j$th task from the pool on the input of $k\Send\Kill j$.
+In both cases, the key $k$ in the input should be equal to the key of the task pool.
+If that is not the case, rule \seerule{H-Pool} passes the input on to all tasks in the pool,
+identical to \seerule{H-Pair} in \cref{fig:semantics-handling}.
+
 \begin{figure}
   \begin{mathpar}
     \boxed{\RelationH} \\
@@ -171,13 +179,6 @@ Otherwise, we would create unwanted sharing of editors.
   \caption{Handling rules for task pools}
   \label{fig:semantics-dynamic-handling}
 \end{figure}
-
-Additional handling rules for \DYNTOPHAT\ are presented in \cref{fig:semantics-dynamic-handling}.
-Rule \seerule{H-Init} shows that sending $k\Send\Init$ copies the template task to the pool.
-Rule \seerule{H-Kill$_j$} removes the $j$th task from the pool on the input of $k\Send\Kill j$.
-In both cases, the key $k$ in the input should be equal to the key of the task pool.
-If that is not the case, rule \seerule{H-Pool} passes the input on to all tasks in the pool,
-identical to \seerule{H-Pair} in \cref{fig:semantics-handling}.
 
 Naturally, we also need to extend our failing, inputs, and value observation to deal with task pools.
 \cref{fig:observations-dynamic} shows these additions.
@@ -205,7 +206,8 @@ we can make a step from a task pool containing partial work.
 \end{figure}
 
 \begin{example}[Partial work in pools]
-  Take the \fun{summarise} task from \cref{exm:summarise}.
+  \label{exm:partial-work}
+  Take the \fun{summarise} task from \cref{exm:summarize}.
   Say we already sold 3 snacks, and two persons are trying to buy another snack.
   Our \fun{machine$_2$} could be in the state
   \begin{TASK}

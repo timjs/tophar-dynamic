@@ -31,10 +31,10 @@ a (fully fixated) task can be in one of five \emph{conditions} which we will sum
     If a task is failing, we can prove that it accepts no more user input and has no value\citeprop{12}.
     That is, $\Inputs(t) = \nothing$ and $\Value(t,\sigma) = \bot$.
     We also know that, if $\Failing(t)$ holds, it stays failing,
-    simply because there is no input that can rewrite $t$ to another $t'$\citeprop{1}.
+    simply because no input can rewrite $t$ to another $t'$\citeprop{1}.
 
   \item[Stuck]
-    A stuck task $t$ is a task which does not fail, does not accept user input, and does not have a value.
+    A stuck task $t$ is a task that does not fail, does not accept user input, and does not have a value.
     That is, $\Failing(t) = \False$, $\Inputs(t) = \nothing$, and $\Value(t,\sigma) = \bot$.
     An example of a stuck task is $\View^k 42 \Step \lambda. \Fail$.
     Similar to failing tasks, stuck tasks will always remain stuck because no more user interaction is possible and, by assumption, it is already fully fixated\citeprop{3}.
@@ -132,7 +132,7 @@ Let us first consider an example.
   $k_1\Send37$ (resulting in $[37]$) or $k_2\Send43$ (resulting in $[42,43]$).
 
   We see that $t$ still has a value,
-  but there are inputs that can change this value.
+  but some inputs can change this value.
   Therefore it is still in the unsteady condition.
   Note, however, that the input space can change:
   because of dynamically spooled or killed tasks it grows or shrinks.
@@ -142,6 +142,7 @@ Let us first consider an example.
 
 
 \subsubsection{Task properties}
+\label{sub:task-properties}
 
 In previous work we proved several properties on tasks \cite{conf/sfp/KlijnsmaS22,Steenvoorden22}:
 \begin{enumerate}
@@ -162,7 +163,7 @@ proving (1), (2a), and (3) is trivial.
 Stepping rules are unaltered, therefore (4) still holds.
 As we have seen in \cref{exm:integer-task-pool},
 task pools are unsteady but the input space can change.
-Therefore (2c) does not hold any more,
+Therefore (2c) does not hold anymore,
 but this is not used in the proofs of the other properties.
 Notably (5) holds by construction and (6) follows from all other properties except (2c).
 
@@ -188,7 +189,7 @@ To do this, we first need to introduce the notion of \emph{stepless tasks}.
 
 \begin{proposition}[Valued tasks are stepless]
   \label{prp:valued-means-stepless}
-  For all well typed normalized tasks $n$ and states $\sigma$,
+  For all well-typed normalized tasks $n$ and states $\sigma$,
   that is $\Gamma,\Sigma \infers n:\Task\tau$ and $\Gamma,\Sigma \infers \sigma$,
   we have that
     if $\Value(n,\sigma) = v$,
@@ -207,14 +208,14 @@ To do this, we first need to introduce the notion of \emph{stepless tasks}.
   \end{itemize}
   Especially, step ($n_1 \Step e_2$) and fail ($\Fail$) are ruled out, because they have no value.
   Choice ($n_1 \Choose n_2$) is ruled out
-  because the only way that this combinator can survive normalisation is for both $n_1$ and $n_2$ to not have a value,
+  because the only way that this combinator can survive normalization is for both $n_1$ and $n_2$ to not have a value,
   but we consider normalized task by assumption.
   Now, by induction, we have that $n$ is stepless and meets the grammar in \cref{fig:stepless-tasks-grammar}.
 \end{proof}
 
 Note that inside task pools we admit normalized subtasks instead of stepless subtasks.
 This is because our value observation ignores subtasks for which $\Value(n_j,\sigma) = \bot$
-and will result in a list of values any way.
+and will result in a list of values anyway.
 
 As stepless tasks do not contain steps ($n_1 \Step e_2$) or choices ($n_1 \Choose n_2$),
 their \emph{outer shape} cannot be altered at runtime.
@@ -225,7 +226,7 @@ Therefore, stepless tasks stay stepless and the value observation will not resul
 
 \begin{corollary}[Stepless tasks stay stepless]
   \label{cor:stepless-stays-stepless}
-  For all well typed normalized tasks $n$ and states $\sigma$,
+  For all well-typed normalized tasks $n$ and states $\sigma$,
   % that is $\Gamma,\Sigma \infers n:\Task\tau$ and $\Gamma,\Sigma \infers \sigma$,
   we have that
     if $n$ is stepless,
