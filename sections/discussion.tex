@@ -3,14 +3,37 @@
 \section{Discussion}
 \label{sec:discussion}
 
-% \subsection{Alternative implementation}
+One could think of multiple alternative implementations of task pools
+by choosing different semantics or by using already existing \TOPHAT\ language constructs.
 
-One could think of an alternative implementation of task pools,
-using already existing \TOPHAT\ language constructs.
-A possible solution could be a shared reference to a list of running tasks,
-and creating custom tasks to remove a task by its index from this list
+\paragraph{Alternative semantics}
+
+\cref{sub:dynamic-semantics} showed our decision for the value observation on task pools to ignore unvalued children.
+Another option would have been to make task pools unvalued when they contain an unvalued child.
+However, we would not be able to specify partial work, as exemplified in \cref{exm:partial-work}.
+Also, our equivalence properties would change.
+\cref{fig:task-conditions} would require an additional arrow from the \emph{unsteady} to the \emph{running} condition,
+as task pools could lose their observed value after adding a new (unvalued) task to the pool.
+Property 2b in \cref{sub:task-properties} would not naturally hold anymore.
+
+In the semantics of \seerule{H-Init} we could have chosen to send values along the init action ($k \Send \Init b$) to parametrize task initialization.
+This could be accomplished by requiring a template \emph{function} $f_0$ instead of a template \emph{task} $t_0$ for each pool.
+Rule \seerule{H-Init} could be extended to dynamically check if the given actual parameters fit the types of the required formal ones,
+similar to the type check of \seerule{H-Enter}.
+However, a similar interaction could be programmed by asking end-users for this information in the first step of template task $t_0$
+without a lot of extra semantics.
+
+Initializing task pools with a fixed size would prohibit symbolic execution from non-termination,
+as there would be a maximum on the number of times the symbolic engine could initialize a new task.
+However, it would not prohibit the symbolic engine from generating infinite input sequences
+where one or more initializations are followed by killing the same or previous tasks.
+
+\paragraph{Utilizing existing TopHat features}
+
+Task pools could be implemented with a shared reference to a list of running tasks,
+and on top of that, creating custom tasks to remove children by their index
 or append the template task to this list.
-Packing these operations together using an infinite loop would seemingly implement task pools:
+Packing these operations together using an infinite loop would seemingly give us a working implementation:
 \begin{TASK}
   let kill = do ts. enter Int >>= do i. remove i ts
   let init = do t. do ts. enter Unit >>= do _. append t ts
@@ -28,9 +51,10 @@ but this would impose severe restrictions on the symbolic execution engine,
 in the same way, non-total functions would do.
 
 The second is that it would require references and editors over the \typ{Task} type constructor.
-Currently, both are restricted to basic types,
+Currently, both are restricted to basic types $\beta$,
 because basic types are trivially displayable, parsable and equatable.
-This last property is used as a basis to reason about task equivalence \cite{conf/sfp/KlijnsmaS22}.
+Because $\beta$ does not include references, tasks, and, most importantly, functions,
+the inductive base cases in the equivalence theory of \citet{conf/sfp/KlijnsmaS22} can suffice with trivial data equality.
 
 This raises the question if tasks are more like basic types, or if they should behave more like functions.
 What would $\Update (\Update 42)$ mean?
@@ -39,6 +63,8 @@ Could they create new tasks at will?
 Or should they pick from a list?
 Is this list predefined or is it populated dynamically during runtime?
 Although \ITASKS\ supports editors on tasks,
-above example cannot be rendered at runtime and the equality on two tasks in \ITASKS\ is always \var{True}.
+the above example cannot be rendered at runtime:
+\ITASKS\ renders is the string "(empty)" in a dashed box.
+The equality on two tasks in \ITASKS\ is always \var{True}.
 
-Therefore, we think explicitly adding task pools to \TOPHAT\ is a better fit for a language which main goal is formal reasoning about task-oriented programs.
+Therefore, we think explicitly adding task pools to \TOPHAT\ is a better fit for a language whose main goal is formal reasoning about task-oriented programs.
