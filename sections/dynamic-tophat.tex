@@ -15,22 +15,24 @@ Let us illustrate this with an example.
   where two buyers can purchase a \typ{Snack} at the same time from a shared inventory.
 
   \begin{TASK}[emph={inventory,payment}]
-    let vend$_1$ : Ref (List Snack) -> Task Snack = do inventory.
-      enter Int >>= do payment.
-      case payment of
-        1 |-> decrease Biscuit inventory >>= do _.
-             view Biscuit
-        2 |-> decrease Chocolate inventory >>= do _.
-             view Chocolate
-        _ |-> fail
+    let vend$_1$ : Ref (List (Snack * Int) -> Task Snack =
+      do inventory.
+        enter Int >>= do payment.
+        case payment of
+          1 |-> decrease Biscuit inventory >>= do _.
+               view Biscuit
+          2 |-> decrease Chocolate inventory >>= do _.
+               view Chocolate
+          _ |-> fail
     let machine$_1$ : Task (Snack * Snack) =
-      share [(Biscuit, 24), (Chocolate, 16)] >>= do inventory.
+      share [{Biscuit, 24}, {Chocolate, 16}] >>= do inventory.
       vend$_1$ inventory <&> vend$_1$ inventory
   \end{TASK}
 
   Here \fun{vend$_1$} is similar to \fun{vend$_0$} from \cref{exm:vending-base},
   but now it takes a shared list with snacks as a parameter.
   \fun{decrease} is a function that decreases the amount of the given snack by one in the shared list of snacks.
+  Note that the inventory could be empty, which means task \fun{decrease} will fail.
   Task \fun{machine$_1$} first creates a shared \var{inventory},
   containing \con{Biscuit}s and \con{Chocolate}s,
   and starts two vending machines with these treats.
@@ -75,7 +77,7 @@ The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
   by using \fun{vend$_1$} as the template task of a pool.
   \begin{TASK}[emph={inventory}]
     let machine$_2$ : Task (List Snack) =
-      share [(Biscuit, 24), (Chocolate, 16)] >>= do inventory.
+      share [{Biscuit, 24}, {Chocolate, 16}] >>= do inventory.
       >&<$_{\fun{vend}_1\,\var{inventory}}$ []
   \end{TASK}
   Note that now, \fun{machine$_2$} returns a \typ{List} of \typ{Snack}s.

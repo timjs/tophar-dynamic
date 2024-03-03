@@ -81,7 +81,7 @@
 \newmacro{G-Tasks-compact}{
   \begin{grammar}
     \heading{Editors} \\
-      & d & ::= & \Enter^{\nu}\beta \Mid  \Update^{\nu} b \Mid  \View^{\nu} b  & – (un)valued, read-only \\
+      & d & ::= & \Enter^{\nu}\beta \Mid  \Update^{\nu} b \Mid  \View^{\nu} b  & – unvalued, valued, read-only \\
       &   & \Mid& \Change^{\nu} h \Mid \Watch^{\nu} h                          & – shared, read-only \\
     \heading{Tasks} \\
       & t & ::= & d \Mid \Lift v \Mid \Fail            & – editor, lift, fail \\

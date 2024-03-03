@@ -44,7 +44,7 @@ However, they cannot be cleared.
 Editors can also be declared as \emph{read-only} ($\View^\nu b$).
 This way they show information to end-users that cannot be changed.
 Editors are tagged by a name $\nu$.
-Names are used to distinguish editors when sending input events (see \cref{sub:inputs} below).
+Names are used to distinguish editors when sending input events (see \cref{sub:inputs} later on).
 Possible states editors can be in are depicted in \cref{fig:editor-state}.
 
 \begin{figure}
@@ -147,12 +147,15 @@ we omit names and keys when they are not relevant to the example.
 \end{figure}
 
 \cref{fig:typing-grammar} shows the grammar of types.
+We use the notation $\overline{x,}$ to denote a sequence of comma separated $x$-productions.
 Typing rules of a selected number of tasks can be found in \cref{fig:typing-rules}.
 Note that editors and references can only contain values of basic types $\beta$.
+Also, environments $\Gamma$ and $\Sigma$ are not touched on the task level,
+they are only used on the level of the host language.
 In particular, editors and references cannot contain functions or tasks themselves.
 The reason for this restriction is twofold.
 First, prohibiting references to functions keeps our host language total.
-% This is necessary for the symbolic execution to not enter an infinite loop.
+Functions should be terminating and have no side effects to aid symbolic execution.
 Second, restricting editors to only contain basic values
 guarantees one can present these values to end-users (print them)
 and receive new inputs from end-users (parse them).
@@ -273,6 +276,8 @@ Next, we describe each of these three observations in more detail.
 \end{figure}
 
 Not just $\Fail$ can fail, tasks with failing subtasks can also fail.
+With failing we mean it is non-sensible to make a step to:
+they do not have a value and no way to produce one.
 For example, the pairing $\Fail \Pair \Fail$ is also a failing task.
 In some way, it is equivalent to $\Fail$.
 To capture what tasks are failing we define the failing observation $\Failing$ in \cref{fig:observation-failing}.
@@ -311,4 +316,7 @@ For this, we introduce the task observation $\Value$.
 Given a task $t:\Task\tau$ and the current state $\sigma$ ,
 this function returns the task's value $v$ of type $\tau$.
 It is also possible that a task's value is undefined, in which case we write $\Value(t,\sigma) = \bot$.
+This is also the case for the step ($\Step$) combinator,
+as determination of this value would require to normalise all following steps and tasks,
+which may need user interaction.
 The definition of $\Value$ is given in \cref{fig:observation-value}.
