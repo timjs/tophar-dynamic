@@ -123,9 +123,9 @@
     {lift}{{$\Lift$}}1
     {enter}{{$\Enter$}}1
     {update}{{$\Update$}}1
-    {view}{{$\View$}}1
+    {view}{{$\square\mkern-10.33mu\circ\mkern+2mu$}}1
     {change}{{$\Change$}}1
-    {watch}{{$\Watch$}}1
+    {watch}{{$\boxplus\mkern-10.33mu\circ\mkern+2mu$}}1
     {fail}{{$\Fail$ }}1
     {forever}{{$\Forever$ }}1
   }
@@ -133,10 +133,9 @@
 \lstnewenvironment{TASK}[1][]
   {\lstset{language=tasks,style=tasks,#1}}
   {}
-\newmacro{TS}[1][1]
-  {\lstinline[language=tasks,style=tasks,#1]}
-\newmacro{includeTASK}[2][]
-  {\lstinputlisting[language=tasks,style=tasks,#1]{#2}}
+\newcommand{\TS}[1]{\lstinline[language=tasks,style=tasks,#1]}
+% \newmacro{includeTASK}[2][]
+%   {\lstinputlisting[language=tasks,style=tasks,#1]{#2}}
 
 
 %% Clean %%

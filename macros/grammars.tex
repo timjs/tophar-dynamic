@@ -1,204 +1,216 @@
 %% Grammars %%
 
-\newmacro{G-Types}{
-  \begin{grammar*}
-    \tau::=&                     & Types \\
-      \mid& \tau_1 \to \tau_2    & – function type \\
-      \mid& \Reference \tau      & – reference type \\
-      \mid& \Task \tau           & – task type \\
-      \mid& \Unit                & – unit type \\
-      \mid& \tau_1 \times \tau_2 & – product type \\
-      \mid& [\many{l,}]          & – enum type \\
-      \mid& \List \tau           & – list type \\
-      \mid& \pi                  & – primitive type \\
-    \pi ::=&                     & Primitive types \\
-      \mid& \Bool                & – boolean type \\
-      \mid& \Int                 & – integer type \\
-      \mid& \String              & – string type \\
-    \beta ::=&                   & Basic types \\
-      \mid& \Unit                & – unit type \\
-      \mid& \beta_1 \times \beta_2 & – product type \\
-      \mid& [\many{l,}]          & – enum type \\
-      \mid& \List \beta          & – list type \\
-      \mid& \pi                  & – primitive type \\
-  \end{grammar*}
-}
+% \newmacro{G-Types}{
+%   \begin{grammar*}
+%     \tau::=&                     & Types \\
+%       \mid& \tau_1 \to \tau_2    & – function type \\
+%       \mid& \Reference \tau      & – reference type \\
+%       \mid& \Task \tau           & – task type \\
+%       \mid& \Unit                & – unit type \\
+%       \mid& \tau_1 \times \tau_2 & – product type \\
+%       \mid& [\many{l,}]          & – enum type \\
+%       \mid& \List \tau           & – list type \\
+%       \mid& \pi                  & – primitive type \\
+%     \pi ::=&                     & Primitive types \\
+%       \mid& \Bool                & – boolean type \\
+%       \mid& \Int                 & – integer type \\
+%       \mid& \String              & – string type \\
+%     \beta ::=&                   & Basic types \\
+%       \mid& \Unit                & – unit type \\
+%       \mid& \beta_1 \times \beta_2 & – product type \\
+%       \mid& [\many{l,}]          & – enum type \\
+%       \mid& \List \beta          & – list type \\
+%       \mid& \pi                  & – primitive type \\
+%   \end{grammar*}
+% }
 
-\newmacro{G-Types-compact}{
-  \begin{grammar}
-    \heading{Types} \\
-      & \tau & ::=& \tau_1 \to \tau_2  & – function \\
-      &      &\Mid& \pi \Mid \Unit \Mid \tau_1 \times \tau_2 & – primitive, unit, product \\
-      &      &\Mid& \List \tau \Mid [\many{l,}]          & – list, enum \\
-      &      &\Mid& \Reference \tau \Mid \Task \tau           & – reference, task \\
-    \heading{Basic types} \\
-      & \beta & ::= & \pi \Mid \Unit \Mid \beta_1 \times \beta_2 & – primitive, unit, product \\
-      &       &\Mid& \List \beta \Mid [\many{l,}]  & – list, enum \\
-    \heading{Primitive types} \\
-      & \pi   & ::=& \Bool \Mid \Int \Mid \String & – bool, int, string \\
-  \end{grammar}
-}
+\newcommand{\GTypescompact}{
+\begin{center}
+ \begin{tabular}{@{}rRCLl}
+     \heading{Types} \\
+       & \tau & ::=& \tau_1 \to \tau_2  & – function \\
+       &      &\Mid& \pi \Mid \Unit \Mid \tau_1 \times \tau_2 & – primitive, unit, product \\
+       &      &\Mid& \List \tau \Mid [\many{l,}]          & – list, enum \\
+       &      &\Mid& \Reference \tau \Mid \Task \tau           & – reference, task \\
+     \heading{Basic types} \\
+       & \beta & ::= & \pi \Mid \Unit \Mid \beta_1 \times \beta_2 & – primitive, unit, product \\
+       &       &\Mid& \List \beta \Mid [\many{l,}]  & – list, enum \\
+     \heading{Primitive types} \\
+       & \pi   & ::=& \Bool \Mid \Int \Mid \String & – bool, int, string \\
+   \end{tabular}
+   \end{center}
+ }
 
-\newmacro{G-Expressions}{
-  \begin{grammar*}
-    e::=&                      & Contexts         \\
-  \addlinespace
-    \mid& \cdot                & – hole             \\
-    \mid& \lambda m:\tau.\ e   & – abstraction      \\
-    \mid& e_1\ e_2             & – application      \\
-    \mid& x                    & – variable         \\
-    \mid& h                    & – heap location    \\
-  \addlinespace
-    \mid& \Ite{e_1}{e_2}{e_3}  & – conditional      \\
-    \mid& \unit                & – unit             \\
-    \mid& \record{e_1, e_2}    & – tuple            \\
-  \addlinespace
-    \mid& c                    & – constant         \\
-    \mid& P                    & – pre-task context \\
-  \end{grammar*}
-}
+% \newmacro{G-Expressions}{
+%   \begin{grammar*}
+%     e::=&                      & Contexts         \\
+%   \addlinespace
+%     \mid& \cdot                & – hole             \\
+%     \mid& \lambda m:\tau.\ e   & – abstraction      \\
+%     \mid& e_1\ e_2             & – application      \\
+%     \mid& x                    & – variable         \\
+%     \mid& h                    & – heap location    \\
+%   \addlinespace
+%     \mid& \Ite{e_1}{e_2}{e_3}  & – conditional      \\
+%     \mid& \unit                & – unit             \\
+%     \mid& \record{e_1, e_2}    & – tuple            \\
+%   \addlinespace
+%     \mid& c                    & – constant         \\
+%     \mid& P                    & – pre-task context \\
+%   \end{grammar*}
+% }
 
-\newmacro{G-Host-compact}{
-  \begin{grammar}
-    \heading{Expressions} \\
-      & e &::= & x \Mid e_1\ e_2                         & – variable, application \\
-      &   &\Mid& \lambda m:\tau.\ e \Mid h \Mid p        & – abstraction, location, pre-task \\
-      &   &\Mid& \Ite{e_1}{e_2}{e_3}                     & – conditional \\
-      &   &\Mid& \unit \Mid \record{e_1, e_2} \Mid c     & – unit, tuple, constant \\
-      &   &\Mid& l \Mid \alist{\ }_\tau \Mid e_1 \Cons e_2 & – label, nil cons \\
-    \heading{Values} \\
-      & v &::= & \lambda m:\tau.\ e \Mid h \Mid t        & – abstraction, location, task \\
-      &   &\Mid& \unit \Mid \record{v_1, v_2} \Mid c     & – unit, tuple, constant \\
-      &   &\Mid& l \Mid \alist{\ }_\tau \Mid v_1 \Cons v_2 & – label, nil cons \\
-    \heading{Basic values} \\
-      & b &::= & \unit \Mid \record{b_1, b_2} \Mid c      & – unit, tuple, constant \\
-      &   &\Mid& l \Mid \alist{\ }_\beta \Mid b_1 \Cons b_2 & – label, nil cons \\
-  \end{grammar}
-}
+% \newmacro{G-Host-compact}{
+%   \begin{grammar}
+%     \heading{Expressions} \\
+%       & e &::= & x \Mid e_1\ e_2                         & – variable, application \\
+%       &   &\Mid& \lambda m:\tau.\ e \Mid h \Mid p        & – abstraction, location, pre-task \\
+%       &   &\Mid& \Ite{e_1}{e_2}{e_3}                     & – conditional \\
+%       &   &\Mid& \unit \Mid \record{e_1, e_2} \Mid c     & – unit, tuple, constant \\
+%       &   &\Mid& l \Mid \alist{\ }_\tau \Mid e_1 \Cons e_2 & – label, nil cons \\
+%     \heading{Values} \\
+%       & v &::= & \lambda m:\tau.\ e \Mid h \Mid t        & – abstraction, location, task \\
+%       &   &\Mid& \unit \Mid \record{v_1, v_2} \Mid c     & – unit, tuple, constant \\
+%       &   &\Mid& l \Mid \alist{\ }_\tau \Mid v_1 \Cons v_2 & – label, nil cons \\
+%     \heading{Basic values} \\
+%       & b &::= & \unit \Mid \record{b_1, b_2} \Mid c      & – unit, tuple, constant \\
+%       &   &\Mid& l \Mid \alist{\ }_\beta \Mid b_1 \Cons b_2 & – label, nil cons \\
+%   \end{grammar}
+% }
 
-\newmacro{G-Tasks}{
-  \begin{grammar*}
-    d::=&                     & Editors \\
-    \mid& \Enter^{\nu}\beta   & – unvalued         editor \\
-    \mid& \Update^{\nu} b     & – valued           editor \\
-    \mid& \View^{\nu} b       & – valued read-only editor \\
-    \mid& \Change^{\nu} h     & – shared           editor \\
-    \mid& \Watch^{\nu} h      & – shared read-only editor \\
-    t::=&                     & Tasks            \\
-    \mid& d                   & – editor           \\
-    \mid& e_1 \Trans t_2      & – transform        \\
-    \mid& t_1 \Pair t_2       & – pair             \\
-    \mid& \Lift v             & – lift             \\
-    \mid& t_1 \Choose t_2     & – choose           \\
-    \mid& \Fail               & – fail             \\
-    \mid& t_1 \Step e_2       & – step             \\
-    \mid& \Share v            & – share            \\
-    \mid& h_1 \Assign v_2     & – assign           \\
-  \end{grammar*}
-}
+% \newmacro{G-Tasks}{
+%   \begin{grammar*}
+%     d::=&                     & Editors \\
+%     \mid& \Enter^{\nu}\beta   & – unvalued         editor \\
+%     \mid& \Update^{\nu} b     & – valued           editor \\
+%     \mid& \View^{\nu} b       & – valued read-only editor \\
+%     \mid& \Change^{\nu} h     & – shared           editor \\
+%     \mid& \Watch^{\nu} h      & – shared read-only editor \\
+%     t::=&                     & Tasks            \\
+%     \mid& d                   & – editor           \\
+%     \mid& e_1 \Trans t_2      & – transform        \\
+%     \mid& t_1 \Pair t_2       & – pair             \\
+%     \mid& \Lift v             & – lift             \\
+%     \mid& t_1 \Choose t_2     & – choose           \\
+%     \mid& \Fail               & – fail             \\
+%     \mid& t_1 \Step e_2       & – step             \\
+%     \mid& \Share v            & – share            \\
+%     \mid& h_1 \Assign v_2     & – assign           \\
+%   \end{grammar*}
+% }
 
-\newmacro{G-Tasks-compact}{
-  \begin{grammar}
+\newcommand{\GTaskscompact}{
+\begin{center}
+ \begin{tabular}{@{}rRCLl}
     \heading{Editors} \\
-      & d & ::= & \Enter^{\nu}\beta \Mid  \Update^{\nu} b \Mid  \View^{\nu} b  & – unvalued, valued, read-only \\
-      &   & \Mid& \Change^{\nu} h \Mid \Watch^{\nu} h                          & – shared, read-only \\
+      & d & ::= & \Enter^{\nu}\beta \Mid  \Update^{\nu} b \Mid  \View^{\nu} b  & - unvalued, valued, read-only \\
+      &   & \Mid& \Change^{\nu} h \Mid \Watch^{\nu} h                          & - shared, read-only \\
     \heading{Tasks} \\
       & t & ::= & d \Mid \Lift v \Mid \Fail            & – editor, lift, fail \\
       &   & \Mid& v_1 \Trans t_2 \Mid t_1 \Step v_2    & – transform, step \\
       &   & \Mid& t_1 \Pair t_2 \Mid t_1 \Choose t_2   & – pair, choose \\
       &   & \Mid& \Share b \Mid h_1 \Assign b_2        & – share, assign \\
-  \end{grammar}
+ \end{tabular}
+    \end{center}
 }
 
-\newmacro{G-Normalized-Tasks-compact}{
-  \begin{grammar}
-    \heading{Normalised tasks} \\
-      & n & ::= & d \Mid \Lift v \Mid \Fail            & – editor, lift, fail \\
-      &   & \Mid& v_1 \Trans n_2 \Mid n_1 \Step v_2    & – transform, step \\
-      &   & \Mid& n_1 \Pair n_2 \Mid n_1 \Choose n_2   & – pair, choose \\
-  \end{grammar}
-}
+\newcommand{\GNormalizedTaskscompact}{
+\begin{center}
+    \begin{tabular}{@{}rRCLl}
+     \heading{Normalised tasks} \\
+       & n & ::= & d \Mid \Lift v \Mid \Fail            & – editor, lift, fail \\
+       &   & \Mid& v_1 \Trans n_2 \Mid n_1 \Step v_2    & – transform, step \\
+       &   & \Mid& n_1 \Pair n_2 \Mid n_1 \Choose n_2   & – pair, choose \\
+   \end{tabular}
+      \end{center}
+ }
 
-\newmacro{G-Inputs-compact}{
-  \begin{grammar}
-    \heading{Names}\\
-      & \nu   & ::=& \epsilon \Mid k & – empty, keyed \\
-    \heading{Inputs}\\
-      & \iota & ::=& k\Send\alpha    & – send action \\
-    \heading{Actions}\\
-      & \alpha& ::=& b \Mid l        & – basic value, label\\
-      % &       &\mid& l               & – continue with label \\
-  \end{grammar}
-}
+\newcommand{\GInputscompact}{
+\begin{center}
+ \begin{tabular}{@{}rRCLl}
+     \heading{Names}\\
+       & \nu   & ::=& \epsilon \Mid k & – empty, keyed \\
+     \heading{Inputs}\\
+       & \iota & ::=& k\,\Send\,\alpha    & – send action \\
+     \heading{Actions}\\
+       & \alpha& ::=& b \Mid l        & – basic value, label\\
+       % &       &\mid& l               & – continue with label \\
+ \end{tabular}
+    \end{center}
+ }
 
-\newmacro{G-Inputs}{
-  \begin{grammar*}
-    \nu::=&          & Names \\
-      \mid& \epsilon & – empty \\
-      \mid& k        & – keyed \\
-    \iota::=&        & Inputs \\
-      \mid& k!\alpha & – send \\
-    \alpha::=&       & Actions \\
-      \mid& b        & – basic value \\
-      \mid& l        & – label \\
-      % &       &\mid& l               & – continue with label \\
-  \end{grammar*}
-}
+% \newmacro{G-Inputs}{
+%   \begin{grammar*}
+%     \nu::=&          & Names \\
+%       \mid& \epsilon & – empty \\
+%       \mid& k        & – keyed \\
+%     \iota::=&        & Inputs \\
+%       \mid& k!\alpha & – send \\
+%     \alpha::=&       & Actions \\
+%       \mid& b        & – basic value \\
+%       \mid& l        & – label \\
+%       % &       &\mid& l               & – continue with label \\
+%   \end{grammar*}
+% }
 
-\newmacro{G-Task-contexts}{
-  \begin{grammar*}
-    P::=&                     & Pre-task contexts\\
-  \addlinespace
-    \mid& \Enter^{\nu}\beta   & – unvalued         editor \\
-    \mid& \Update^{\nu} E     & – valued           editor \\
-    \mid& \Change^{\nu} E     & – shared           editor \\
-    \mid& \View^{\nu} E       & – valued read-only editor \\
-    \mid& \Watch^{\nu} E      & – shared read-only editor \\
-  \addlinespace
-    \mid& E_1 \Trans E_2      & – transform        \\
-    \mid& E_1 \Pair E_2       & – pair             \\
-    \mid& \Lift E             & – lift             \\
-    \mid& E_1 \Choose E_2     & – choose           \\
-    \mid& \Fail               & – fail             \\
-    \mid& E_1 \Step E_2       & – step             \\
-  \addlinespace
-    \mid& \Share E            & – share            \\
-    \mid& E_1 \Assign E_2     & – assign           \\
-  \end{grammar*}
-}
+% \newmacro{G-Task-contexts}{
+%   \begin{grammar*}
+%     P::=&                     & Pre-task contexts\\
+%   \addlinespace
+%     \mid& \Enter^{\nu}\beta   & – unvalued         editor \\
+%     \mid& \Update^{\nu} E     & – valued           editor \\
+%     \mid& \Change^{\nu} E     & – shared           editor \\
+%     \mid& \View^{\nu} E       & – valued read-only editor \\
+%     \mid& \Watch^{\nu} E      & – shared read-only editor \\
+%   \addlinespace
+%     \mid& E_1 \Trans E_2      & – transform        \\
+%     \mid& E_1 \Pair E_2       & – pair             \\
+%     \mid& \Lift E             & – lift             \\
+%     \mid& E_1 \Choose E_2     & – choose           \\
+%     \mid& \Fail               & – fail             \\
+%     \mid& E_1 \Step E_2       & – step             \\
+%   \addlinespace
+%     \mid& \Share E            & – share            \\
+%     \mid& E_1 \Assign E_2     & – assign           \\
+%   \end{grammar*}
+% }
 
-\newmacro{G-Dynamic-extensions}{
-  \begin{grammar}
-    \heading{Tasks} \\
-      & t &::=& \ldots \Mid \Pool^\nu_{t_0} [\many{t}] & – pool \\
-    \heading{Normalised tasks} \\
-      & n &::=& \ldots \Mid \Pool^k_{t_0} [\many{n}] & – pool \\
-    \heading{Actions} \\
-      &\alpha&::=& \ldots \Mid \Init \Mid \Kill j & – init, kill \\
-  \end{grammar}
-}
+\newcommand{\GDynamicextensions}{
+\begin{center}
+ \begin{tabular}{@{}rRCLl}
+     \heading{Tasks} \\
+       & t &::=& \ldots \Mid \PoolText^\nu_{t_0} [\many{t}] & – pool \\
+     \heading{Normalised tasks} \\
+       & n &::=& \ldots \Mid \PoolText^k_{t_0} [\many{n}] & – pool \\
+     \heading{Actions} \\
+       &\alpha&::=& \ldots \Mid \Init \Mid \Kill j & – init, kill \\
+   \end{tabular}
+      \end{center}
+ }
 
-\newmacro{G-Stepless-Tasks}{
-  \begin{grammar*}
-      s::=&                          & Static tasks     \\
-    \addlinespace
-      \mid& \Update^k b              & – valued           editor \\
-      \mid& \Change^k h              & – shared           editor \\
-      \mid& \View^k b                & – valued read-only editor \\
-      \mid& \Watch^k h               & – shared read-only editor \\
-    \addlinespace
-      \mid& v_1 \Trans s_2           & – transform        \\
-      \mid& s_1 \Pair s_2            & – pair             \\
-      \mid& \Lift v                  & – lift             \\
-      \mid& \Pool^k_{t_0} [\many{s}] & – pool \\
-  \end{grammar*}
-}
+% \newmacro{G-Stepless-Tasks}{
+%   \begin{grammar*}
+%       s::=&                          & Static tasks     \\
+%     \addlinespace
+%       \mid& \Update^k b              & – valued           editor \\
+%       \mid& \Change^k h              & – shared           editor \\
+%       \mid& \View^k b                & – valued read-only editor \\
+%       \mid& \Watch^k h               & – shared read-only editor \\
+%     \addlinespace
+%       \mid& v_1 \Trans s_2           & – transform        \\
+%       \mid& s_1 \Pair s_2            & – pair             \\
+%       \mid& \Lift v                  & – lift             \\
+%       \mid& \Pool^k_{t_0} [\many{s}] & – pool \\
+%   \end{grammar*}
+% }
 
-\newmacro{G-Stepless-Tasks-compact}{
-  \begin{grammar}
-    \heading{Stepless tasks} \\
-      &s&::=& \Update^k b \Mid \Change^k h \Mid \View^k b \Mid \Watch^k h & – editors \\
-      &&\Mid& v_1 \Trans s_2 \Mid s_1 \Pair s_2 \Mid \Lift v & – tasks \\
-      &&\Mid& \Pool^k_{t_0} [\many{n}] & – pools \\
-  \end{grammar}
-}
+\newcommand{\GSteplessTaskscompact}{
+\begin{center}
+ \begin{tabular}{@{}rRCLl}
+     \heading{Stepless tasks} \\
+       &s&::=& \Update^k b \Mid \Change^k h \Mid \View^k b \Mid \Watch^k h & – editors \\
+       &&\Mid& v_1 \Trans s_2 \Mid s_1 \Pair s_2 \Mid \Lift v & – tasks \\
+       &&\Mid& \PoolText^k_{t_0} [\many{n}] & – pools \\
+   \end{tabular}
+      \end{center}
+ }

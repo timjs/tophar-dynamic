@@ -12,7 +12,7 @@ We describe the \TOPHAT\ language as presented in \citet{Steenvoorden22}.
 This slightly deviates from presentations in earlier work \cite{conf/ppdp/SteenvoordenNK19,conf/ifl/NausSK19,conf/sfp/NausS20}.
 
 \begin{figure}[b]
-  \usemacro{G-Tasks-compact}
+  \GTaskscompact
   \caption{Task grammar}
   \label{fig:task-grammar}
 \end{figure}
@@ -62,7 +62,7 @@ Shared editors $\Change^\nu h$ watch over heap locations $h$,
 similar to \ML-style references.
 Changing the value of shared editors changes the value in the heap location.
 Multiple shared editors can watch the same heap location.
-As plain editors, shared editors can also be read-only ($\Watch^\nu h$),
+As plain editors, shared editors can also be read-only ($\WatchText^\nu h$),
 which means their displayed value will only change when the referenced heap location changes,
 but end-users cannot send values to update the heap location.
 
@@ -128,13 +128,13 @@ They are the only way users can interact with the system.
 Initially, editors are unnamed ($\epsilon$).
 After the system prepared them for user interaction, a process we call normalisation,
 each editor is keyed with a \emph{unique} key $k$.
-Sending the input $k \Send b$ to the system will change the value inside the editor with key $k$ to hold value $b$.
+Sending the input $k\,\Send\,b$ to the system will change the value inside the editor with key $k$ to hold value $b$.
 \cref{fig:input-grammar} contains the grammar of inputs and actions accepted by a \TOPHAT\ system.
 In the remaining part of this article,
 we omit names and keys when they are not relevant to the example.
 
 \begin{figure}
-  \usemacro{G-Inputs-compact}
+  \GInputscompact
   \caption{Input grammar}
   \label{fig:input-grammar}
 \end{figure}
@@ -154,7 +154,7 @@ they are only used on the level of the host language.
 
 \begin{figure}
   \centering
-  \usemacro{G-Types-compact}
+  \GTypescompact
   \caption{Typing grammar}
   \label{fig:typing-grammar}
 \end{figure}
@@ -174,17 +174,17 @@ Arbitrary tasks and functions do not have this property.
   \begin{mathpar}
     \boxed{\RelationT}    \\
     % \userule{T-Enter}     \quad
-    \userule{T-Update}    \quad
-    \userule{T-Share}     \\
+    \TUpdate   \quad
+    \TShare     \\
     % \userule{T-View}      \\
     % \userule{T-Change}    \quad
     % \userule{T-Watch}     \\
     % \userule{T-Trans}     \\
-    \userule{T-Pair}      \quad
+    \TPair     \quad
     % \userule{T-Lift}      \\
     % \userule{T-Choose}    \quad
-    \userule{T-Fail}      \\
-    \userule{T-Step}      \\
+    \TFail     \\
+    \TStep      \\
     % \userule{T-Assign}
   \end{mathpar}
   \caption{Selected typing rules}
@@ -198,7 +198,7 @@ Arbitrary tasks and functions do not have this property.
 Each contains one or two semantic relations, as depicted in \cref{fig:semantic-layers}.
 
 \begin{figure}
-  \usemacro{P-Semantic-Layers}
+  \PSemanticLayers
   \caption{Semantic functions and their relation
     (read $x \bullet\!\!\raisebox{-0.1ex}{\mbox{–}}\ y$ as `$x$ makes use of $y$')}
   \label{fig:semantic-layers}
@@ -228,16 +228,16 @@ Their grammar can be found in \cref{fig:normalized-task-grammar}.
 \begin{figure}
   \begin{mathpar}
     \boxed{\RelationN} \\
-    \userule{N-Assign} \Quad
-    \userule{N-Name} \\
-    \userule{N-Pair} \\
+    \NAssign \Quad
+    \NName \\ \\
+    \NPair \\ \\
   \end{mathpar}
   \caption{Selected normalisation rules}
   \label{fig:semantics-normalization}
 \end{figure}
 
 \begin{figure}
-  \usemacro{G-Normalized-Tasks-compact}
+  \GNormalizedTaskscompact
   \caption{Normalized task grammar}
   \label{fig:normalized-task-grammar}
 \end{figure}
@@ -255,8 +255,8 @@ and the set of dirty references is calculated by taking the union of the generat
 \begin{figure}
   \begin{mathpar}
     \boxed{\RelationH} \\
-    \userule{H-Enter} \\
-    \userule{H-Pair} \\
+    \HEnter \\
+    \HPair \\
   \end{mathpar}
   \caption{Selected handling rules}
   \label{fig:semantics-handling}
@@ -288,7 +288,7 @@ and the value of a task ($\Value$).
 Next, we describe each of these three observations in more detail.
 
 \begin{figure}
-  \usemacro{O-Failing}
+  \OFailing
   \caption{Failing observation}
   \label{fig:observation-failing}
 \end{figure}
@@ -307,7 +307,7 @@ then $\Fail \Pair t$ can still interact with end-users if $t$ can.
 Therefore the whole task should not fail if only one side fails.
 
 \begin{figure}
-  \usemacro{O-Inputs}
+  \OInputs
   \caption{Inputs observation}
   \label{fig:observation-inputs}
 \end{figure}
@@ -324,7 +324,7 @@ For all other tasks, $\Inputs$ returns the empty set.
 $\Inputs$ is only defined on normalized tasks, as those tasks are ready to receive user input.
 
 \begin{figure}
-  \usemacro{O-Value}
+  \OValue
   \caption{Value observation}
   \label{fig:observation-value}
 \end{figure}

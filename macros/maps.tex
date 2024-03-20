@@ -1,8 +1,8 @@
 
-%% Observations %%
+% %% Observations %%
 
-\newmacro{O-Value}{
-  \begin{function}
+\newcommand{\OValue}{
+\begin{tabular}{@{}L@{\ \ }C@{\ \ }L@{}}
     \signature{\Value : \mathrm{Normalised\ task} \times \mathrm{State} \rightharpoonup \mathrm{Value}} \\
   \addlinespace
     \Value(\Enter^k \beta, \sigma)                     &=& \bot \\
@@ -35,123 +35,123 @@
         \obox{\tuple{v_1, v_2}}{\bot}                  & \otherwise \\
       \end{array}
     \right. \\
-  \end{function}
+  \end{tabular}
 }
 
-\newmacro{O-Value-A}{
-  \begin{function}
-    \signature{\Value : \mathrm{Normalised\ task} \times \mathrm{State} \rightharpoonup \mathrm{Value}} \\
-  \addlinespace
-    \Value(\Enter^k \beta, \sigma)                     &=& \bot \\
-    \Value(\Update^k b, \sigma)                        &=& b \\
-    \Value(\View^k b, \sigma)                          &=& b \\
-    \Value(\Change^k h, \sigma)                        &=& \sigma(h) \\
-    \Value(\Watch^k h, \sigma)                         &=& \sigma(h) \\
-  \addlinespace
-    \Value(\Lift v, \sigma)                            &=& v \\
-    \Value(\Fail, \sigma)                              &=& \bot \\
-  \end{function}
-}
-\newmacro{O-Value-B}{
-  \begin{function}
-    \\
-  \addlinespace
-    \Value(t_1 \Step e_2, \sigma)                      &=& \bot \\
-    \Value(e_1 \Trans t_2, \sigma)                     &=& \left\{
-      \begin{array}{ll}
-        v_2'                                           & \ \when\ \Value(t_2,\sigma) = v_2 \land e_1\ v_2 \evaluate v_2' \\
-        \obox{\tuple{v_1, v_2}}{\bot}                  & \ \otherwise \\
-      \end{array}
-    \right. \\
-  \addlinespace
-    \Value(t_1 \Pair t_2, \sigma)                      &=& \left\{
-      \begin{array}{ll}
-        \tuple{v_1, v_2}                               & \ \when\ \Value(t_1, \sigma) = v_1 \land \Value(t_2, \sigma) = v_2 \\
-        \bot                                           & \ \otherwise \\
-      \end{array}
-    \right. \\
-    \Value(t_1 \Choose t_2, \sigma)                    &=& \left\{
-      \begin{array}{ll}
-        v_1                                            & \ \when\ \Value(t_1, \sigma) = v_1 \\
-        v_2                                            & \ \when\ \Value(t_1, \sigma) = \bot \land \Value(t_2, \sigma) = v_2 \\
-        \obox{\tuple{v_1, v_2}}{\bot}                  & \ \otherwise \\
-      \end{array}
-    \right. \\
-  \end{function}
-}
+% \newmacro{O-Value-A}{
+%   \begin{tabular}{@{}L@{\ \ }C@{\ \ }L@{}}
+%     \signature{\Value : \mathrm{Normalised\ task} \times \mathrm{State} \rightharpoonup \mathrm{Value}} \\
+%   \addlinespace
+%     \Value(\Enter^k \beta, \sigma)                     &=& \bot \\
+%     \Value(\Update^k b, \sigma)                        &=& b \\
+%     \Value(\View^k b, \sigma)                          &=& b \\
+%     \Value(\Change^k h, \sigma)                        &=& \sigma(h) \\
+%     \Value(\Watch^k h, \sigma)                         &=& \sigma(h) \\
+%   \addlinespace
+%     \Value(\Lift v, \sigma)                            &=& v \\
+%     \Value(\Fail, \sigma)                              &=& \bot \\
+%   \end{function}
+% }
+% \newmacro{O-Value-B}{
+%   \begin{tabular}{@{}L@{\ \ }C@{\ \ }L@{}}
+%     \\
+%   \addlinespace
+%     \Value(t_1 \Step e_2, \sigma)                      &=& \bot \\
+%     \Value(e_1 \Trans t_2, \sigma)                     &=& \left\{
+%       \begin{array}{ll}
+%         v_2'                                           & \ \when\ \Value(t_2,\sigma) = v_2 \land e_1\ v_2 \evaluate v_2' \\
+%         \obox{\tuple{v_1, v_2}}{\bot}                  & \ \otherwise \\
+%       \end{array}
+%     \right. \\
+%   \addlinespace
+%     \Value(t_1 \Pair t_2, \sigma)                      &=& \left\{
+%       \begin{array}{ll}
+%         \tuple{v_1, v_2}                               & \ \when\ \Value(t_1, \sigma) = v_1 \land \Value(t_2, \sigma) = v_2 \\
+%         \bot                                           & \ \otherwise \\
+%       \end{array}
+%     \right. \\
+%     \Value(t_1 \Choose t_2, \sigma)                    &=& \left\{
+%       \begin{array}{ll}
+%         v_1                                            & \ \when\ \Value(t_1, \sigma) = v_1 \\
+%         v_2                                            & \ \when\ \Value(t_1, \sigma) = \bot \land \Value(t_2, \sigma) = v_2 \\
+%         \obox{\tuple{v_1, v_2}}{\bot}                  & \ \otherwise \\
+%       \end{array}
+%     \right. \\
+%   \end{function}
+% }
 
-\newmacro{O-Failing}{
-  \begin{function}
-    \signature{\Failing : \mathrm{Task} \to \mathrm{Boolean}} \\
-  \addlinespace
-    \Failing(\Fail)                              &=& \True \\
-  \addlinespace
-    \Failing(e_1 \Trans t_2)                     &=& \Failing(t_2) \\
-    \Failing(t_1 \Step e_2)                      &=& \Failing(t_1) \\
-    \Failing(t_1 \Pair t_2)                      &=& \Failing(t_1) \land \Failing(t_2) \\
-    \Failing(t_1 \Choose t_2)                    &=& \Failing(t_1) \land \Failing(t_2) \\
-  \addlinespace
-    \Failing(\_)                                 &=& \False \\
-  \end{function}
-}
-
-\newmacro{O-Inputs}{
-  \begin{function}
-    \signature{\Inputs : \mathrm{Normalised\ task} \to \powerset{\mathrm{Input}}} \\
-  \addlinespace
-    \Inputs(\Enter^k \beta)                      &=& \set{k!b' \mid b':\beta} \\
-    \Inputs(\Update^k b)                         &=& \set{k!b' \mid b':\beta} \quad\where\ \Update b : \Task\beta \\
-    % \Inputs(\View b)                           &=& \nothing
-    \Inputs(\Change^k h)                         &=& \set{k!b' \mid b':\beta} \quad\where\ \Change l : \Task\beta \\
-    % \Inputs(\Watch h)                          &=& \nothing
-  \addlinespace
-    \Inputs(e_1 \Trans t_2)                    &=& \Inputs(t_2) \\
-    \Inputs(t_1 \Step e_2)                     &=& \Inputs(t_1) \\
-    \Inputs(t_1 \Pair t_2)                     &=& \Inputs(t_1) \cup \Inputs(t_2) \\
-    \Inputs(t_1 \Choose t_2)                   &=& \Inputs(t_1) \cup \Inputs(t_2) \\
-  \addlinespace
-    \Inputs(\_)                                &=& \nothing \\
-  \end{function}
+\newcommand{\OFailing}{
+\begin{tabular}{@{}L@{\ \ }C@{\ \ }L@{}}
+     \signature{\Failing : \mathrm{Task} \to \mathrm{Boolean}} \\
+   \addlinespace
+     \Failing(\Fail)                              &=& \True \\
+   \addlinespace
+     \Failing(e_1 \Trans t_2)                     &=& \Failing(t_2) \\
+     \Failing(t_1 \Step e_2)                      &=& \Failing(t_1) \\
+     \Failing(t_1 \Pair t_2)                      &=& \Failing(t_1) \land \Failing(t_2) \\
+     \Failing(t_1 \Choose t_2)                    &=& \Failing(t_1) \land \Failing(t_2) \\
+   \addlinespace
+     \Failing(\_)                                 &=& \False \\
+   \end{tabular}
 }
 
-\newmacro{O-Dynamic}{
-  \begin{function}
-    \signature{\Failing : \mathrm{Task} \to \mathrm{Boolean}} \\
-    \Failing(\Pool^\nu_{t_0}[\many{t}])
-      &=& \False \\
-  \addlinespace
-    \signature{\Inputs : \mathrm{Normalised\ task} \to \powerset{\mathrm{Input}}} \\
-    \Inputs(\Pool^k_{t_0}[\many{n}])
-      &=&  \set{\iota \Mid \iota\in\Inputs(n_j) \quad n_j \in \many{n}} \\
-      & &  \cup\:\set{k \Send \Init} \cup \set{k \Send \Kill j \Mid j \in 1\upto\#\many{n}} \\
-  \addlinespace
-    \signature{\Value : \mathrm{Normalised\ task} \times \mathrm{State} \rightharpoonup \mathrm{Value}} \\
-    \Value(\Pool^k_{t_0}[\many{n}], \sigma)
-      &=& \alist{v \Mid \Value(n_j,\sigma) = v \quad n_j\in\many{n}}
-      % &=& \left\{
-      %   \begin{array}{l}
-      %     \alist{v \Mid \Value(n_j, \sigma) = v \neq\bot \quad n_j \in \many{n}} \\
-      %     \bot \quad \otherwise \\
-      %   \end{array}
-      %   \right.
-  % \addlinespace
-  %   \signature{\Watching : \mathrm{Normalised\ task} \to \powerset{\mathrm{Heap\ location}}} \\
-  %   \Watching(\Pool^k_{t_0}[\many{n}]) &=& \bigcup_{n_i\in\many{n}} \Watching(n_i) \\
-  \end{function}
-}
+\newcommand{\OInputs}{
+   \begin{tabular}{@{}L@{\ \ }C@{\ \ }L@{}}
+     \signature{\Inputs : \mathrm{Normalised\ task} \to \powerset{\mathrm{Input}}} \\
+   \addlinespace
+     \Inputs(\Enter^k \beta)                      &=& \set{k!b' \mid b':\beta} \\
+     \Inputs(\Update^k b)                         &=& \set{k!b' \mid b':\beta} \quad\where\ \Update b : \Task\beta \\
+     % \Inputs(\View b)                           &=& \nothing
+     \Inputs(\Change^k h)                         &=& \set{k!b' \mid b':\beta} \quad\where\ \Change l : \Task\beta \\
+     % \Inputs(\Watch h)                          &=& \nothing
+   \addlinespace
+     \Inputs(e_1 \Trans t_2)                    &=& \Inputs(t_2) \\
+     \Inputs(t_1 \Step e_2)                     &=& \Inputs(t_1) \\
+     \Inputs(t_1 \Pair t_2)                     &=& \Inputs(t_1) \cup \Inputs(t_2) \\
+     \Inputs(t_1 \Choose t_2)                   &=& \Inputs(t_1) \cup \Inputs(t_2) \\
+   \addlinespace
+     \Inputs(\_)                                &=& \nothing \\
+  \end{tabular}
+ }
 
-\newmacro{O-Hints}{
-  \begin{function}
-    \signature{         \Hints_0 : \mathrm{Normalised\ task} \times \mathrm{State} \times (\mathrm{Value} \to \mathrm{Path\ condition})} \\
-    \signature{\phantom{\Hints_0 :} \to \powerset{\mathrm{Inputs} \times \mathrm{Path\ conditions}}} \\
+\newcommand{\ODynamic}{
+   \begin{tabular}{@{}L@{\ \ }C@{\ \ }L@{}}
+     \signature{\Failing : \mathrm{Task} \to \mathrm{Boolean}} \\
+     \Failing(\PoolText^\nu_{t_0}[\many{t}])
+       &=& \False \\
+   \addlinespace
+     \signature{\Inputs : \mathrm{Normalised\ task} \to \powerset{\mathrm{Input}}} \\
+     \Inputs(\PoolText^k_{t_0}[\many{n}])
+       &=&  \set{\iota \Mid \iota\in\Inputs(n_j) \quad n_j \in \many{n}} \\
+       & &  \cup\:\set{k \Send \Init} \cup \set{k \Send \Kill j \Mid j \in 1\upto\#\many{n}} \\
+   \addlinespace
+     \signature{\Value : \mathrm{Normalised\ task} \times \mathrm{State} \rightharpoonup \mathrm{Value}} \\
+     \Value(\PoolText^k_{t_0}[\many{n}], \sigma)
+       &=& \alist{v \Mid \Value(n_j,\sigma) = v \quad n_j\in\many{n}}
+       % &=& \left\{
+       %   \begin{array}{l}
+       %     \alist{v \Mid \Value(n_j, \sigma) = v \neq\bot \quad n_j \in \many{n}} \\
+       %     \bot \quad \otherwise \\
+       %   \end{array}
+       %   \right.
+   % \addlinespace
+   %   \signature{\Watching : \mathrm{Normalised\ task} \to \powerset{\mathrm{Heap\ location}}} \\
+   %   \Watching(\PoolText^k_{t_0}[\many{n}]) &=& \bigcup_{n_i\in\many{n}} \Watching(n_i) \\
+   \end{tabular}
+ }
 
-    \Hints_0(n, \sigma, \psi) &=& \big\{\uad (\tilde{\iota}, \Psi) \uad\big|\uad n, \sigma \simulate{\tilde{\iota} \cdot \tilde{I}} \tilde{v}|_\Phi \quad \Sat(\Psi) \uad\big\} \\
-                            & & \where\ \Psi = \Phi \land \psi(\tilde{v}) \\
-  \end{function}
-}
+\newcommand{\OHints}{
+   \begin{tabular}{@{}L@{\ \ }C@{\ \ }L@{}}
+     \signature{         \Hints_0 : \mathrm{Normalised\ task} \times \mathrm{State} \times (\mathrm{Value} \to \mathrm{Path\ condition})} \\
+     \signature{\phantom{\Hints_0 :} \to \powerset{\mathrm{Inputs} \times \mathrm{Path\ conditions}}} \\
 
-\newmacro{O-Generate}{
-  \begin{function}
+     \Hints_0(n, \sigma, \psi) &=& \big\{\uad (\tilde{\iota}, \Psi) \uad\big|\uad n, \sigma \simulate{\tilde{\iota} \cdot \tilde{I}} \tilde{v}|_\Phi \quad \Sat(\Psi) \uad\big\} \\
+                             & & \where\ \Psi = \Phi \land \psi(\tilde{v}) \\
+   \end{tabular}
+ }
+
+\newcommand{\OGenerate}{
+   \begin{tabular}{@{}L@{\ \ }C@{\ \ }L@{}}
     \signature{\Hints_1 : \mathrm{Normalised\ task} \times \mathrm{State} \times (\mathrm{Value} \to \mathrm{Path\ condition}) \to \powerset{\mathrm{Inputs} \times \mathrm{Path\ conditions}}} \\
     \Hints_1(n, \sigma, \psi) &=& \Generate(\big\{(n,\sigma,\epsilon,\True)\big\}, \psi) \\
     \addlinespace
@@ -163,7 +163,7 @@
             (n',\sigma',\tilde{\iota}'\cdot\tilde{I}, \phi\land\phi') \uad
             \big| \uad
             ts \ni (n,\sigma,\tilde{I},\phi) \quad
-            n,\sigma\syminteract{\tilde{\iota}'}n'|_{\phi'},\sigma' \quad
+            n,\sigma\ \ \syminteract{\tilde{\iota}'}\ \ n'|_{\phi'},\sigma' \quad
             \Sat(\phi\land\phi') \uad
         \big\},\; \psi)
         & \ \when\ hs = \nothing \\
@@ -179,5 +179,5 @@
          \big\} \\
        \Psi &= \phi \land \psi(\tilde{v})
      \end{array}
-  \end{function}
+  \end{tabular}
 }

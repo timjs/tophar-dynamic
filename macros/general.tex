@@ -11,52 +11,48 @@
 
 %% Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newmacro{separate}
-  {\medskip\noindent}
+% \newmacro{separate}
+%   {\medskip\noindent}
 
-\providemacro{marginnote}
-  {\marginpar}
-\providemacro{smallcaps}
-  {\textsc}
-\providemacro{marginwidth}
-  {\marginparwidth}
+% \providemacro{marginnote}
+%   {\marginpar}
+% \providemacro{smallcaps}
+%   {\textsc}
+% \providemacro{marginwidth}
+%   {\marginparwidth}
 
-\newmacro{alert}[1]
-  {\textbf{#1}}
-\newmacro{divert}[1]
-  {\textcolor{gray}{#1}}
-\newmacro{enquote}[1]
-  {``#1''}
-\newmacro{fixme}[1]
-  {\colorbox{yellow}{#1}\marginnote{\colorbox{yellow}{$\star$}}}
-\newmacro{todo}[1]
-  % {\textcolor{red}{$\star$}\marginnote{\textcolor{red}{#1}}}
-  {\marginnote{\textcolor{red}{$\star$}}\textcolor{red}{#1}}
-  % {}
-\newmacro{TODO}
-  {TODO}
-\newmacro{type}[1]
-  {\texttt{#1}}
+\newcommand{\alert}[1]{\textbf{#1}}
+\newcommand{\divert}[1]{\textcolor{gray}{#1}}
+\newcommand{\enquote}[1]{``#1''}
+% \newmacro{fixme}[1]
+%   {\colorbox{yellow}{#1}\marginnote{\colorbox{yellow}{$\star$}}}
+% \newmacro{todo}[1]
+%   % {\textcolor{red}{$\star$}\marginnote{\textcolor{red}{#1}}}
+%   {\marginnote{\textcolor{red}{$\star$}}\textcolor{red}{#1}}
+%   % {}
+% \newmacro{TODO}
+%   {TODO}
+\newcommand{\type}[1]{\texttt{#1}}
 
-\newmacro{add}[1]
-  {\textcolor{green}{#1}}
-\newmacro{remove}[1]
-  {\textcolor{red}{#1}}
-\newmacro{change}[1]
-  {\textcolor{orange}{#1}}
-\newmacro{adjust}[2]
-  {\remove{#1} \add{#2}}
+% \newmacro{add}[1]
+%   {\textcolor{green}{#1}}
+% \newmacro{remove}[1]
+%   {\textcolor{red}{#1}}
+% \newmacro{change}[1]
+%   {\textcolor{orange}{#1}}
+% \newmacro{adjust}[2]
+%   {\remove{#1} \add{#2}}
 
-\newenvironment{fadeout}
-  {\color{gray}}
-  {}
-\newenvironment{emphasize}
-  {\begin{quote}\itshape}
-  {\end{quote}}
-\newenvironment{margintext}[1]
-  {\begin{marginfigure}
-     \subsection*{#1}}
-  {\end{marginfigure}}
+% \newenvironment{fadeout}
+%   {\color{gray}}
+%   {}
+% \newenvironment{emphasize}
+%   {\begin{quote}\itshape}
+%   {\end{quote}}
+% \newenvironment{margintext}[1]
+%   {\begin{marginfigure}
+%      \subsection*{#1}}
+%   {\end{marginfigure}}
 
 
 %% Lists %%
@@ -89,8 +85,8 @@
 
 \let\quote\quoting
 \let\endquote\endquoting
-\renewenvironment{quotation}
-  {\ClassError{Please use the `quote` environment instead of `quotation`}}
+% \renewenvironment{quotation}
+%   {\ClassError{Please use the `quote` environment instead of `quotation`}}
 
 
 %% Column types %%
@@ -125,76 +121,71 @@
 
 %% Blocks and Boxes %%
 
-\newenvironment{block}
-  {\begin{center}}
-  {\end{center}}
+% \newenvironment{block}
+%   {\begin{center}}
+%   {\end{center}}
 % \newenvironment{box}
 %   {\begin{mdframed}}
 %   {\end{mdframed}}
 
 %% \vspace helps to force top alignment...
-\newmacro{sidebyside}[4][1={0.5},2={0.5}]
-  {\begin{minipage}[t]{#1\textwidth}\vspace{0pt}#3\end{minipage}% NEEDS to be here...
-   \begin{minipage}[t]{#2\textwidth}\vspace{0pt}#4\end{minipage}}
+% \newmacro{sidebyside}[4][1={0.5},2={0.5}]
+%   {\begin{minipage}[t]{#1\textwidth}\vspace{0pt}#3\end{minipage}% NEEDS to be here...
+%    \begin{minipage}[t]{#2\textwidth}\vspace{0pt}#4\end{minipage}}
 
 
 %% Logos %%
 
 %% \newlogo[.name.]{.text.}
-\newmacro{newlogo}[2][1]
-  {\ifthenelse{\isempty{#1}}
-     {\newlogoaux{#2}{\smallcaps{\lowercase{#2}}}}
-     {\newlogoaux{#1}{#2}}}
-\newmacro{newlogoaux}[2]
-  {\newmacro{#1}{#2}}
+% \newmacro{newlogo}[2][1]
+%   {\ifthenelse{\isempty{#1}}
+%      {\newlogoaux{#2}{\smallcaps{\lowercase{#2}}}}
+%      {\newlogoaux{#1}{#2}}}
+% \newmacro{newlogoaux}[2]
+%   {\newmacro{#1}{#2}}
 
 
 %% Languages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newmacro{newkeyword}[2][1]
-  %%FIXME: this is to complicated: {\newoperator{\ifthenelse{\isempty{#1}}{#2}{#1}}{\text{\sffamily\bfseries #2}}}
-  {\ifthenelse{\isempty{#1}}
-    {\newoperator{#2}{\text{\normalfont\sffamily\bfseries #2}}}
-    {\newoperator{#1}{\text{\normalfont\sffamily\bfseries #2}}}}
-\newmacro{newvalue}[2][1]
-  {\ifthenelse{\isempty{#1}}
-    {\newmathcommand{#2}{\text{\normalfont\sffamily #2}}}
-    {\newmathcommand{#1}{\text{\normalfont\sffamily #2}}}}
-\newmacro{newparam}[2][1]
-  {\ifthenelse{\isempty{#1}}
-    {\newmathcommand{#2}{\text{\normalfont\sffamily\itshape #2}}}
-    {\newmathcommand{#1}{\text{\normalfont\sffamily\itshape #2}}}}
-\newmacro{newtype}[2][1]
-  {\ifthenelse{\isempty{#1}}
-    {\newmathcommand{#2}{\text{\normalfont\sffamily\scshape #2}}}
-    {\newmathcommand{#1}{\text{\normalfont\sffamily\scshape #2}}}}
+% \newmacro{newkeyword}[2][1]
+%   %%FIXME: this is to complicated: {\newoperator{\ifthenelse{\isempty{#1}}{#2}{#1}}{\text{\sffamily\bfseries #2}}}
+%   {\ifthenelse{\isempty{#1}}
+%     {\newoperator{#2}{\text{\normalfont\sffamily\bfseries #2}}}
+%     {\newoperator{#1}{\text{\normalfont\sffamily\bfseries #2}}}}
+% \newmacro{newvalue}[2][1]
+%   {\ifthenelse{\isempty{#1}}
+%     {\newmathcommand{#2}{\text{\normalfont\sffamily #2}}}
+%     {\newmathcommand{#1}{\text{\normalfont\sffamily #2}}}}
+% \newmacro{newparam}[2][1]
+%   {\ifthenelse{\isempty{#1}}
+%     {\newmathcommand{#2}{\text{\normalfont\sffamily\itshape #2}}}
+%     {\newmathcommand{#1}{\text{\normalfont\sffamily\itshape #2}}}}
+\newcommand{\newtype}[1]{{\text{\normalfont\sffamily\scshape #1}}}
+%   {\ifthenelse{\isempty{#1}}
+%     {\newmathcommand{#2}{\text{\normalfont\sffamily\scshape #2}}}
+%     {\newmathcommand{#1}{\text{\normalfont\sffamily\scshape #2}}}}
 
 
 %% Math %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Boxes %%
 
-\newmacro{obox}[2]
-  {\makebox[0pt][l]{\ensuremath{#2}}\phantom{\ensuremath{#1}}}
+\newcommand{\obox}[2]{\makebox[0pt][l]{\ensuremath{#2}}\phantom{\ensuremath{#1}}}
 
-\newmacro{highlight}[1]
-  {\colorbox{lightgray}{\ensuremath{#1}}}
+% \newmacro{highlight}[1]
+%   {\colorbox{lightgray}{\ensuremath{#1}}}
 \let\shaded\highlight
 
 %% Spacing %%
 
-\newmacro{uad}
-  {\hspace{0.5em}}
-\newmacro{Quad}
-  {\hspace{1.5em}}
-\newmacro{Break}
-  {\\[\smallskipamount]}
+\newcommand{\uad}{\hspace{0.5em}}
+\newcommand{\Quad}{\hspace{1.5em}}
+\newcommand{\Break}{\\[\smallskipamount]}
 
 
 %% Fractions %%
 
-\newmacro{upon}
-  {\genfrac{}{}{0pt}{0}}
+\newcommand{\upon}[2]{\genfrac{}{}{0pt}{0}{#1}{#2}}
 
 
 %% Symbols %%
@@ -210,17 +201,14 @@
 \let\<\langle
 \let\>\rangle
 
-\newmathcommand{llbrace}[open] {\{\!|}
-\newmathcommand{rrbrace}[close]{|\!\}}
+% \newmathcommand{llbrace}[open] {\{\!|}
+% \newmathcommand{rrbrace}[close]{|\!\}}
 
-\newmacro{set}[1]
-  {\ensuremath{\{#1\}}}
-\newmacro{tuple}{\set}
-\newmacro{record}{\tuple}
-\newmacro{alist}[1]
-  {\ensuremath{[#1]}}
-\newmacro{more}[1]
-  {\overline{#1}}
+\newcommand{\set}[1]{\ensuremath{\{#1\}}}
+\newcommand{\tuple}{\set}
+\newcommand{\record}{\tuple}
+\newcommand{\alist}[1]{\ensuremath{[#1]}}
+\newcommand{\more}[1]{\overline{#1}}
 
 
 %% Operators %%
@@ -229,40 +217,36 @@
 \let\gt>
 \let\To\Rightarrow
 
-\newmathcommand{pp}[bin]
-  {+\!\!+}
-\newmathcommand{Mid}
-  {\;\mid\;}
+\newcommand{\pp}{+\!\!+}
+\newcommand{\Mid}{\;\mid\;}
 
 
-%% Shortcuts %%
+% %% Shortcuts %%
 
-\newmacro{powerset}[1]
-  % {2^{#1}}
-  {\mathcal{P}(#1)}
-\newmacro{id}[1]
-  {\mathrm{#1}}
-\newmacro{lbl}[1]
-  {\mathsf{#1}}
+\newcommand{\powerset}[1]{\mathcal{P}(#1)}
+% \newmacro{id}[1]
+%   {\mathrm{#1}}
+% \newmacro{lbl}[1]
+%   {\mathsf{#1}}
 
-\newmathcommand{many}{\overline}
-\newbinary{upto}{..} %{..\!\!<}
+\newcommand{\many}{\overline}
+\newcommand{\upto}{..} %{..\!\!<}
 
-\newmathcommand{n}{\underline{n}}
+% \newmathcommand{n}{\underline{n}}
 
-\newmathcommand{NN}  [bb]{N}
-\newmathcommand{ZZ}  [bb]{Z}
-\newmathcommand{EE}  [bb]{E}
-\newmathcommand{OO}  [bb]{O}
-\newmathcommand{QQ}  [bb]{A}
-\newmathcommand{RR}  [bb]{R}
-\newmathcommand{CC}  [bb]{C}
-\newmathcommand{HH}  [bb]{H}
+% \newmathcommand{NN}  [bb]{N}
+% \newmathcommand{ZZ}  [bb]{Z}
+% \newmathcommand{EE}  [bb]{E}
+% \newmathcommand{OO}  [bb]{O}
+% \newmathcommand{QQ}  [bb]{A}
+% \newmathcommand{RR}  [bb]{R}
+% \newmathcommand{CC}  [bb]{C}
+% \newmathcommand{HH}  [bb]{H}
 
-\newmathcommand{LL}  [bb]{L}
-\newmathcommand{UU}  [bb]{U}
-\newmathcommand{BB}  [bb]{B}
-\renewmathcommand{SS}[bb]{S}
+% \newmathcommand{LL}  [bb]{L}
+% \newmathcommand{UU}  [bb]{U}
+% \newmathcommand{BB}  [bb]{B}
+% \renewmathcommand{SS}[bb]{S}
 
 \let\to\rightarrow
 % \let\implies\Rightarrow
@@ -273,55 +257,47 @@
 
 %% Hints and local definitions %%
 
-\newmacro{hint}[1]
-  {\quad\text{\{ #1 \}}}
+% \newmacro{hint}[1]
+%   {\quad\text{\{ #1 \}}}
 
-\newmathcommand{each}[op]
-  {\mathrm{for\ each}}
-\newmathcommand{when}[op]
-  {\mathrm{when}}
-\newmathcommand{where}[op]
-  {\mathrm{where}}
-\renewmathcommand{and}[op]
-  {\mathrm{and}}
-\newmathcommand{otherwise}[op]
-  {\mathrm{otherwise}}
-\newmathcommand{impossible}[op]
-  {\mathrm{impossible}}
+\newcommand{\each}{\mathrm{for\ each}}
+\newcommand{\when}{\mathrm{when}}
+\newcommand{\where}{\mathrm{where}}
+\newcommand{\en}{\mathrm{and}}
+\newcommand{\otherwise}{\mathrm{otherwise}}
+\newcommand{\impossible}{\mathrm{impossible}}
 
 
 %% Environments %%
 
 \let\group\begingroup
 
-\newenvironment*{marginequation}[1][1=0pt]
-  {\begin{marginfigure}[#1]\equation}
-  {\endequation\end{marginfigure}}
+% \newenvironment*{marginequation}[1][1=0pt]
+%   {\begin{marginfigure}[#1]\equation}
+%   {\endequation\end{marginfigure}}
 
-\newenvironment*{marginequation*}[1][1=0pt]
-  {\begin{marginfigure}[#1]\equation\nonumber}
-  {\endequation\end{marginfigure}}
-
-
-\newenvironment*{function}
-  {\begin{tabular}{@{}L@{\ \ }C@{\ \ }L@{}}}
-  {\end{tabular}}
-\newmacro{signature}[1]
-  {\multicolumn{3}{@{}L@{}}{#1}}
-\newmacro{inset}[1]
-  {\multicolumn{3}{L}{\quad #1}}
+% \newenvironment*{marginequation*}[1][1=0pt]
+%   {\begin{marginfigure}[#1]\equation\nonumber}
+%   {\endequation\end{marginfigure}}
 
 
-\newmacro{heading}[1]
-  {\addlinespace\multicolumn{5}{c}{#1}}
-\newenvironment*{grammar}
-  %%NOTE: the `@{}` suppreses `\tabcolsep` before the first column
-  {\begin{block}\begin{tabular}{@{}rRCLl}}
-  {\end{tabular}\end{block}}
-\newenvironment*{grammar*}
-  %%NOTE: the `@{}` suppreses `\tabcolsep` before the first column
-  {\begin{block}\begin{tabular}{@{}RLl}}
-  {\end{tabular}\end{block}}
+% \newenvironment*{function}
+%   {\begin{tabular}{@{}L@{\ \ }C@{\ \ }L@{}}}
+%   {\end{tabular}}
+\newcommand{\signature}[1]{\multicolumn{3}{@{}L@{}}{#1}}
+% \newmacro{inset}[1]
+%   {\multicolumn{3}{L}{\quad #1}}
+
+
+\newcommand{\heading}[1]{\addlinespace\multicolumn{5}{c}{#1}}
+% \newenvironment*{grammar}
+%   %%NOTE: the `@{}` suppreses `\tabcolsep` before the first column
+%   {\begin{block}\begin{tabular}{@{}rRCLl}}
+%   {\end{tabular}\end{block}}
+% \newenvironment*{grammar*}
+%   %%NOTE: the `@{}` suppreses `\tabcolsep` before the first column
+%   {\begin{block}\begin{tabular}{@{}RLl}}
+%   {\end{tabular}\end{block}}
 
 
 %% Theorems %%
@@ -364,26 +340,23 @@
 
 %% Inference rules %%
 
-\newmacro{placerule}[4][1,4]
+\newcommand{\placerule}[4]
   {\ensuremath{
-    \upon
-      {\text{\smallcaps{#1}}\hfill}
-      {\dfrac{#2}{#3}\ #4}
-  }}
+  \upon{\textsc{#1}\hfill} {\dfrac{#2}{#3}\ #4}
+   }}
 
-\newmacro{newrule}[4] %[4]
-  {\newmacro{#1}{\placerule[#1]{#2}{#3}[#4]}}
-\newmacro{userule}
-  {\usemacro}
-\newmacro{Userule}[1]
-    %{\parbox[b][1.1cm][t]{\linewidth}{\userule{#1}}}
-    {\begin{tabular}[b]{c}
-      \userule{#1}\\
-      \vspace{-.45cm}
-  \end{tabular}}
-\newmacro{refrule}[1]
-  {\ifthenelse{\isundefined{#1}}
-    {\GenericError{}{Rule `#1` is not defined}{}{}}
-    {\textsc{#1}}}
-% \newmacro{refrule}
-%   {\textsc}
+% \newmacro{newrule}[4] %[4]
+%   {\newmacro{#1}{\placerule[#1]{#2}{#3}[#4]}}
+% \newmacro{userule}
+%   {\usemacro}
+% \newmacro{Userule}[1]
+%     %{\parbox[b][1.1cm][t]{\linewidth}{\userule{#1}}}
+%     {\begin{tabular}[b]{c}
+%       \userule{#1}\\
+%       \vspace{-.45cm}
+%   \end{tabular}}
+% \newmacro{refrule}[1]
+%   {\ifthenelse{\isundefined{#1}}
+%     {\GenericError{}{Rule `#1` is not defined}{}{}}
+%     {\textsc{#1}}}
+\newcommand{\refrule}{\textsc}

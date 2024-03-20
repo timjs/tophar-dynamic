@@ -35,9 +35,9 @@ This makes the symbolic semantics non-deterministic.
 \begin{figure}
   \begin{mathpar}
     \boxed{\RelationSH} \\
-    \usemacro{SH-Enter} \\
-    \usemacro{SH-Pair-Left}
-    \usemacro{SH-Pair-Right} \\
+    \SHEnter \\
+    \SHPairLeft
+    \SHPairRight \\
   \end{mathpar}
   \caption{Selected symbolic handling rules}
   \label{fig:symbolic-handling}
@@ -56,15 +56,15 @@ Last, we add a rule to symbolically initialize a new task in the pool: \refrule{
 \begin{figure}
   \begin{mathpar}
     \boxed{\RelationSH} \\
-    \usemacro{SH-Pool-Init} \\
-    \usemacro{SH-Pool-Kill$_j$} \\
-    \usemacro{SH-Pool$_j$} \\
+    \SHPoolInit \\
+    \SHPoolKillj \\
+    \SHPoolj \\
   \end{mathpar}
   \caption{Symbolic rules for \DYNTOPHAT}
   \label{fig:symbolic-handling-new}
 \end{figure}
 
-Top-level symbolic interaction of tasks is written $\RelationSI$,
+Top-level symbolic interaction of tasks is written $n|_{\phi},\sigma\ \ \syminteract{\iota'}$ $n'|_{\phi'},\sigma'$,
 meaning that a normalized task $n$ under path condition $\phi$ in state $\sigma$ generates input $\iota$, a new normalized task $n'$ under path condition $\phi'$ in state $\sigma'$.
 Rule \seerule{SI-Handle} in \cref{fig:symbolic-interaction} initiates simulation
 by using the symbolic handling and fixation semantics.
@@ -73,7 +73,7 @@ Fixation, as in the concrete case, resolves any dependencies between shared heap
 \begin{figure}
   \begin{mathpar}
     \boxed{\RelationSI} \\
-    \usemacro{SI-Handle} \\
+    \SIHandle \\
   \end{mathpar}
   \caption{Symbolic interaction rule}
   \label{fig:symbolic-interaction}
@@ -111,7 +111,7 @@ The basic idea is that symbolic execution can be leveraged to reach some goal $\
 
 \begin{figure}
   \begin{mathpar}
-    \usemacro{O-Hints}
+    \OHints
   \end{mathpar}
   \caption{Next-step hint generation function}
   \label{fig:next-step-hints}
@@ -126,7 +126,7 @@ This allows us to return a hint that guides the user to the shortest path to the
 
 \begin{figure*}
   \begin{mathpar}
-    \usemacro{O-Generate}
+    \OGenerate
   \end{mathpar}
   \caption{Altered next-step hint generation function}
   \label{fig:next-step-hints-new}

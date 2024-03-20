@@ -3,153 +3,153 @@
 
 %% Symbols %%
 
-\newbinary{Rhd}           {\blacktriangleright}
-\newbinary{Lhd}           {\blacktriangleleft}
-\newbinary{moustache}     {\rhd\mkern-5mu\lhd}
-\newbinary{blackmoustache}{\Rhd\mkern-8mu\Lhd}
-\renewbinary{blacklozenge}{\Lhd\mkern-4mu\Rhd}
-\newbinary{boxcirc}       {\square\mkern-10.33mu\circ\mkern+2mu} %\kern-1.25ex\whitebox} %{\ocircle} %{\boxcircle} %{\overline{\whitebox}}
-\newbinary{boxpluscirc}   {\boxplus\mkern-10.33mu\circ\mkern+2mu} %{\oplus} %{\dot{\boxplus}} %{\boxbox} %{\overline{\boxplus}}]
+\newcommand{\Rhd}           {\blacktriangleright}
+\newcommand{\Lhd}           {\blacktriangleleft}
+\newcommand{\moustache}     {\rhd\mkern-5mu\lhd}
+\newcommand{\blackmoustache}{\Rhd\mkern-8mu\Lhd}
+\renewcommand{\blacklozenge}{\Lhd\mkern-4mu\Rhd}
+\newcommand{\boxcirc}       {\square\mkern-14.33mu\circ\mkern-2mu} %\kern-1.25ex\whitebox} %{\ocircle} %{\boxcircle} %{\overline{\whitebox}}
+\newcommand{\boxpluscirc}   {\boxplus\mkern-14.33mu\circ\mkern-2mu} %{\oplus} %{\dot{\boxplus}} %{\boxbox} %{\overline{\boxplus}}]
 
-\newrelation{colonequals} {:=}
+\newcommand{\colonequals} {:=}
 
-\newmathcommand{exprequiv}{\simeq}
-\newmathcommand{nexprequiv}{\not\simeq}
-\newmathcommand{taskequiv}{\cong}
-\newmathcommand{ntaskequiv}{\not\cong}
+% \newmathcommand{exprequiv}{\simeq}
+% \newmathcommand{nexprequiv}{\not\simeq}
+% \newmathcommand{taskequiv}{\cong}
+% \newmathcommand{ntaskequiv}{\not\cong}
 
-\newmathcommand{mapsdown}[rel]
-  {\rotatebox[origin=c]{-90}{\ensuremath{\mapsto}}}
-
-
-%% Arrows %%
-
-\newrelation{too}     {\longrightarrow}
-\newrelation{down}    {\downarrow}
-\newrelation{Down}    {\Downarrow}
-\newrelation{Too}     {\Longrightarrow}
-\newrelation{Leadsto}{\raisebox{-0.25ex}{$\leadsto$}\mathllap{\raisebox{+0.25ex}{$\leadsto$}}}
+\newcommand{\mapsdown}{\rotatebox[origin=c]{-90}{\ensuremath{\mapsto}}}
 
 
-%% Keywords %%
+% %% Arrows %%
 
-\newkeyword[If]{if}
-\newkeyword[Then]{then}
-\newkeyword[Else]{else}
-
-\newmacro{Ite}[3]{
-  \If #1 \Then #2 \Else #3
-}
-
-\newkeyword[As]{as\:}
-\newkeyword[Assert]{assert\:}
-\newkeyword[Share]{share\:}
+\newcommand{\too}     {\longrightarrow}
+\newcommand{\down}    {\downarrow}
+\newcommand{\Down}    {\Downarrow}
+\newcommand{\Too}     {\Longrightarrow}
+\newcommand{\Leadsto}{\raisebox{-0.25ex}{$\leadsto$}\mathllap{\raisebox{+0.25ex}{$\leadsto$}}}
 
 
-%% Values %%
+% %% Keywords %%
 
-\newvalue[True]  {True}
-\newvalue[False] {False}
-\newvalue[Not]   {not}
+% \newkeyword[If]{if}
+% \newkeyword[Then]{then}
+% \newkeyword[Else]{else}
 
-\newvalue[Id]    {id}
-\newvalue[Assoc] {assoc}
+% \newmacro{Ite}[3]{
+%   \If #1 \Then #2 \Else #3
+% }
 
-\newrelation{Cons}{::}
-
-\newvalue[unit]{\record{}}
-
-
-%% Types %%
-
-\newtype{Unit}
-\newtype{Bool}
-\newtype{Int}
-\newtype{String}
-\newtype[List]{List\;}
-\newtype[Task]{Task\;}
-\newtype[Reference]{Ref\;}
-
-\newtype{Snack}
-\newtype{Location}
+% \newkeyword[As]{as\:}
+% \newkeyword[Assert]{assert\:}
+\newcommand{\Share}{\textbf{share}\:}
 
 
-%% Inputs %%
+% %% Values %%
 
-\newmacro{send}[2]
-  {#1!#2}
+\newcommand{\True}{\text{\normalfont\sffamily True}}
+\newcommand{\False}{\text{\normalfont\sffamily False}}
+\newcommand{\Not}{\text{\normalfont\sffamily not}}
 
-\newbinary{Send}     {!}
-\newunary {Init}     {\circledast}
-\newunary {Kill}     {\ominus}
+\newcommand{\Id}{\text{\normalfont\sffamily id}}
+\newcommand{\Assoc}{\text{\normalfont\sffamily assoc}}
 
+% \newrelation{Cons}{::}
 
-%% Operators %%
-
-\newunary {Enter}    {\square}
-\newunary {Update}   {\boxminus}
-\newunary {View}     {\boxcirc}
-
-\newbinary{Pair}     {\blackmoustache}
-\newunary {Lift}     {\blacksquare}
-\newbinary{Choose}   {\blacklozenge}
-\newunary {Fail}     {\lightning}
-
-\newbinary{Trans}    {\bullet}
-\newbinary{Step}     {\Rhd}
-
-\newunary {Pool}     {\moustache}
-\newbinary{Assign}   {\colonequals}
-\newunary {Change}   {\boxplus}
-\newunary {Watch}    {\boxpluscirc}
-
-\newbinary{Modify}   {::=}
-\newbinary{Select}   {\rhd}
-\newunary {Pick}     {\diamond}
-\newunary {Branch}   {\blackdiamond}
-\newunary {Repeat}   {\backcicle}
-\newunary {Forever}  {\circlearrowleft}
+\newcommand{\unit}{\record{}}
 
 
-%% Observations %%
+% %% Types %%
 
-\newunary {Value}    {\mathcal{V}}
-\newunary {Inputs}   {\mathcal{I}}
-\newunary {Rendering}{\mathcal{R}}
-\newunary {Failing}  {\mathcal{F}}
-\newunary {Watching} {\mathcal{W}}
-\newunary {Options}  {\mathcal{O}}
-\newunary {Labels}   {\mathcal{L}}
-\newunary {Sat}      {\mathcal{S}}
-\newunary {Hints}    {\mathcal{H}}
-\newunary {Generate} {\mathcal{G}}
-\newunary {Node}     {\mathcal{N}}
+\newcommand{\Unit}{\newtype{Unit}}
+\newcommand{\Bool}{\newtype{Bool}}
+\newcommand{\Int}{\newtype{Int}}
+\newcommand{\String}{\newtype{String}}
+\newcommand{\List}{\newtype{List}\;}
+\newcommand{\Task}{\newtype{Task}\;}
+\newcommand{\Reference}{\newtype{Ref}\;}
+
+\newcommand{\Snack}{\textsc{Snack}}
+\newcommand{\Location}{\textsc{Location}}
 
 
-%% Semantics %%
+% %% Inputs %%
 
-\newrelation{evaluate}  {\mapsdown}
-\newrelation{normalize} {\down}
-\newrelation{fixate}    {\Down}
+\newcommand{\send}[2]{#1\Send #2}
 
-\newmacro{handle}[1]    {\overset{#1}{\too}}
-\newmacro{interact}[1]  {\overset{#1}{\Too}}
-\newmacro{execute}[1]   {\mathrel{\overset{#1}{\Too}\nobreak\strut\mkern-6mu^*}}
+\newcommand{\Send}{!}
+\newcommand{\Init}     {\circledast}
+\newcommand{\Kill}     {\ominus}
 
-\newrelation{symevaluate}  {\rotatebox[origin=c]{-90}{$\mapstochar\kern+0.1em\leadsto$}}
-\newrelation{symnormalize} {\rotatebox[origin=c]{-90}{$\leadsto$}}
-\newrelation{symfixate}    {\rotatebox[origin=c]{-90}{$\Leadsto$}}
 
-\newmacro{symhandle}[1]    {\underset{#1}{\leadsto}}
-\newmacro{syminteract}[1]  {\underset{#1}{\Leadsto}}
-\newmacro{simulate}[1]     {\mathrel{\underset{#1}{\Leadsto}\nobreak\strut\mkern-6mu^*}}
+% %% Operators %%
 
-%% Helpers %%
+\newcommand{\Enter}{\square}
+\newcommand{\Update}   {\boxminus}
+\newcommand{\View}     {\boxcirc}
 
-\newmacro{var}[1]{\textsf{\textit{#1}}}
-\newmacro{fun}{\textsf}
-\newmacro{con}{\textsf}
-\newmacro{typ}[1]{\textsf{\textsc{#1}}}
-\newmacro{seecond}{\textsc}
-% \newmacro{impl}{\texttt}
-\newmacro{seerule}{\textsc}
+\newcommand{\Pair}     {\blackmoustache}
+\newcommand{\Lift}     {\blacksquare}
+\newcommand{\Choose}   {\blacklozenge}
+\newcommand{\Fail}     {\lightning}
+
+\newcommand{\Trans}    {\bullet}
+\newcommand{\Step}     {\Rhd}
+
+\newcommand{\Pool}     {\moustache}
+\newcommand{\PoolText}     {\rhd\mkern-8mu\lhd}
+\newcommand{\Assign}   {\colonequals}
+\newcommand{\Change}   {\boxplus}
+\newcommand{\Watch}    {\boxpluscirc}
+\newcommand{\WatchText}    {\boxplus\mkern-14.33mu\circ\mkern-0mu}
+
+\newcommand{\Modify}   {::=}
+\newcommand{\Select}   {\rhd}
+\newcommand{\Pick}     {\diamond}
+\newcommand{\Branch}   {\blackdiamond}
+\newcommand{\Repeat}   {\backcicle}
+\newcommand{\Forever}  {\circlearrowleft}
+
+
+% %% Observations %%
+
+\newcommand{\Value}    {\mathcal{V}}
+\newcommand{\Inputs}   {\mathcal{I}}
+\newcommand{\Rendering}{\mathcal{R}}
+\newcommand{\Failing}{\mathcal{F}}
+\newcommand{\Watching} {\mathcal{W}}
+\newcommand{\Options}  {\mathcal{O}}
+\newcommand{\Labels}   {\mathcal{L}}
+\newcommand{\Sat}      {\mathcal{S}}
+\newcommand{\Hints}    {\mathcal{H}}
+\newcommand{\Generate} {\mathcal{G}}
+\newcommand{\Node}     {\mathcal{N}}
+
+
+% %% Semantics %%
+
+\newcommand{\evaluate}  {\mapsdown}
+\newcommand{\normalize} {\down}
+\newcommand{\fixate}    {\Down}
+
+\newcommand{\handle}[1]{\overset{#1}{\too}}
+\newcommand{\interact}[1]  {\overset{#1}{\Too}}
+\newcommand{\execute}[1]   {\mathrel{\overset{#1}{\Too}\nobreak\strut\mkern-6mu^*}}
+
+\newcommand{\symevaluate}  {\rotatebox[origin=c]{-90}{$\mapstochar\kern+0.1em\leadsto$}}
+\newcommand{\symnormalize} {\rotatebox[origin=c]{-90}{$\leadsto$}}
+\newcommand{\symfixate}    {\rotatebox[origin=c]{-90}{$\Leadsto$}}
+
+\newcommand{\symhandle}[1]    {\underset{#1}{\leadsto}}
+\newcommand{\syminteract}[1]  {\underset{#1}{\Leadsto}}
+\newcommand{\simulate}[1]     {\mathrel{\underset{#1}{\Leadsto}\nobreak\strut\mkern-1mu^*}}
+
+% %% Helpers %%
+
+\newcommand{\var}[1]{\textsf{\textit{#1}}}
+\newcommand{\fun}{\textsf}
+\newcommand{\con}{\textsf}
+\newcommand{\typ}[1]{\textsf{\textsc{#1}}}
+\newcommand{\seecond}{\textsc}
+\newcommand{\impl}{\texttt}
+\newcommand{\seerule}{\textsc}

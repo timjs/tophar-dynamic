@@ -1,4 +1,4 @@
-\newmacro{citeprop}[1]{} % {[Prop.~#1]} % {\cite[Prop.~#1]{conf/sfp/KlijnsmaS22}}
+\newcommand{\citeprop}[1]{} % {[Prop.~#1]} % {\cite[Prop.~#1]{conf/sfp/KlijnsmaS22}}
 
 \subsection{Task equivalence}
 \label{sec:equivalence}
@@ -95,7 +95,7 @@ only those transitions shown are possible \cite{conf/sfp/KlijnsmaS22}.
 Next, we discuss how our theory of task equivalence changes after the addition of task pools.
 It is always possible to initialize tasks in pools.
 As shown in \cref{fig:observations-dynamic},
-the inputs observation $\Inputs$ on a task pool $\Pool_{t_0}^k [\many{n}]$ will contain the input $k\Send\Init$
+the inputs observation $\Inputs$ on a task pool $\PoolText_{t_0}^k [\many{n}]$ will contain the input $k\Send\Init$
 regardless of the tasks in the pool.
 Also, by definition of $\Value$ in \cref{fig:observations-dynamic},
 task pools always have a value.
@@ -120,7 +120,7 @@ Let us first consider an example.
   Because $t$ has observable inputs and an observable value that could change,
   it is in the unsteady condition.
 
-  Say, we send $k_0\Send\Init$ to $t$.
+  Say, we send $k_0\,\Send\,\Init$ to $t$.
   Then, $t$ will be rewritten to:
   \begin{TASK}
     >&<$_{\Enter^\epsilon \Int}^{k_0}$ [update$^{k_1}$ 42, enter$^{k_2}$ Int].
@@ -182,7 +182,7 @@ To do this, we first need to introduce the notion of \emph{stepless tasks}.
 \hfill$\therefore$\end{definition}
 
 \begin{figure}
-  \usemacro{G-Stepless-Tasks-compact}
+  \GSteplessTaskscompact
   \caption{Stepless tasks}
   \label{fig:stepless-tasks-grammar}
 \end{figure}
@@ -204,7 +204,7 @@ To do this, we first need to introduce the notion of \emph{stepless tasks}.
     \item a pair $n_1 \Pair n_2$, for which $\Value(n_1,\sigma) = v_1$ and $\Value(n_2,\sigma) = v_2$;
     \item a transform $e_1 \Trans n_2$, for which $\Value(n_2,\sigma) = v_2$;
     \item a lift $\Lift v$;
-    \item a pool $\Pool_{t_0} [\many{n}]$.
+    \item a pool $\PoolText_{t_0} [\many{n}]$.
   \end{itemize}
   Especially, step ($n_1 \Step e_2$) and fail ($\Fail$) are ruled out, because they have no value.
   Choice ($n_1 \Choose n_2$) is ruled out

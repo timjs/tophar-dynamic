@@ -58,14 +58,14 @@ Language-wise, a task pool is a new combinator at the task level.
 The combinator $\Pool^\nu_{t_0} []$ is parametrised by a name $\nu$, a template task $t_0$ and an (initially) empty task list $[]$.
 After normalization, pools, as editors, the name is instantiated with a unique key $k$.
 Each time end-users send an init action to a pool ($k\Send\Init$), the template task is placed in the list of currently running tasks.
-In this case resulting in $\Pool^k_{t_0} [t_0]$.
+In this case resulting in $\PoolText^k_{t_0} [t_0]$.
 This way, an arbitrary amount of tasks can be started at runtime.
 Tasks in the list can also be killed by sending a \emph{kill} action to the pool ($k\Send\Kill1$).
 In this case, the first task in the pool will be killed, as indicated by the index 1.
 The syntactic extensions to \TOPHAT\ are shown in \cref{fig:dynamic-grammar}.
 
 \begin{figure}
-  \usemacro{G-Dynamic-extensions}
+  \GDynamicextensions
   \caption{Grammar additions for \DYNTOPHAT}
   \label{fig:dynamic-grammar}
 \end{figure}
@@ -118,7 +118,7 @@ if every task in the pool, including the template task, is a \typ{Task} of type 
 \begin{figure}
   \begin{mathpar}
     \boxed{\RelationT} \\
-    \userule{T-Pool} \\
+    \TPool \\
   \end{mathpar}
   \caption{Typing rule for task pools}
   \label{fig:typing-dynamic}
@@ -134,8 +134,8 @@ Otherwise, we would create unwanted sharing of editors.
   \begin{mathpar}
     % \userule{E-Pool} \\
     \boxed{\RelationN} \\
-    \userule{N-Pool-Name} \\
-    \userule{N-Pool} \\
+    \NPoolName \\
+    \NPool \\
   \end{mathpar}
   \caption{Normalisation rules for task pools}
   \label{fig:semantics-dynamic-normalization}
@@ -158,12 +158,12 @@ Otherwise, we would create unwanted sharing of editors.
     >&<$^{k_0}_{\Enter^{k_1}\Int}$ [enter$^{k_1}$ Int, enter$^{k_1}$ Int]
   \end{TASK}
   This is undesirable because it breaks our requirement that every editor should have a \emph{unique} key.
-  It would be unclear what to do with the input $k_1\Send 42$.
+  It would be unclear what to do with the input $k_1\,\Send\, 42$.
   Therefore, we delay normalization of the template task until the moment they are added to the pool.
 \hfill$\therefore$\end{example}
 
 Additional handling rules for \DYNTOPHAT\ are presented in \cref{fig:semantics-dynamic-handling}.
-Rule \seerule{H-Init} shows that sending $k\Send\Init$ copies the template task to the pool.
+Rule \seerule{H-Init} shows that sending $k\,\Send\,\Init$ copies the template task to the pool.
 Rule \seerule{H-Kill$_j$} removes the $j$th task from the pool on the input of $k\Send\Kill j$.
 In both cases, the key $k$ in the input should be equal to the key of the task pool.
 If that is not the case, rule \seerule{H-Pool} passes the input on to all tasks in the pool,
@@ -172,9 +172,9 @@ identical to \seerule{H-Pair} in \cref{fig:semantics-handling}.
 \begin{figure}
   \begin{mathpar}
     \boxed{\RelationH} \\
-    \userule{H-Init} \\
-    \userule{H-Kill$_j$} \\
-    \userule{H-Pool} \\
+    \HInit \\
+    \HKillsj \\
+    \HPool \\
   \end{mathpar}
   \caption{Handling rules for task pools}
   \label{fig:semantics-dynamic-handling}
@@ -200,7 +200,7 @@ Only in this way,
 we can make a step from a task pool containing partial work.
 
 \begin{figure}
-  \usemacro{O-Dynamic}
+  \ODynamic
   \caption{Observations on task pools}
   \label{fig:observations-dynamic}
 \end{figure}
@@ -215,7 +215,7 @@ we can make a step from a task pool containing partial work.
       enter$^{k_3}$ Int >>= ..., view Chocolate, enter$^{k_5}$ Int >>= ...]
   \end{TASK}
   Note that, by definition of our value observation $\Value$,
-  this task has the value \TS{[Biscuit, Chocolate, Chocolate]}.
+  this task has the value [Biscuit, Chocolate, Chocolate].
   In particular, it does not result in $\bot$ because the third and fifth tasks do not have observable values.
 
   After user five pays the amount of 2 coins for a Chocolate (i.e. we send input $k_3\Send2$),
@@ -224,7 +224,7 @@ we can make a step from a task pool containing partial work.
     >&<$_{\fun{vend}_1\,\var{inventory}}$ [view Biscuit, view Chocolate,
       enter$^{k_3}$ Int >>= ..., view Chocolate, view Chocolate]
   \end{TASK}
-  The value observation of this task would return the list \TS{[Biscuit, Chocolate, Chocolate, Chocolate]}.
+  The value observation of this task would return the list [Biscuit, Chocolate, Chocolate, Chocolate].
   We now satisfy the guard in the definition of \fun{summarise} that the number of snacks should be four.
   We can take the step and immediately rewrite the whole task to summarise the different purchases that were made.
   The result will be:
